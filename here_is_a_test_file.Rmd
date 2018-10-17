@@ -1,0 +1,15 @@
+---
+title: "here_is_a_test_file"
+author: "Cameron Kay"
+date: "10/17/2018"
+output: html_document
+---
+
+```{r}
+x <- "this is a"
+
+y <- "test"
+
+paste(x, y, sep = " ")
+```
+
