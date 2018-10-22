@@ -9,21 +9,31 @@ output:
     toc: yes
     toc_float: yes
   pdf_document:
-    highlight: kate
+    toc: yes
+  word_document:
     toc: yes
 ---
 
 ```{r setup, include = FALSE}
+
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.width = 7.5,
+                      fig.height = 4.0)
+
 #install required packages
 library(rio)
 library(here)
 library(tidyverse)
 
 #import data
-data <- import(here("data", "January 3-10, 2018 - Core Trends Survey - SPSS.sav")) %>%
+data <- import(here("data", "dataSPSS.sav")) %>%
   janitor::clean_names() %>%
   characterize()
+
 ```
+
 ### 1) Description of the dataset to be used
 
 We will be using [Pew Research Center's](http://www.pewresearch.org) 
@@ -33,12 +43,50 @@ media use, but the dataset also includes participant demographics.
 
 ### 2) Description of preparatory work that will need to be completed
 
-  + **Hereherehere**
+  + **Tidying and Wrangling Data**
+      + Considering we will need to create a series of interesting graphics, the bulk of work will consist of tidying the data.  
+      + For example, let's say we want to examine whether age trends in social media use differ as a function of social media site (e.g., do older users spend more time on Facebook, whereas younger users spend more time on Snapchat and Instagram?). However, as seen below, the current structure of the data will not allow for this analysis. We will need to convert the data into long format.
+ 
+```{r reload data, include=FALSE}
+
+#For some reason we get a lot of NAs when trying to import the spss file, so I will use the csv file here
+
+data <- import(here("data", "dataCSV.csv")) %>%
+  janitor::clean_names()
+
+```
+
+```{r example}
+
+plot_data <- data %>%
+  select(age, sns2a, sns2b, sns2c, sns2d, sns2e)
+
+#sns2a = Twitter use
+#sns2b = Instagram use
+#sns2c = Facebook use
+#sns2d = Snapchat
+#sns2e = Youtube
+
+head(plot_data)
+
+```
+
   + **Hereherehere**
       + Hereherehere
+
+```{r example2}
+
+print("Here is another example")
+
+```
+
 
 ### 3) Description of how the requirements for the final project will be met.
 
   + **Hereherehere**
   + **Hereherehere**
-      + Hereherehere
+
+
+
+
+
