@@ -1,0 +1,24 @@
+---
+title: "Outline for the Final Project"
+author: "Cameron Kay"
+date: "10/22/2018"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+#install required packages
+library(rio)
+library(here)
+library(tidyverse)
+
+#import data
+df <- import(here("data", "January 3-10, 2018 - Core Trends Survey - SPSS.sav")) %>%
+  janitor::clean_names() %>%
+  characterize()
+```
+## Description of the dataset to be used
+
+We will be using [Pew Research Center's](http://www.pewresearch.org) 
+*Core Trends Survey* from January 3-10, 2018. It contains data on `r nrow(df)`
+people and nearly `r ncol(df)` variables. The variables primarily concern social
+media use, but the dataset also includes participant demographics. 
