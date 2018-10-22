@@ -22,3 +22,11 @@ We will be using [Pew Research Center's](http://www.pewresearch.org)
 *Core Trends Survey* from January 3-10, 2018. It contains data on `r nrow(df)`
 people and nearly `r ncol(df)` variables. The variables primarily concern social
 media use, but the dataset also includes participant demographics. 
+
+## Description of preparatory work that will need to be completed
+
+Hereherehere.
+
+## Description of how the requirements for the final project will be met.
+
+Hereherehere. 
