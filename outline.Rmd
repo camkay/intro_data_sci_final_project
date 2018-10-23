@@ -93,7 +93,7 @@ print("Here is another example")
       + We will create at least two graphs
   + **Requirement (d)**
       + We will create one table depicting relevant summary statistics
-            + Depending on what we uncover (and on how motivated we feel), we may include a summary of a fitted model
+      + Depending on what we uncover (and on how motivated we feel), we may include a summary of a fitted model
 
 
 
