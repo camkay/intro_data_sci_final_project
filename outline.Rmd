@@ -44,7 +44,7 @@ media use, but the dataset also includes participant demographics.
 ### 2) Description of preparatory work that will need to be completed
 
   + **Tidying and Wrangling Data**
-      + Considering we will need to create a series of interesting graphics, the bulk of work will consist of tidying the data.  
+      + Considering we will need to create at least two graphs and one table, the bulk of work will consist of tidying the data.  
       + For example, let's say we want to examine whether age trends in social media use differ as a function of social media site (e.g., do older users spend more time on Facebook, whereas younger users spend more time on Snapchat and Instagram?). However, as seen below, the current structure of the data will not allow for this analysis. We will need to convert the data into long format.
  
 ```{r reload data, include=FALSE}
