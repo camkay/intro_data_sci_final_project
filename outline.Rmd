@@ -37,8 +37,8 @@ data <- import(here("data", "dataSPSS.sav")) %>%
 ### 1) Description of the dataset to be used
 
 We will be using [Pew Research Center's](http://www.pewresearch.org) 
-*Core Trends Survey* from January 3-10, 2018. It contains data on `r nrow(df)`
-people and nearly `r ncol(df)` variables. The variables primarily concern social
+*Core Trends Survey* from January 3-10, 2018. It contains data on `r nrow(data)`
+people and nearly `r ncol(data)` variables. The variables primarily concern social
 media use, but the dataset also includes participant demographics. 
 
 ### 2) Description of preparatory work that will need to be completed
@@ -64,8 +64,8 @@ plot_data <- data %>%
 #sns2a = Twitter use
 #sns2b = Instagram use
 #sns2c = Facebook use
-#sns2d = Snapchat
-#sns2e = Youtube
+#sns2d = Snapchat use
+#sns2e = Youtube use
 
 head(plot_data)
 
