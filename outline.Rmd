@@ -96,6 +96,7 @@ head(plot_data2)
       + Our final R markdown document will demonstrate use of inline code, as well as tidying of the data
           + We will use inline code to provide the mean and standard deviation, as well as the percentages, for our demographic data (i.e., age, gender identity, and cultural identity)
           + We will also use inline code to represent our model in the manuscript (e.g., `time_spent_on_social_media_sites ~ age + social_media_site + (1 | subject)`)
+          + Second model idea: `books_read ~ age + book_type + (1 | subject)`
   + **Requirement (c)**
       + We will create at least two graphs
           + Tentative graph 1: geom_point with geom_smooth with method "lm"
@@ -106,6 +107,10 @@ head(plot_data2)
               + x-axis: perception of internet as good or bad
               + y-axis: time spent on social media sites
               + facet_wrap: social media site
+          + Tentative graph 3: geom_point with geom_smooth with method "lm"
+              + x-axis: age
+              + y-axis: number books read
+              + colour: book format (print, audio, electronic)
   + **Requirement (d)**
       + We will create one table depicting relevant summary statistics, such as... 
           + The mean and sd of the frequency of visiting each social media site overall, as well as bifurcated by gender. 
