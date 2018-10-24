@@ -114,6 +114,7 @@ head(plot_data2)
   + **Requirement (d)**
       + We will create one table depicting relevant summary statistics, such as... 
           + The mean and sd of the frequency of visiting each social media site overall, as well as bifurcated by gender. 
+          + The mean and se of the number of books read for each of the three formats, bifurcated by gender & political party affiliation.
           + A table showing the log-likelihood results of the linear mixed-effects model comparison. 
       + Depending on what we uncover (and on how motivated we feel), we may include a summary of a fitted model described above
 
