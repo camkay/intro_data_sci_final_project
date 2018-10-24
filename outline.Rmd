@@ -28,12 +28,11 @@ library(rio)
 library(here)
 library(tidyverse)
 
-#import data, not applying characterize because it results in NAs where they shouldn't be 
+# import data, not applying characterize because it results in NAs where they shouldn't be 
 # to use characterize at a later date, we will need to go into the spss file first and make sure all variables that need to be coded have labels.
 data <- import(here("data", "dataSPSS.sav")) %>%
   janitor::clean_names()
 
-head(data)
 
 ```
 
@@ -44,16 +43,19 @@ We will be using [Pew Research Center's](http://www.pewresearch.org)
 people and nearly `r ncol(data)` variables. The variables primarily concern social
 media use, but the dataset also includes participant demographics. 
 
+```{r look at data}
+
+head(data)
+
+```
+
 ### 2) Description of preparatory work that will need to be completed
 
   + **Tidying and Wrangling Data**
       + As already completed, we will use janitor to clean the names of the columns on import, in addition to converving (via characterize) the SPSS labels. Currently, we cannot use characterize because it results in NAs where there shouldn't be any. In order to use characterize, we will need to first make sure all labels are accurately listed in SPSS before importing to `R`. 
       + We will also need to convert the dataframe to long format using `gather()` and `spread()` from `tidyverse`
           + For example, let's say we want to examine whether age trends in social media use differ as a function of social media site (e.g., do older users spend more time on Facebook, whereas younger users spend more time on Snapchat and Instagram?). However, as seen below, the current structure of the data will not allow for this analysis.  
-        
-
 ```{r example}
-
 plot_data <- data %>%
   select(age, sns2a, sns2b, sns2c, sns2d, sns2e)
 
@@ -67,9 +69,19 @@ head(plot_data)
 
 ```
 
+Or, perhaps we want to examine whether age trends in reading differs as a function of book format (e.g. do older readers spend more time with paper copy books whereas younger yousers may spend more time with audiobooks or digital print?). Once again, we will need to transform our data to do this analysis: 
+      
 ```{r example2}
 
-print("Here is another example")
+plot_data2 <- data %>% 
+  select(age, books1, books2a, books2b, books2c)
+
+# books1 = how many books read in a year?
+# books2a	= how many printed books
+# books2b	= how many audiobooks
+# books2c = how many e-books
+
+head(plot_data2)
 
 ```
 
