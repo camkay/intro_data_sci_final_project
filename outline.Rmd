@@ -44,9 +44,10 @@ media use, but the dataset also includes participant demographics.
 ### 2) Description of preparatory work that will need to be completed
 
   + **Tidying and Wrangling Data**
-      + Considering we will need to create at least two graphs and one table, the bulk of work will consist of tidying the data.
-      + For example, let's say we want to examine whether age trends in social media use differ as a function of social media site (e.g., do older users spend more time on Facebook, whereas younger users spend more time on Snapchat and Instagram?). However, as seen below, the current structure of the data will not allow for this analysis. We will need to convert the data into long format.
- 
+      + As already completed, we will user janitor to the clean the names of the columns on import, in addition to converving (via characterize) the SPSS labels
+      + We will also need to convert the dataframe to long format
+        + For example, let's say we want to examine whether age trends in social media use differ as a function of social media site (e.g., do older users spend more time on Facebook, whereas younger users spend more time on Snapchat and Instagram?). However, as seen below, the current structure of the data will not allow for this analysis.
+        
 ```{r reload data, include=FALSE}
 
 #For some reason we get a lot of NAs when trying to import the spss file, so I will use the csv file here
@@ -70,9 +71,6 @@ plot_data <- data %>%
 head(plot_data)
 
 ```
-
-  + **Hereherehere**
-      + Hereherehere
 
 ```{r example2}
 
