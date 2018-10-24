@@ -69,7 +69,7 @@ head(plot_data)
 
 ```
 
-Or, perhaps we want to examine whether age trends in reading differs as a function of book format (e.g. do older readers spend more time with paper copy books whereas younger yousers may spend more time with audiobooks or digital print?). Once again, we will need to transform our data to do this analysis: 
+Or, perhaps we want to examine whether age trends in reading differs as a function of book format (e.g. do older readers spend more time with paper copy books whereas younger users may spend more time with audiobooks or digital print?). Once again, we will need to transform our data to do this analysis: 
       
 ```{r example2}
 
