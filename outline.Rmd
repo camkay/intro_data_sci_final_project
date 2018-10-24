@@ -44,7 +44,7 @@ media use, but the dataset also includes participant demographics.
 ### 2) Description of preparatory work that will need to be completed
 
   + **Tidying and Wrangling Data**
-      + Considering we will need to create at least two graphs and one table, the bulk of work will consist of tidying the data.  
+      + Considering we will need to create at least two graphs and one table, the bulk of work will consist of tidying the data.
       + For example, let's say we want to examine whether age trends in social media use differ as a function of social media site (e.g., do older users spend more time on Facebook, whereas younger users spend more time on Snapchat and Instagram?). However, as seen below, the current structure of the data will not allow for this analysis. We will need to convert the data into long format.
  
 ```{r reload data, include=FALSE}
@@ -89,8 +89,14 @@ print("Here is another example")
   + **Requirement (b)**
       + The project is already hosted on Github, but we will ensure that the final manuscript is fully reproducable
       + Our final R markdown document will demonstrate use of inline code, as well as tidying of the data
+        + We will use inline code to provide the mean and standard deviation, as well as the percentages, for our demographic data (i.e., age, gender identity, and cultural identity)
+        + We will also use inline code to represent our model in the manuscript (e.g., `time_spent_on_social_media_sites ~ age + social_media_site + (1 | subject)`)
   + **Requirement (c)**
       + We will create at least two graphs
+        + Tentative graph 1: geom_point with geom_smooth with method "lm"
+          + x-axis: age
+          + y-axs: time_spent_on_social_media_site
+          + colour: social_media_site
   + **Requirement (d)**
       + We will create one table depicting relevant summary statistics
       + Depending on what we uncover (and on how motivated we feel), we may include a summary of a fitted model
