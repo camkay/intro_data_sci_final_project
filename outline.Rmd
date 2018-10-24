@@ -95,8 +95,12 @@ print("Here is another example")
       + We will create at least two graphs
         + Tentative graph 1: geom_point with geom_smooth with method "lm"
           + x-axis: age
-          + y-axs: time_spent_on_social_media_site
-          + colour: social_media_site
+          + y-axs: time spent on social media sites
+          + colour: social media site
+        + Tentative graph 2: geom_bar, facet_wrapped by social media site
+          + x-axis: perception of internet as good or bad
+          + y-axis: time spent on social media sites
+          + facet_wrap: social media site
   + **Requirement (d)**
       + We will create one table depicting relevant summary statistics
       + Depending on what we uncover (and on how motivated we feel), we may include a summary of a fitted model
