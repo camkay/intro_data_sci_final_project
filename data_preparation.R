@@ -16,10 +16,19 @@ library(here)
 library(rio)
 library(lubridate)
 
+###create function to find column numbers given column names
+.rcol <- function(column.name.as.string = NULL, data = df) {
+  grep(column.name.as.string,colnames(data))
+}
+
 ###import data
 df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
-  characterize() %>%
   janitor::clean_names()
+
+###characterize all columns except for age and books1 (the spss labels were causing the numeric values to be recorded as NAs for those columns)
+df[, -c(.rcol("age"), 
+        .rcol("books1"))] <- characterize(df[, -c(.rcol("age"), 
+                                                  .rcol("books1"))])
 
 ###############################
 ###data tidying
@@ -45,4 +54,5 @@ df <- df %>%
 df <- df %>% 
   filter(eminuse == "Yes")
 
+###
 
