@@ -14,6 +14,7 @@ library(lme4)
 library(lmerTest)
 library(here)
 library(rio)
+library(lubridate)
 
 ###import data
 df <- import(here("data", "dataSPSS.sav"), setclass = "tibble") %>%
@@ -36,5 +37,8 @@ df <- df %>%
          -marital:-racem4,
          -hh1:-cellweight)
   
+###parse date for interview date column
+df <- df %>%
+  mutate(int_date = ymd(int_date))
 
 
