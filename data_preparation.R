@@ -64,7 +64,7 @@ freq_use <- grep("^sns2", colnames(df))
 
 #change "no, do not do this" in the web columns to "Rarely if ever" in the sns columns
 for (i in 1:length(never_use)) {
-  df[which(df[ , never_use[i]] == "No, do not do this"), freq_use[i]] <- "Rarely, if ever"
+  df[which(df[ , never_use[i]] == "No, do not do this"), freq_use[i]] <- "Rarely if ever"
 }
 
 #drop web columns
@@ -83,8 +83,19 @@ df <- df %>%
                            sns2d = "Snapchat",
                            sns2e = "YouTube"))
 
-###rename poorly names columns for sanity
-df <- df 
+###rename poorly named columns for sanity
+df <- df %>%
+  rename(id = respid,
+         date = int_date,
+         int_use_freq = intfreq,
+         int_good_society = pial11,
+         int_good_self = pial12,
+         total_books_read = books1,
+         books_print = books2a,
+         books_audio = books2b,
+         books_elect = books2c,
+         race = racecmb,
+         income = inc)
 
 
 
