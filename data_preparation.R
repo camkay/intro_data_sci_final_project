@@ -24,4 +24,17 @@ df <- import(here("data", "dataSPSS.sav"), setclass = "tibble") %>%
 ###data tidying
 ###############################
 
+###select only variables of interest
+df <- df %>%
+  select(-comp, 
+         -state:-qs1,
+         -intmob,
+         -bbhome1:-smart2,
+         -device1b:-web1h,
+         -pial5a:-pial5d,
+         -pial11a:-pial11_igbm,
+         -marital:-racem4,
+         -hh1:-cellweight)
+  
+
 
