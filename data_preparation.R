@@ -40,7 +40,8 @@ df <- df %>%
          -state:-qs1,
          -intmob,
          -bbhome1:-smart2,
-         -device1b:-web1h,
+         -device1b:-device1d,
+         -web1f:-web1h, #dropped because we don't have frequency values
          -pial5a:-pial5d,
          -pial11a:-pial11_igbm,
          -marital:-racem4,
