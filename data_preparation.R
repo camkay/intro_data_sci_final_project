@@ -39,13 +39,13 @@ df <- df %>%
   select(-comp, 
          -state:-qs1,
          -intmob,
-         -bbhome1:-smart2,
-         -device1b:-device1d,
+         -home4nw:-device1d,
          -web1f:-web1h, #dropped because we don't have frequency values
          -pial5a:-pial5d,
          -pial11a:-pial11_igbm,
          -marital:-racem4,
-         -hh1:-cellweight)
+         -birth_hisp,
+         -partyln:-cellweight)
   
 ###parse date for interview date column
 df <- df %>%
@@ -53,7 +53,22 @@ df <- df %>%
 
 ###remove participants who do not occasionally use the internet or email
 df <- df %>% 
-  filter(eminuse == "Yes")
+  filter(eminuse == "Yes") %>%
+  select(-eminuse)
 
-###
+###move never-use social media cites from the columns starting web to the frequency columns
+
+#gather names for never-use columns and for frequency-use columns
+never_use <- grep("^web1", colnames(df))
+freq_use <- grep("^sns2", colnames(df))
+
+#change "no, do not do this" in the web columns to "Rarely if ever" in the sns columns
+for (i in 1:length(never_use)) {
+  df[which(df[ , never_use[i]] == "No, do not do this"), freq_use[i]] <- "Rarely, if ever"
+}
+
+#drop web columns
+df <- df %>%
+  select(-starts_with("web1"))
+
 
