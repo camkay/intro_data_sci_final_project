@@ -56,7 +56,7 @@ df <- df %>%
   filter(eminuse == "Yes") %>%
   select(-eminuse)
 
-###move never-use social media cites from the columns starting web to the frequency columns
+###move never-use social media sites from the columns starting web to the frequency columns
 
 #gather names for never-use columns and for frequency-use columns
 never_use <- grep("^web1", colnames(df))
@@ -70,5 +70,22 @@ for (i in 1:length(never_use)) {
 #drop web columns
 df <- df %>%
   select(-starts_with("web1"))
+
+#drop unneeded values
+rm(freq_use, never_use)
+
+###tidy the data according to the SNS columns
+df <- df %>%
+  gather(key = "sns", value = "freq_usage", starts_with("sns2")) %>%
+  mutate(sns = recode(sns, sns2a = "Twitter",
+                           sns2b = "Instagram",
+                           sns2c = "Facebook",
+                           sns2d = "Snapchat",
+                           sns2e = "YouTube"))
+
+###rename poorly names columns for sanity
+df <- df 
+
+
 
 
