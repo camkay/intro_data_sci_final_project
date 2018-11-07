@@ -17,7 +17,7 @@ library(rio)
 library(lubridate)
 
 ###import data
-df <- import(here("data", "dataSPSS.sav"), setclass = "tibble") %>%
+df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
   characterize() %>%
   janitor::clean_names()
 
@@ -40,5 +40,9 @@ df <- df %>%
 ###parse date for interview date column
 df <- df %>%
   mutate(int_date = ymd(int_date))
+
+###remove participants who do not occasionally use the internet or email
+df <- df %>% 
+  filter(eminuse == "Yes")
 
 
