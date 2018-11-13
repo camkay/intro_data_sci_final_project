@@ -15,6 +15,8 @@ library(lmerTest)
 library(here)
 library(rio)
 library(lubridate)
+library(cowplot)
+library(wesanderson)
 
 #create function to find column numbers given column names
 .rcol <- function(column.name.as.string = NULL, data = df) {
@@ -97,6 +99,29 @@ df <- df %>%
          race = racecmb,
          income = inc)
 
+
+#################################################
+########### Analyses and Data Viz ###############
+#################################################
+
+# Examine whether age trends in reading differs as a function of book format 
+# (e.g. do older readers spend more time with paper copy books whereas younger users may spend more time with audiobooks or digital print?). 
+ 
+plot_data <- df %>% 
+  select(age, books_print, books_audio, books_elect) %>% 
+  mutate(books_print = factor(books_print),
+         books_audio = factor(books_audio),
+         books_elect = factor(books_elect)) %>% 
+  gather(book_format, yn, -age) %>% 
+  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
+  select(-dis) %>% 
+  filter(!is.na(yn)) %>% 
+  mutate(book_format = factor(book_format),
+         yn = factor(yn))
+
+plot <- plot_data %>% 
+  group_by(age) %>% 
+  count(yn)
 
 
 
