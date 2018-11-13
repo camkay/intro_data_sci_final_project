@@ -120,7 +120,7 @@ plot_data <- df %>%
   mutate(book_format = factor(book_format),
          yn = factor(yn)) 
 
-# Bar Chart data
+# Bar Chart: looking at average books read across age.
 bar_plot <- plot_data %>% 
   group_by(age) %>% 
   summarize(mean_books = mean(total_books_read)) %>% 
@@ -129,11 +129,12 @@ bar_plot <- plot_data %>%
 
 bar_plot
 
-# Scatter Plots
+## Scatter Plots: 
 point_plot <- plot_data %>% 
+  filter(yn == 'Yes') %>% 
   group_by(age, book_format) %>% 
   count(yn) %>% 
-  ggplot(aes(x = age, y = n, color = yn)) + 
+  ggplot(aes(x = age, y = n)) + 
   geom_point() +
   geom_smooth(method = 'lm') +
   facet_wrap(~book_format, nrow = 3, ncol = 1)
@@ -156,4 +157,5 @@ reg_data <- plot_data %>%
   summarize(mean_books = mean(total_books_read))
 
 model <- lm(mean_books ~ age + book_format, data = reg_data)
+model
 anova(model)
