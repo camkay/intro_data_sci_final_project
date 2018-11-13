@@ -156,6 +156,6 @@ reg_data <- plot_data %>%
   group_by(age, book_format) %>% 
   summarize(mean_books = mean(total_books_read))
 
-model <- lm(mean_books ~ age + book_format, data = reg_data)
+model <- lm(mean_books ~ age * book_format, data = reg_data)
 model
 anova(model)
