@@ -107,20 +107,29 @@ df <- df %>%
 # Examine whether age trends in reading differs as a function of book format 
 # (e.g. do older readers spend more time with paper copy books whereas younger users may spend more time with audiobooks or digital print?). 
 
-# Subseet the original data and tidy 
+# Subseet the original data and tidy for plotting
 plot_data <- df %>% 
-  select(age, books_print, books_audio, books_elect) %>% 
+  select(age, total_books_read, books_print, books_audio, books_elect) %>% 
   mutate(books_print = factor(books_print),
          books_audio = factor(books_audio),
          books_elect = factor(books_elect)) %>% 
-  gather(book_format, yn, -age) %>% 
+  gather(book_format, yn, -age, -total_books_read) %>% 
   separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
   select(-dis) %>% 
   filter(!is.na(yn) & !str_detect(yn, "VOL")) %>% 
   mutate(book_format = factor(book_format),
-         yn = factor(yn))
+         yn = factor(yn)) 
 
-# Scatterplot
+# Bar Chart data
+bar_plot <- plot_data %>% 
+  group_by(age) %>% 
+  summarize(mean_books = mean(total_books_read)) %>% 
+  ggplot(aes(x = age, y = mean_books, fill = age)) + 
+  geom_col()
+
+bar_plot
+
+# Scatter Plots
 point_plot <- plot_data %>% 
   group_by(age, book_format) %>% 
   count(yn) %>% 
@@ -131,4 +140,12 @@ point_plot <- plot_data %>%
 
 point_plot
 
+point_plot2 <- plot_data %>% 
+  group_by(age, book_format) %>% 
+  summarize(mean_books = mean(total_books_read)) %>% 
+  ggplot(aes(x = age, y = mean_books, color = book_format)) + 
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  facet_wrap(~book_format, nrow = 3, ncol = 1)
 
+point_plot2
