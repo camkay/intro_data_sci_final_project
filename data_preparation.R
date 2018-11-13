@@ -149,3 +149,11 @@ point_plot2 <- plot_data %>%
   facet_wrap(~book_format, nrow = 3, ncol = 1)
 
 point_plot2
+
+# Regression model to see how age and format of books relates to average number of books read. 
+reg_data <- plot_data %>%
+  group_by(age, book_format) %>% 
+  summarize(mean_books = mean(total_books_read))
+
+model <- lm(mean_books ~ age + book_format, data = reg_data)
+anova(model)
