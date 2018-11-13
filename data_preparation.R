@@ -17,6 +17,7 @@ library(rio)
 library(lubridate)
 library(cowplot)
 library(wesanderson)
+library(forcats)
 
 #create function to find column numbers given column names
 .rcol <- function(column.name.as.string = NULL, data = df) {
@@ -159,3 +160,63 @@ reg_data <- plot_data %>%
 model <- lm(mean_books ~ age * book_format, data = reg_data)
 model
 anova(model)
+
+
+###############################################
+######### Ash's Data Visualizations ###########
+###############################################
+
+
+#Examine whether perceptions of social media use vary as age, political party, and social media site
+
+#Prep data
+
+plot_data_ash <- df %>% 
+  select(age, party, sns, int_good_society, int_good_self) %>% 
+  mutate(party = factor(party),
+         sns = factor(sns),
+         int_good_society = factor(int_good_society),
+         int_good_self = factor(int_good_self)) 
+
+plot_data_ash <- plot_data_ash %>%
+  mutate(int_good_society = fct_recode(int_good_society,
+      "Bad" = "Bad thing",
+      "Good" = "Good thing",
+      "Some of both" = "(VOL) Some of both",
+      "Other" = "(VOL) Don't know",
+      "Other" = "(VOL) Refused")) %>%
+  mutate(int_good_self = fct_recode(int_good_self,
+      "Bad" = "Bad thing",
+      "Good" = "Good thing",
+      "Some of both" = "(VOL) Some of both",
+      "Other" = "(VOL) Don't know",
+      "Other" = "(VOL) Refused")) %>%
+  mutate(party = fct_recode(party,
+      "Other" = "(VOL) Other party",
+      "Other" = "(VOL) Don't know",
+      "Other" = "(VOL) No preference",
+      "Refused" = "(VOL) Refused"))
+
+levels(plot_data_ash$int_good_society) <- c("Other", "Bad", "Some of both", "Good")
+
+#FINALLY ready for graphing:
+
+plot_ash1 <- plot_data_ash %>%
+  mutate(int_good_self = as.numeric(int_good_self),
+         int_good_society = as.numeric(int_good_society)) %>%
+  group_by(party) %>%
+  summarize(m_age = mean(age),
+            m_self = mean(int_good_self),
+            m_society = mean(int_good_society)) %>%
+  ggplot(aes(x = party, y = m_society)) +
+  geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
+  geom_hline(yintercept = 3.5) +
+  theme_bw() +
+  labs(title = "Ash's Plot 1.",
+       subtitle = "Ratings on a 4 point scale of how good or bad the internet is for society as a function of political party",
+       x = "Political Party", 
+       y = "Mean Rating") +
+  coord_cartesian(ylim = c(2.5, 4)) 
+
+plot_ash1
+
