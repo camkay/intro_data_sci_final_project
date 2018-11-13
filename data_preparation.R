@@ -106,7 +106,8 @@ df <- df %>%
 
 # Examine whether age trends in reading differs as a function of book format 
 # (e.g. do older readers spend more time with paper copy books whereas younger users may spend more time with audiobooks or digital print?). 
- 
+
+# Subseet the original data and tidy 
 plot_data <- df %>% 
   select(age, books_print, books_audio, books_elect) %>% 
   mutate(books_print = factor(books_print),
@@ -115,13 +116,17 @@ plot_data <- df %>%
   gather(book_format, yn, -age) %>% 
   separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
   select(-dis) %>% 
-  filter(!is.na(yn)) %>% 
+  filter(!is.na(yn) & !str_detect(yn, "VOL")) %>% 
   mutate(book_format = factor(book_format),
          yn = factor(yn))
 
+
 plot <- plot_data %>% 
-  group_by(age) %>% 
-  count(yn)
+  group_by(age, book_format) %>% 
+  count(yn) %>% 
+  ggplot(aes(x = age, y = n)) + 
+  geom_col() +
+  facet_wrap(yn~book_format)
 
 
 
