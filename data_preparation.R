@@ -120,13 +120,15 @@ plot_data <- df %>%
   mutate(book_format = factor(book_format),
          yn = factor(yn))
 
-
-plot <- plot_data %>% 
+# Scatterplot
+point_plot <- plot_data %>% 
   group_by(age, book_format) %>% 
   count(yn) %>% 
-  ggplot(aes(x = age, y = n)) + 
-  geom_col() +
-  facet_wrap(yn~book_format)
+  ggplot(aes(x = age, y = n, color = yn)) + 
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  facet_wrap(~book_format, nrow = 3, ncol = 1)
 
+point_plot
 
 
