@@ -18,6 +18,7 @@ library(lubridate)
 library(cowplot)
 library(wesanderson)
 library(forcats)
+library(pander)
 
 #create function to find column numbers given column names
 .rcol <- function(column.name.as.string = NULL, data = df) {
@@ -122,11 +123,35 @@ bar_plot <- plot_data %>%
   group_by(age) %>% 
   summarize(mean_books = mean(total_books_read)) %>% 
   ggplot(aes(x = age, y = mean_books, fill = age)) + 
-  geom_col()
+  geom_col() +
+  scale_fill_viridis_c() + 
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Age",
+       title = "Average Number of Books Read by Age",
+       subtitle = "Books Read in the Past Year. Respondents 18-99.") +
+  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+        plot.title = element_text(size = 15, hjust = 0))
 
 bar_plot
 
+# Average books read by format
+bar_plot2 <- plot_data %>% 
+  group_by(age, book_format) %>% 
+  summarize(mean_books = mean(total_books_read)) %>% 
+  ggplot(aes(x = age, y = mean_books, fill = book_format)) + 
+  geom_col() +
+  facet_wrap(~book_format, nrow = 3, ncol = 1) +
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Age",
+       title = "Average Books Read by Format",
+       subtitle = "Average Books Read in the Past Year. Respondents 18-99.") +
+  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+        plot.title = element_text(size = 15, hjust = 0))
+
 ## Scatter Plots: 
+# Total books read by format
 point_plot <- plot_data %>% 
   filter(yn == 'Yes') %>% 
   group_by(age, book_format) %>% 
@@ -134,17 +159,32 @@ point_plot <- plot_data %>%
   ggplot(aes(x = age, y = n)) + 
   geom_point() +
   geom_smooth(method = 'lm') +
-  facet_wrap(~book_format, nrow = 3, ncol = 1)
+  facet_wrap(~book_format, nrow = 3, ncol = 1) +
+  theme(legend.position = "none") +
+  labs(y = "Total Books Read",
+       x = "Age",
+       title = "Total Books Read by Format",
+       subtitle = "Total Books Read in the Past Year. Respondents 18-99.") +
+  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+        plot.title = element_text(size = 15, hjust = 0))
 
 point_plot
 
+# Average books read by format
 point_plot2 <- plot_data %>% 
   group_by(age, book_format) %>% 
   summarize(mean_books = mean(total_books_read)) %>% 
   ggplot(aes(x = age, y = mean_books, color = book_format)) + 
   geom_point() +
   geom_smooth(method = 'lm') +
-  facet_wrap(~book_format, nrow = 3, ncol = 1)
+  facet_wrap(~book_format, nrow = 3, ncol = 1) +
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Age",
+       title = "Average Books Read by Format",
+       subtitle = "Average Books Read in the Past Year. Respondents 18-99.") +
+  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+        plot.title = element_text(size = 15, hjust = 0))
 
 point_plot2
 
@@ -155,7 +195,9 @@ reg_data <- plot_data %>%
 
 model <- lm(mean_books ~ age * book_format, data = reg_data)
 model
-anova(model)
+
+# Put anova of regression model into a table
+pander(anova(model))
 
 ###############################################
 ######### Ash's Data Visualizations ###########
