@@ -162,7 +162,6 @@ anova(model)
 ######### Ash's Data Visualizations ###########
 ###############################################
 
-
 #Examine whether perceptions of social media use vary as age, political party, and social media site
 
 #Prep data
@@ -198,6 +197,9 @@ plot_data_ash <- plot_data_ash %>%
 
 levels(plot_data_ash$int_good_society) <- c("Other", "Bad", "Some of both", "Good")
 
+levels(plot_data_ash$int_use_freq) <- c("(VOL) Don't know", "Less often?", "Several times a week, OR", "About once a day", "Several times a day", "Almost constantly")
+
+
 #FINALLY ready for the first graph:
 
 #Graphing ratings of how good vs bad the internet is for society as a function of political party
@@ -223,8 +225,6 @@ plot_ash1 <- plot_data_ash %>%
 plot_ash1
 
 #Graph number 2 data prep:
-
-levels(plot_ash2$int_use_freq) <- c("(VOL) Don't know", "Less often?", "Several times a week, OR", "About once a day", "Several times a day", "Almost constantly")
 
 plot_ash2 <- plot_data_ash %>%
   mutate(int_good_self = as.numeric(int_good_self),
