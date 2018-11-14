@@ -108,7 +108,8 @@ df <- df %>%
          sns = factor(sns),
          int_good_society = factor(int_good_society),
          int_good_self = factor(int_good_self),
-         int_use_freq = factor(int_use_freq))
+         int_use_freq = factor(int_use_freq),
+         sns_freq_use = factor(sns_freq_use))
 
 df <- df %>%
   mutate(int_good_self    = fct_recode(int_good_self,
@@ -152,7 +153,15 @@ df <- df %>%
                                               "Several times a week, OR", 
                                               "About once a day", 
                                               "Several times a day", 
-                                              "Almost constantly")))
+                                              "Almost constantly")),
+         sns_freq_use     = factor(sns_freq_use,
+                                   levels = c("(VOL) Don't know",
+                                              "Rarely if ever",
+                                              "Less often",
+                                              "Every few weeks",
+                                              "A few times a week", 
+                                              "About once a day", 
+                                              "Several times a day")))
 
 #################################################
 ########### Analyses and Data Viz ###############
@@ -269,7 +278,7 @@ pander(anova(model))
 #Prep data
 
 plot_data_ash <- df %>% 
-  select(age, sex, race, cregion, party, sns, int_good_society, int_good_self, int_use_freq)
+  select(age, sex, race, cregion, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq)
 
 #FINALLY ready for the first graph:
 
@@ -333,16 +342,43 @@ plot_ash2
 plot_ash3 <- plot_data_ash %>%
   mutate(int_good_self = as.numeric(int_good_self),
          int_good_society = as.numeric(int_good_society),
-         int_use_freq = as.numeric(int_use_freq)) %>%
-  filter(party != "Refused") %>%
-  ggplot(aes(x = age, y = int_use_freq)) +
+         int_use_freq = as.numeric(int_use_freq),
+         sns_freq_use = as.numeric(sns_freq_use)) %>%
+  filter(party != "Refused",
+         sns_freq_use != "<NA>",
+         sns_freq_use != "(VOL) Don't know") %>%
+  ggplot(aes(x = age, y = sns_freq_use)) +
   geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
+  facet_wrap(~sns) +
   scale_colour_viridis_d() +
   theme_bw() +
   labs(title = "Ash's Plot 3.",
-       subtitle = "The relation between age and frequency of internet use as a function of political party",
+       subtitle = "The relation between age and frequency of social media use as a function of political party and social media site",
        x = "Age", 
-       y = "Frequency of internet use",
+       y = "Frequency of social media use",
        colour = "Political party")
 
 plot_ash3
+
+#Yet another plot
+
+plot_ash4 <- plot_data_ash %>%
+  mutate(int_good_self = as.numeric(int_good_self),
+         int_good_society = as.numeric(int_good_society),
+         int_use_freq = as.numeric(int_use_freq),
+         sns_freq_use = as.numeric(sns_freq_use)) %>%
+  filter(party != "Refused",
+         sns_freq_use != "<NA>",
+         sns_freq_use != "(VOL) Don't know") %>%
+  ggplot(aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = sex, colour = sex), method = "lm", se = FALSE, lwd = 2) +
+  scale_color_manual(values = c("turquoise3", "purple3")) +
+  facet_wrap(~sns) +
+  theme_bw() +
+  labs(title = "Ash and Cam's plot 4.",
+       subtitle = "The relation between age and frequency of social media use as a function of gender identity and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Gender identity")
+
+plot_ash4
