@@ -21,7 +21,7 @@ library(forcats)
 
 #create function to find column numbers given column names
 .rcol <- function(column.name.as.string = NULL, data = df) {
-  grep(column.name.as.string,colnames(data))
+  grep(column.name.as.string, colnames(data))
 }
 
 #import data
@@ -58,6 +58,13 @@ df <- df %>%
 df <- df %>% 
   filter(eminuse == "Yes") %>%
   select(-eminuse)
+
+
+###########TESTING
+test <- df %>%
+  gather(key = "websites", value = "freq_usage", starts_with("sns"), starts_with("web")) %>%
+  select(websites, freq_usage) %>%
+  separate(websites, into = c("trash", "website"), sep = "[[:digit:]]")
 
 #move never-use social media sites from the columns starting web to the frequency columns
 
