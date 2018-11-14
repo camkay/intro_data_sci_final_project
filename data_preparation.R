@@ -172,11 +172,14 @@ anova(model)
 #Prep data
 
 plot_data_ash <- df %>% 
-  select(age, party, sns, int_good_society, int_good_self) %>% 
-  mutate(party = factor(party),
+  select(age, sex, race, cregion, party, sns, int_good_society, int_good_self, int_use_freq) %>% 
+  mutate(sex = factor(sex),
+         race = factor(race),
+         party = factor(party),
          sns = factor(sns),
          int_good_society = factor(int_good_society),
-         int_good_self = factor(int_good_self)) 
+         int_good_self = factor(int_good_self),
+         int_use_freq = factor(int_use_freq)) 
 
 plot_data_ash <- plot_data_ash %>%
   mutate(int_good_society = fct_recode(int_good_society,
@@ -199,18 +202,21 @@ plot_data_ash <- plot_data_ash %>%
 
 levels(plot_data_ash$int_good_society) <- c("Other", "Bad", "Some of both", "Good")
 
-#FINALLY ready for graphing:
+#FINALLY ready for the first graph:
+
+#Graphing ratings of how good vs bad the internet is for society as a function of political party
 
 plot_ash1 <- plot_data_ash %>%
   mutate(int_good_self = as.numeric(int_good_self),
          int_good_society = as.numeric(int_good_society)) %>%
+  filter(party != "Refused") %>%
   group_by(party) %>%
   summarize(m_age = mean(age),
             m_self = mean(int_good_self),
             m_society = mean(int_good_society)) %>%
   ggplot(aes(x = party, y = m_society)) +
   geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
-  geom_hline(yintercept = 3.5) +
+  geom_hline(yintercept = 3.5) + #Note that this line represents the overall mean
   theme_bw() +
   labs(title = "Ash's Plot 1.",
        subtitle = "Ratings on a 4 point scale of how good or bad the internet is for society as a function of political party",
@@ -219,4 +225,42 @@ plot_ash1 <- plot_data_ash %>%
   coord_cartesian(ylim = c(2.5, 4)) 
 
 plot_ash1
+
+#Graph number 2 data prep:
+
+levels(plot_ash2$int_use_freq) <- c("(VOL) Don't know", "Less often?", "Several times a week, OR", "About once a day", "Several times a day", "Almost constantly")
+
+plot_ash2 <- plot_data_ash %>%
+  mutate(int_good_self = as.numeric(int_good_self),
+         int_good_society = as.numeric(int_good_society)) %>%
+  select(-party, -age) %>%
+  filter(int_use_freq != "(VOL) Don't know",
+         race != "Don't know/Refused (VOL.)") %>%
+  group_by(cregion, race) %>%
+  summarize(m_self = mean(int_good_self),
+            m_society = mean(int_good_society))
+
+plot_ash2 <- plot_ash2 %>%
+  mutate(self_vs_society = m_self - m_society) %>%
+  mutate(race = fct_recode(race,
+          "Asian" = "Asian or Asian-American",
+          "Black" = "Black or African-American",
+          "Other" = "Or some other race",
+          "Mixed" = "Mixed Race"))
+
+#Plot comparing ratings between how good the internet is for the self.. 
+#relative to how good the internet is for society.. 
+#as a funtion of race and region in the US
+
+ggplot(plot_ash2, aes(x = race, y = self_vs_society, fill = race)) +
+  geom_col(alpha = 0.8) +
+  facet_wrap(~cregion, ncol = 4) +
+  scale_fill_viridis_d() +
+  theme_bw() +
+  theme(legend.position = "") +
+  labs(title = "Ash's Plot 2.",
+       subtitle = "Mean difference in ratings between how good the internet is for the self relative to how good the internet is for society as a funtion of race and region in the US",
+       x = "Race", 
+       y = "Mean rating for self - Mean rating for society")
+
 
