@@ -157,7 +157,6 @@ model <- lm(mean_books ~ age * book_format, data = reg_data)
 model
 anova(model)
 
-
 ###############################################
 ######### Ash's Data Visualizations ###########
 ###############################################
@@ -199,7 +198,6 @@ levels(plot_data_ash$int_good_society) <- c("Other", "Bad", "Some of both", "Goo
 
 levels(plot_data_ash$int_use_freq) <- c("(VOL) Don't know", "Less often?", "Several times a week, OR", "About once a day", "Several times a day", "Almost constantly")
 
-
 #FINALLY ready for the first graph:
 
 #Graphing ratings of how good vs bad the internet is for society as a function of political party
@@ -226,7 +224,7 @@ plot_ash1
 
 #Graph number 2 data prep:
 
-plot_ash2 <- plot_data_ash %>%
+plot_data_ash <- plot_data_ash %>%
   mutate(int_good_self = as.numeric(int_good_self),
          int_good_society = as.numeric(int_good_society)) %>%
   select(-party, -age) %>%
@@ -236,7 +234,7 @@ plot_ash2 <- plot_data_ash %>%
   summarize(m_self = mean(int_good_self),
             m_society = mean(int_good_society))
 
-plot_ash2 <- plot_ash2 %>%
+plot_data_ash <- plot_data_ash %>%
   mutate(self_vs_society = m_self - m_society) %>%
   mutate(race = fct_recode(race,
           "Asian" = "Asian or Asian-American",
@@ -248,15 +246,17 @@ plot_ash2 <- plot_ash2 %>%
 #relative to how good the internet is for society.. 
 #as a funtion of race and region in the US
 
-ggplot(plot_ash2, aes(x = race, y = self_vs_society, fill = race)) +
+plot_ash2 <- ggplot(plot_data_ash, aes(x = race, y = self_vs_society, fill = race)) +
   geom_col(alpha = 0.8) +
   facet_wrap(~cregion, ncol = 4) +
   scale_fill_viridis_d() +
   theme_bw() +
   theme(legend.position = "") +
   labs(title = "Ash's Plot 2.",
-       subtitle = "Mean difference in ratings between how good the internet is for the self relative to how good the internet is for society as a funtion of race and region in the US",
+       subtitle = "Mean difference in ratings between how good the internet is for the self 
+relative to how good the internet is for society as a funtion of race and region in the US",
        x = "Race", 
        y = "Mean rating for self - Mean rating for society")
 
+plot_ash2
 
