@@ -6,7 +6,6 @@ output:
   html_document:
     highlight: zenburn
     theme: lumen
-    toc: yes
     toc_float: yes
     df_print: paged
   pdf_document:
