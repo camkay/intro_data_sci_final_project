@@ -11,7 +11,7 @@
 #load required packages
 library(tidyverse)
 library(lme4)
-library(lmerdf)
+library(lmerTest)
 library(here)
 library(rio)
 library(lubridate)
@@ -59,36 +59,26 @@ df <- df %>%
   filter(eminuse == "Yes") %>%
   select(-eminuse)
 
-
-###########dfING
+#over gather the sns_use and sns_freq_use columns, and spread them back out
 df <- df %>%
   gather(key = "websites", value = "value", starts_with("sns"), starts_with("web")) %>%
   separate(websites, into = c("temp", "website"), sep = "[[:digit:]]") %>%
   spread(key = "temp", value = "value")
 
-#move never-use social media sites from the columns starting web to the frequency columns
+#change "no, do not do this" in the sns_use column to "Rarely if ever" in the sns_freq_use columns
+df[which(df[, "web"] == "No, do not do this"), "sns"] <- "Rarely if ever"
 
-##change "no, do not do this" in the web columns to "Rarely if ever" in the sns columns
-for (i in 1:nrow(df)) {
-  if (df[i, "web"] == "No, do not do this") {
-    df[i, "sns"] <- "Rarely if ever"
-  }
-}
-
-##drop web columns
+#drop now unneeded sns_use column
 df <- df %>%
   select(-web)
 
-##drop unneeded values
-rm(i)
-
-#tidy the data according to the SNS columns
+#rename the values in the website column
 df <- df %>%
   mutate(website = recode(website, a = "Twitter",
-                               b = "Instagram",
-                               c = "Facebook",
-                               d = "Snapchat",
-                               e = "YouTube"))
+                                   b = "Instagram",
+                                   c = "Facebook",
+                                   d = "Snapchat",
+                                   e = "YouTube"))
 
 #rename poorly named columns for sanity
 df <- df %>%
