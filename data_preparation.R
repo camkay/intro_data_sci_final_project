@@ -97,6 +97,61 @@ df <- df %>%
          sns_freq_use = sns,
          sns = website)
 
+#convert factors to factors
+df <- df %>%
+  mutate(books_print = factor(books_print),
+         books_audio = factor(books_audio),
+         books_elect = factor(books_elect),
+         sex = factor(sex),
+         race = factor(race),
+         party = factor(party),
+         sns = factor(sns),
+         int_good_society = factor(int_good_society),
+         int_good_self = factor(int_good_self),
+         int_use_freq = factor(int_use_freq))
+
+df <- df %>%
+  mutate(int_good_self    = fct_recode(int_good_self,
+                                       "Bad" = "Bad thing",
+                                       "Good" = "Good thing",
+                                       "Some of both" = "(VOL) Some of both",
+                                       "Other" = "(VOL) Don't know",
+                                       "Other" = "(VOL) Refused"),
+         int_good_society = fct_recode(int_good_society,
+                                       "Bad" = "Bad thing",
+                                       "Good" = "Good thing",
+                                       "Some of both" = "(VOL) Some of both",
+                                       "Other" = "(VOL) Don't know",
+                                       "Other" = "(VOL) Refused"),
+         party            = fct_recode(party,
+                                       "Other" = "(VOL) Other party",
+                                       "Other" = "(VOL) Don't know",
+                                       "Other" = "(VOL) No preference",
+                                       "Refused" = "(VOL) Refused"),
+         race             = fct_recode(race,
+                                       "Asian" = "Asian or Asian-American",
+                                       "Black" = "Black or African-American",
+                                       "Other" = "Or some other race",
+                                       "Mixed" = "Mixed Race"))
+
+df <- df %>%
+  mutate(int_good_society = factor(int_good_society, 
+                                   levels = c("Other", 
+                                               "Bad", 
+                                               "Some of both", 
+                                               "Good")),
+         int_good_self =    factor(int_good_self, 
+                                   levels = c("Other", 
+                                              "Bad", 
+                                              "Some of both", 
+                                              "Good")),
+         int_use_freq =     factor(int_use_freq, 
+                                   levels = c("(VOL) Don't know", 
+                                              "Less often?", 
+                                              "Several times a week, OR", 
+                                              "About once a day", 
+                                              "Several times a day", 
+                                              "Almost constantly")))
 
 #################################################
 ########### Analyses and Data Viz ###############
@@ -108,9 +163,6 @@ df <- df %>%
 # Subset the original data and tidy for plotting
 plot_data <- df %>% 
   select(age, total_books_read, books_print, books_audio, books_elect) %>% 
-  mutate(books_print = factor(books_print),
-         books_audio = factor(books_audio),
-         books_elect = factor(books_elect)) %>% 
   gather(book_format, yn, -age, -total_books_read) %>% 
   separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
   select(-dis) %>% 
@@ -216,42 +268,7 @@ pander(anova(model))
 #Prep data
 
 plot_data_ash <- df %>% 
-  select(age, sex, race, cregion, party, sns, int_good_society, int_good_self, int_use_freq) %>% 
-  mutate(sex = factor(sex),
-         race = factor(race),
-         party = factor(party),
-         sns = factor(sns),
-         int_good_society = factor(int_good_society),
-         int_good_self = factor(int_good_self),
-         int_use_freq = factor(int_use_freq)) 
-
-plot_data_ash <- plot_data_ash %>%
-  mutate(int_good_society = fct_recode(int_good_society,
-      "Bad" = "Bad thing",
-      "Good" = "Good thing",
-      "Some of both" = "(VOL) Some of both",
-      "Other" = "(VOL) Don't know",
-      "Other" = "(VOL) Refused")) %>%
-  mutate(int_good_self = fct_recode(int_good_self,
-      "Bad" = "Bad thing",
-      "Good" = "Good thing",
-      "Some of both" = "(VOL) Some of both",
-      "Other" = "(VOL) Don't know",
-      "Other" = "(VOL) Refused")) %>%
-  mutate(party = fct_recode(party,
-      "Other" = "(VOL) Other party",
-      "Other" = "(VOL) Don't know",
-      "Other" = "(VOL) No preference",
-      "Refused" = "(VOL) Refused")) %>%
-  mutate(race = fct_recode(race,
-      "Asian" = "Asian or Asian-American",
-      "Black" = "Black or African-American",
-      "Other" = "Or some other race",
-      "Mixed" = "Mixed Race"))
-
-levels(plot_data_ash$int_good_society) <- c("Other", "Bad", "Some of both", "Good")
-levels(plot_data_ash$int_good_self) <- c("Other", "Bad", "Some of both", "Good")
-levels(plot_data_ash$int_use_freq) <- c("(VOL) Don't know", "Less often?", "Several times a week, OR", "About once a day", "Several times a day", "Almost constantly")
+  select(age, sex, race, cregion, party, sns, int_good_society, int_good_self, int_use_freq)
 
 #FINALLY ready for the first graph:
 
