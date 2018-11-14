@@ -134,6 +134,7 @@ df <- df %>%
                                        "Other" = "Or some other race",
                                        "Mixed" = "Mixed Race"))
 
+
 df <- df %>%
   mutate(int_good_society = factor(int_good_society, 
                                    levels = c("Other", 
@@ -339,9 +340,9 @@ plot_ash3 <- plot_data_ash %>%
   scale_colour_viridis_d() +
   theme_bw() +
   labs(title = "Ash's Plot 3.",
-       subtitle = "The relation between age and frequency of social media use as a function of political party",
+       subtitle = "The relation between age and frequency of internet use as a function of political party",
        x = "Age", 
-       y = "Frequency of social media use",
+       y = "Frequency of internet use",
        colour = "Political party")
 
 plot_ash3
