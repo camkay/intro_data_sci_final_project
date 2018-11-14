@@ -192,10 +192,15 @@ plot_data_ash <- plot_data_ash %>%
       "Other" = "(VOL) Other party",
       "Other" = "(VOL) Don't know",
       "Other" = "(VOL) No preference",
-      "Refused" = "(VOL) Refused"))
+      "Refused" = "(VOL) Refused")) %>%
+  mutate(race = fct_recode(race,
+      "Asian" = "Asian or Asian-American",
+      "Black" = "Black or African-American",
+      "Other" = "Or some other race",
+      "Mixed" = "Mixed Race"))
 
 levels(plot_data_ash$int_good_society) <- c("Other", "Bad", "Some of both", "Good")
-
+levels(plot_data_ash$int_good_self) <- c("Other", "Bad", "Some of both", "Good")
 levels(plot_data_ash$int_use_freq) <- c("(VOL) Don't know", "Less often?", "Several times a week, OR", "About once a day", "Several times a day", "Almost constantly")
 
 #FINALLY ready for the first graph:
@@ -224,7 +229,7 @@ plot_ash1
 
 #Graph number 2 data prep:
 
-plot_data_ash <- plot_data_ash %>%
+plot2_data_ash <- plot_data_ash %>%
   mutate(int_good_self = as.numeric(int_good_self),
          int_good_society = as.numeric(int_good_society)) %>%
   select(-party, -age) %>%
@@ -234,19 +239,14 @@ plot_data_ash <- plot_data_ash %>%
   summarize(m_self = mean(int_good_self),
             m_society = mean(int_good_society))
 
-plot_data_ash <- plot_data_ash %>%
-  mutate(self_vs_society = m_self - m_society) %>%
-  mutate(race = fct_recode(race,
-          "Asian" = "Asian or Asian-American",
-          "Black" = "Black or African-American",
-          "Other" = "Or some other race",
-          "Mixed" = "Mixed Race"))
+plot2_data_ash <- plot2_data_ash %>%
+  mutate(self_vs_society = m_self - m_society)
 
 #Plot comparing ratings between how good the internet is for the self.. 
 #relative to how good the internet is for society.. 
 #as a funtion of race and region in the US
 
-plot_ash2 <- ggplot(plot_data_ash, aes(x = race, y = self_vs_society, fill = race)) +
+plot_ash2 <- ggplot(plot2_data_ash, aes(x = race, y = self_vs_society, fill = race)) +
   geom_col(alpha = 0.8) +
   facet_wrap(~cregion, ncol = 4) +
   scale_fill_viridis_d() +
@@ -260,3 +260,21 @@ relative to how good the internet is for society as a funtion of race and region
 
 plot_ash2
 
+#Another plot
+
+plot_ash3 <- plot_data_ash %>%
+  mutate(int_good_self = as.numeric(int_good_self),
+         int_good_society = as.numeric(int_good_society),
+         int_use_freq = as.numeric(int_use_freq)) %>%
+  filter(party != "Refused") %>%
+  ggplot(aes(x = age, y = int_use_freq)) +
+  geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  labs(title = "Ash's Plot 3.",
+       subtitle = "The relation between age and frequency of social media use as a function of political party",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Political party")
+
+plot_ash3
