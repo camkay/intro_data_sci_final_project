@@ -140,12 +140,12 @@ df <- df %>%
                                                "Bad", 
                                                "Some of both", 
                                                "Good")),
-         int_good_self =    factor(int_good_self, 
+         int_good_self    = factor(int_good_self, 
                                    levels = c("Other", 
                                               "Bad", 
                                               "Some of both", 
                                               "Good")),
-         int_use_freq =     factor(int_use_freq, 
+         int_use_freq     = factor(int_use_freq, 
                                    levels = c("(VOL) Don't know", 
                                               "Less often?", 
                                               "Several times a week, OR", 
@@ -184,7 +184,7 @@ bar_plot <- plot_data %>%
        x = "Age",
        title = "Average Number of Books Read by Age",
        subtitle = "Books Read in the Past Year. Respondents 18-99.") +
-  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
         plot.title = element_text(size = 15, hjust = 0))
 
 bar_plot
@@ -203,7 +203,7 @@ bar_plot2 <- plot_data %>%
        x = "Age",
        title = "Average Books Read by Format",
        subtitle = "Average Books Read in the Past Year. Respondents 18-99.") +
-  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
         plot.title = element_text(size = 15, hjust = 0))
 
 bar_plot2
@@ -223,7 +223,7 @@ point_plot <- plot_data %>%
        x = "Age",
        title = "Total Books Read by Format",
        subtitle = "Total Books Read in the Past Year. Respondents 18-99.") +
-  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
         plot.title = element_text(size = 15, hjust = 0))
 
 point_plot
@@ -243,7 +243,7 @@ point_plot2 <- plot_data %>%
        x = "Age",
        title = "Average Books Read by Format",
        subtitle = "Average Books Read in the Past Year. Respondents 18-99.") +
-  theme(plot.subtitle = element_text(size = 11, hjust=0, face="italic", color="black"),
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
         plot.title = element_text(size = 15, hjust = 0))
 
 point_plot2
