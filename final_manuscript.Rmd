@@ -126,10 +126,8 @@ df_td %<>%
          race = racecmb,
          income = inc,
          sns_freq_use = sns,
-         sns = website)
-
+         sns = website) %>% 
 #convert factors to factors
-df_td %<>%
   mutate(books_print = factor(books_print),
          books_audio = factor(books_audio),
          books_elect = factor(books_elect),
