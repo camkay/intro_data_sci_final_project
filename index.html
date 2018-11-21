@@ -25,7 +25,6 @@ class: center, middle, inverse, title-slide
 
 
 
-
 # Cam, here is where you can begin talking about the data
 
 You can see an insert links like this [its homepage](https://remarkjs.com).
@@ -71,7 +70,7 @@ I recommend leaving the code as is above, but inserting chunks of code with **r 
 ---
 class: inverse, middle, center
 
-# An examination of perceptions of social media use
+# Examining perceptions of social media use
 
 ---
 
@@ -79,13 +78,13 @@ class: inverse, middle, center
 
 
 
-&lt;img src="index_files/figure-html/ash_plot1-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/ash_plot1_run-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 # A Bar Chart's Journey:
 
-First, I put together a dataframe with the variables I was most intereseted in:
+First, I put together a dataframe with variables of interest:
 
 
 ```r
@@ -102,7 +101,20 @@ Next, I came up with a question:
 
 --
 
-- Of course, to get at this question, I had to tidy the data a bit more..
+- Do I need to tidy the data any more?
+
+
+```r
+head(plot_data_ash, 1)
+```
+
+```
+## # A tibble: 1 x 10
+##     age sex   race  cregion party sns   sns_freq_use int_good_society
+##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;        &lt;fct&gt;           
+## 1    33 Fema… White Northe… Demo… Twit… Rarely if e… Good            
+## # ... with 2 more variables: int_good_self &lt;fct&gt;, int_use_freq &lt;fct&gt;
+```
 
 ---
 
@@ -122,21 +134,145 @@ plot_ash1 &lt;- plot_data_ash %&gt;%
 
 --
 
-Now the data is ready to plot:
+Plotting the data:
 
 
 ```r
 ggplot(plot_ash1, aes(x = party, y = m_society)) +
   geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
-  geom_hline(yintercept = 3.5) + 
+  geom_hline(yintercept = 3.5, color = "red") + 
   theme_bw() +
-  labs(title = "Plot 1.",
+  labs(title = "Figure 1.",
        subtitle = "Ratings on a 4 point scale of how good or bad the 
        internet is for society as a function of political party",
        x = "Political Party", 
        y = "Mean Rating") +
   coord_cartesian(ylim = c(2.5, 4))
 ```
+
+---
+class: inverse, middle, center
+
+# Examining social media use frequency
+
+---
+
+# A Line Graph: Final Product
+
+&lt;img src="index_files/figure-html/ash_plot2_run-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# A Line Graph's Journey
+
+Again, I first came up with a question. This time I wanted to examine how **frequency of social media use** might vary as a function of **age**, **political party**, and **social media site**.
+
+--
+
+
+```r
+head(plot_data_ash, 1)
+```
+
+```
+## # A tibble: 1 x 10
+##     age sex   race  cregion party sns   sns_freq_use int_good_society
+##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;        &lt;fct&gt;           
+## 1    33 Fema… White Northe… Demo… Twit… Rarely if e… Good            
+## # ... with 2 more variables: int_good_self &lt;fct&gt;, int_use_freq &lt;fct&gt;
+```
+
+--
+
+Minor data tidying:
+
+
+```r
+plot_ash2 &lt;- plot_data_ash %&gt;%
+* mutate(sns_freq_use = as.numeric(sns_freq_use)) %&gt;%
+  filter(party != "Refused",
+         sns_freq_use != "&lt;NA&gt;",
+         sns_freq_use != "(VOL) Don't know") 
+```
+
+---
+
+# Plotting the data:
+
+
+```r
+ggplot(plot_ash2, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = party, colour = party), 
+              method = "lm", se = FALSE) +
+  facet_wrap(~sns, nrow = 1) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  labs(title = "Figure 2.",
+       subtitle = "The relation between age and frequency of social media use 
+       as a function of political party and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Political party")
+```
+
+---
+class: inverse, middle, center
+
+#What happens if we swap out political party for sex?
+
+---
+
+# Another Line Graph: Final Product
+
+&lt;img src="index_files/figure-html/ash_plot3_run-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Another Line Graph's Journey
+
+First, inspect the data frame
+
+
+```r
+head(plot_ash2, 1)
+```
+
+```
+## # A tibble: 1 x 10
+##     age sex   race  cregion party sns   sns_freq_use int_good_society
+##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt;        &lt;dbl&gt;            &lt;dbl&gt;
+## 1    33 Fema… White Northe… Demo… Twit…            2                4
+## # ... with 2 more variables: int_good_self &lt;dbl&gt;, int_use_freq &lt;dbl&gt;
+```
+
+--
+
+Luckily, it appears that I do not need to tidy the data beyond what has already been done. So, all I need to do is plot the data
+
+---
+
+#Code for Plotting Another Line Graph
+
+
+```r
+ggplot(plot_ash3, aes(x = age, y = sns_freq_use)) +
+* geom_smooth(aes(group = sex, colour = sex),
+              method = "lm", se = FALSE, lwd = 2) +
+  scale_color_manual(values = c("turquoise3", "purple3")) +
+  facet_wrap(~sns, nrow = 1) +
+  theme_bw(base_size = 21) +
+  labs(title = "Figure 3.",
+       subtitle = "Relation between age and frequency of social 
+       media use as a function of sex and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+```
+
+---
+
+#Stefania, add whatever plots/code you want! Could you add your pretty table? :)
+
+Note that I will likely delete one of my figure.. I'm leaning towards Figure 1. Thoughts?
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

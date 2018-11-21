@@ -35,13 +35,16 @@ options(scipen = 999)
 
 ```
 
-
 ```{r xaringan-themer, include = FALSE}
+
+#This hidden chunk specifies the theme for the slides
+
 mono_accent_inverse(
   base_color = "#3C989E",
   header_font_google = google_font("Josefin Sans"),
   text_font_google   = google_font("Montserrat", "300", "300i"),
   code_font_google   = google_font("Droid Mono"))
+
 ```
 
 ```{r code_from_script, echo=FALSE}
@@ -236,20 +239,20 @@ I recommend leaving the code as is above, but inserting chunks of code with **r 
 ---
 class: inverse, middle, center
 
-# An examination of perceptions of social media use
+# Examining perceptions of social media use
 
 ---
 
 # A Bar Chart: Final Product
 
-```{r data_prep, echo=FALSE}
+```{r ash_plot1_prep, echo=FALSE}
 
 plot_data_ash <- df %>% 
   select(age, sex, race, cregion, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq)
 
 ```
 
-```{r ash_plot1, fig.height=7, fig.width=12, fig.align='center', echo=FALSE}
+```{r ash_plot1_run, fig.height=8, fig.width=12, fig.align='center', echo=FALSE}
 plot_ash1 <- plot_data_ash %>%
   mutate(int_good_self = as.numeric(int_good_self),
          int_good_society = as.numeric(int_good_society)) %>%
@@ -261,8 +264,8 @@ plot_ash1 <- plot_data_ash %>%
   ggplot(aes(x = party, y = m_society)) +
   geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
   geom_hline(yintercept = 3.5, color = "red") + #Note that this line represents the overall mean
-  theme_bw(base_size = 20) +
-  labs(title = "Plot 1.",
+  theme_bw(base_size = 21) +
+  labs(title = "Figure 1.",
        subtitle = "Ratings of how good or bad the internet is for society as a function of political party",
        x = "Political Party", 
        y = "Mean Rating") +
@@ -275,9 +278,9 @@ plot_ash1
 
 # A Bar Chart's Journey:
 
-First, I put together a dataframe with the variables I was most intereseted in:
+First, I put together a dataframe with variables of interest:
 
-```{r ash_plot1_code, eval=FALSE}
+```{r ash_plot1_df, eval=FALSE}
 
 plot_data_ash <- df %>% 
   select(age, sex, race, cregion, party, sns, sns_freq_use, 
@@ -293,7 +296,11 @@ Next, I came up with a question:
 
 --
 
-- Of course, to get at this question, I had to tidy the data a bit more..
+- Do I need to tidy the data any more?
+
+```{r ash_plot1_view}
+head(plot_data_ash, 1)
+```
 
 ---
 
@@ -314,15 +321,15 @@ plot_ash1 <- plot_data_ash %>%
 
 --
 
-Now the data is ready to plot:
+Plotting the data:
 
-```{r plotting_code, eval=FALSE}
+```{r ash_plot1_code, eval=FALSE}
 
 ggplot(plot_ash1, aes(x = party, y = m_society)) +
   geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
-  geom_hline(yintercept = 3.5) + 
+  geom_hline(yintercept = 3.5, color = "red") + 
   theme_bw() +
-  labs(title = "Plot 1.",
+  labs(title = "Figure 1.",
        subtitle = "Ratings on a 4 point scale of how good or bad the 
        internet is for society as a function of political party",
        x = "Political Party", 
@@ -330,3 +337,142 @@ ggplot(plot_ash1, aes(x = party, y = m_society)) +
   coord_cartesian(ylim = c(2.5, 4))
 
 ```
+
+---
+class: inverse, middle, center
+
+# Examining social media use frequency
+
+---
+
+# A Line Graph: Final Product
+
+```{r ash_plot2_run, fig.height=8, fig.width=15, fig.align='center', echo = FALSE}
+
+plot_ash2 <- plot_data_ash %>%
+  mutate(int_good_self = as.numeric(int_good_self),
+         int_good_society = as.numeric(int_good_society),
+         int_use_freq = as.numeric(int_use_freq),
+         sns_freq_use = as.numeric(sns_freq_use)) %>%
+  filter(party != "Refused",
+         sns_freq_use != "<NA>",
+         sns_freq_use != "(VOL) Don't know")
+
+
+ggplot(plot_ash2, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
+  facet_wrap(~sns, nrow = 1) +
+  scale_colour_viridis_d() +
+  theme_bw(base_size = 21) +
+  labs(title = "Figure 2.",
+       subtitle = "Relation between age and frequency of social media use as a function of political party and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Political party")
+
+```
+
+---
+
+# A Line Graph's Journey
+
+Again, I first came up with a question. This time I wanted to examine how **frequency of social media use** might vary as a function of **age**, **political party**, and **social media site**.
+
+--
+
+```{r ash_plot2_view}
+head(plot_data_ash, 1)
+```
+
+--
+
+Minor data tidying:
+
+```{r ash_plot2_tidy, eval=FALSE}
+plot_ash2 <- plot_data_ash %>%
+  mutate(sns_freq_use = as.numeric(sns_freq_use)) %>% #<<
+  filter(party != "Refused",
+         sns_freq_use != "<NA>",
+         sns_freq_use != "(VOL) Don't know") 
+```
+
+---
+
+# Plotting the data:
+
+```{r ash_plot2_code, eval=FALSE}
+ggplot(plot_ash2, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = party, colour = party), 
+              method = "lm", se = FALSE) +
+  facet_wrap(~sns, nrow = 1) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  labs(title = "Figure 2.",
+       subtitle = "The relation between age and frequency of social media use 
+       as a function of political party and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Political party")
+```
+
+---
+class: inverse, middle, center
+
+#What happens if we swap out political party for sex?
+
+---
+
+# Another Line Graph: Final Product
+
+```{r ash_plot3_run, fig.height=8, fig.width=15, fig.align='center', echo=FALSE}
+
+ggplot(plot_ash2, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = sex, colour = sex), method = "lm", se = FALSE, lwd = 2) +
+  scale_color_manual(values = c("turquoise3", "purple3")) +
+  facet_wrap(~sns, nrow = 1) +
+  theme_bw(base_size = 21) +
+  labs(title = "Figure 3.",
+       subtitle = "The relation between age and frequency of social media use as a function of sex and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+
+```
+
+---
+# Another Line Graph's Journey
+
+First, inspect the data frame
+
+```{r ash_plot3_view}
+head(plot_ash2, 1)
+```
+
+--
+
+Luckily, it appears that I do not need to tidy the data beyond what has already been done. So, all I need to do is plot the data
+
+---
+
+#Code for Plotting Another Line Graph
+
+```{r ash_plot3_code, eval=FALSE}
+ggplot(plot_ash3, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = sex, colour = sex), #<<
+              method = "lm", se = FALSE, lwd = 2) +
+  scale_color_manual(values = c("turquoise3", "purple3")) +
+  facet_wrap(~sns, nrow = 1) +
+  theme_bw(base_size = 21) +
+  labs(title = "Figure 3.",
+       subtitle = "Relation between age and frequency of social 
+       media use as a function of sex and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+```
+
+---
+
+#Stefania, add whatever plots/code you want! Could you add your pretty table? :)
+
+Note that I will likely delete one of my figure.. I'm leaning towards Figure 1. Thoughts?
