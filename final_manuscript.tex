@@ -1,0 +1,271 @@
+\documentclass[man]{apa6}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Something Clever\ldots{}},
+            pdfauthor={Cameron S. Kay, Stefania R. Ashby, \& Ashley L. Miller},
+            pdfkeywords={american, social media, internet, pew research center},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+
+  \title{Something Clever\ldots{}}
+    \author{Cameron S. Kay\textsuperscript{1}, Stefania R. Ashby\textsuperscript{1},
+\& Ashley L. Miller\textsuperscript{1}}
+    \date{}
+  
+\shorttitle{Title}
+\affiliation{
+\vspace{0.5cm}
+\textsuperscript{1} University of Oregon}
+\keywords{american, social media, internet, pew research center}
+\usepackage{csquotes}
+\usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
+
+\usepackage{longtable}
+\usepackage{lscape}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage[flushleft]{threeparttable}
+\usepackage{threeparttablex}
+
+\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+
+\makeatletter
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
+
+
+\DeclareDelayedFloatFlavor{ThreePartTable}{table}
+\DeclareDelayedFloatFlavor{lltable}{table}
+\DeclareDelayedFloatFlavor*{longtable}{table}
+\makeatletter
+\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
+\makeatother
+
+\authornote{
+
+Correspondence concerning this article should be addressed to Cameron S.
+Kay, 1451 Onyx Street, Eugene, OR 97403. E-mail:
+\href{mailto:ckay@uoregon.edu}{\nolinkurl{ckay@uoregon.edu}}}
+
+\abstract{
+TBD
+
+
+}
+
+\begin{document}
+\maketitle
+
+\section{Methods}\label{methods}
+
+We report how we determined our sample size, all data exclusions (if
+any), all manipulations, and all measures in the study.
+
+\subsection{Participants}\label{participants}
+
+\subsection{Material}\label{material}
+
+\subsection{Procedure}\label{procedure}
+
+\subsection{Data analysis}\label{data-analysis}
+
+We used R (Version 3.5.1; R Core Team, 2018) and the R-packages
+\emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{cowplot} (Version
+0.9.3; Wilke, 2018), \emph{dplyr} (Version 0.7.7; Wickham, François,
+Henry, \& Müller, 2018), \emph{forcats} (Version 0.3.0; Wickham, 2018a),
+\emph{ggplot2} (Version 3.1.0; Wickham, 2016), \emph{here} (Version 0.1;
+Müller, 2017), \emph{lme4} (Version 1.1.18.1; Bates, Mächler, Bolker, \&
+Walker, 2015), \emph{lmerTest} (Version 3.0.1; Kuznetsova, Brockhoff, \&
+Christensen, 2017), \emph{lubridate} (Version 1.7.4; Grolemund \&
+Wickham, 2011), \emph{magrittr} (Version 1.5; Bache \& Wickham, 2014),
+\emph{Matrix} (Version 1.2.14; Bates \& Maechler, 2018), \emph{pander}
+(Version 0.6.2; Daróczi \& Tsegelskyi, 2018), \emph{papaja} (Version
+0.1.0.9842; Aust \& Barth, 2018), \emph{purrr} (Version 0.2.5; Henry \&
+Wickham, 2018), \emph{readr} (Version 1.1.1; Wickham, Hester, \&
+Francois, 2017), \emph{rio} (Version 0.5.10; C.-h. Chan, Chan, Leeper,
+\& Becker, 2018), \emph{stringr} (Version 1.3.1; Wickham, 2018b),
+\emph{tibble} (Version 1.4.2; Müller \& Wickham, 2018), \emph{tidyr}
+(Version 0.8.1; Wickham \& Henry, 2018), \emph{tidyverse} (Version
+1.2.1; Wickham, 2017), and \emph{wesanderson} (Version 0.3.6; Ram \&
+Wickham, 2018) for all our analyses.
+
+\section{Results}\label{results}
+
+\section{Discussion}\label{discussion}
+
+\newpage
+
+\section{References}\label{references}
+
+\begingroup
+\setlength{\parindent}{-0.5in} \setlength{\leftskip}{0.5in}
+
+\hypertarget{refs}{}
+\hypertarget{ref-R-papaja}{}
+Aust, F., \& Barth, M. (2018). \emph{papaja: Create APA manuscripts with
+R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
+
+\hypertarget{ref-R-magrittr}{}
+Bache, S. M., \& Wickham, H. (2014). \emph{Magrittr: A forward-pipe
+operator for r}. Retrieved from
+\url{https://CRAN.R-project.org/package=magrittr}
+
+\hypertarget{ref-R-Matrix}{}
+Bates, D., \& Maechler, M. (2018). \emph{Matrix: Sparse and dense matrix
+classes and methods}. Retrieved from
+\url{https://CRAN.R-project.org/package=Matrix}
+
+\hypertarget{ref-R-lme4}{}
+Bates, D., Mächler, M., Bolker, B., \& Walker, S. (2015). Fitting linear
+mixed-effects models using lme4. \emph{Journal of Statistical Software},
+\emph{67}(1), 1--48.
+doi:\href{https://doi.org/10.18637/jss.v067.i01}{10.18637/jss.v067.i01}
+
+\hypertarget{ref-R-rio}{}
+Chan, C.-h., Chan, G. C., Leeper, T. J., \& Becker, J. (2018).
+\emph{Rio: A swiss-army knife for data file i/o}.
+
+\hypertarget{ref-R-pander}{}
+Daróczi, G., \& Tsegelskyi, R. (2018). \emph{Pander: An r 'pandoc'
+writer}. Retrieved from \url{https://CRAN.R-project.org/package=pander}
+
+\hypertarget{ref-R-lubridate}{}
+Grolemund, G., \& Wickham, H. (2011). Dates and times made easy with
+lubridate. \emph{Journal of Statistical Software}, \emph{40}(3), 1--25.
+Retrieved from \url{http://www.jstatsoft.org/v40/i03/}
+
+\hypertarget{ref-R-purrr}{}
+Henry, L., \& Wickham, H. (2018). \emph{Purrr: Functional programming
+tools}. Retrieved from \url{https://CRAN.R-project.org/package=purrr}
+
+\hypertarget{ref-R-lmerTest}{}
+Kuznetsova, A., Brockhoff, P. B., \& Christensen, R. H. B. (2017).
+lmerTest package: Tests in linear mixed effects models. \emph{Journal of
+Statistical Software}, \emph{82}(13), 1--26.
+doi:\href{https://doi.org/10.18637/jss.v082.i13}{10.18637/jss.v082.i13}
+
+\hypertarget{ref-R-here}{}
+Müller, K. (2017). \emph{Here: A simpler way to find your files}.
+Retrieved from \url{https://CRAN.R-project.org/package=here}
+
+\hypertarget{ref-R-bindrcpp}{}
+Müller, K. (2018). \emph{Bindrcpp: An 'rcpp' interface to active
+bindings}. Retrieved from
+\url{https://CRAN.R-project.org/package=bindrcpp}
+
+\hypertarget{ref-R-tibble}{}
+Müller, K., \& Wickham, H. (2018). \emph{Tibble: Simple data frames}.
+Retrieved from \url{https://CRAN.R-project.org/package=tibble}
+
+\hypertarget{ref-R-base}{}
+R Core Team. (2018). \emph{R: A language and environment for statistical
+computing}. Vienna, Austria: R Foundation for Statistical Computing.
+Retrieved from \url{https://www.R-project.org/}
+
+\hypertarget{ref-R-wesanderson}{}
+Ram, K., \& Wickham, H. (2018). \emph{Wesanderson: A wes anderson
+palette generator}. Retrieved from
+\url{https://CRAN.R-project.org/package=wesanderson}
+
+\hypertarget{ref-R-ggplot2}{}
+Wickham, H. (2016). \emph{Ggplot2: Elegant graphics for data analysis}.
+Springer-Verlag New York. Retrieved from \url{http://ggplot2.org}
+
+\hypertarget{ref-R-tidyverse}{}
+Wickham, H. (2017). \emph{Tidyverse: Easily install and load the
+'tidyverse'}. Retrieved from
+\url{https://CRAN.R-project.org/package=tidyverse}
+
+\hypertarget{ref-R-forcats}{}
+Wickham, H. (2018a). \emph{Forcats: Tools for working with categorical
+variables (factors)}. Retrieved from
+\url{https://CRAN.R-project.org/package=forcats}
+
+\hypertarget{ref-R-stringr}{}
+Wickham, H. (2018b). \emph{Stringr: Simple, consistent wrappers for
+common string operations}. Retrieved from
+\url{https://CRAN.R-project.org/package=stringr}
+
+\hypertarget{ref-R-tidyr}{}
+Wickham, H., \& Henry, L. (2018). \emph{Tidyr: Easily tidy data with
+'spread()' and 'gather()' functions}. Retrieved from
+\url{https://CRAN.R-project.org/package=tidyr}
+
+\hypertarget{ref-R-dplyr}{}
+Wickham, H., François, R., Henry, L., \& Müller, K. (2018). \emph{Dplyr:
+A grammar of data manipulation}. Retrieved from
+\url{https://CRAN.R-project.org/package=dplyr}
+
+\hypertarget{ref-R-readr}{}
+Wickham, H., Hester, J., \& Francois, R. (2017). \emph{Readr: Read
+rectangular text data}. Retrieved from
+\url{https://CRAN.R-project.org/package=readr}
+
+\hypertarget{ref-R-cowplot}{}
+Wilke, C. O. (2018). \emph{Cowplot: Streamlined plot theme and plot
+annotations for 'ggplot2'}. Retrieved from
+\url{https://CRAN.R-project.org/package=cowplot}
+
+\endgroup
+
+
+\end{document}
