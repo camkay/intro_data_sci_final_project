@@ -8,6 +8,24 @@
 ###set up
 ###############################
 
+# AG: to enhance reproducibility, I reccommend including the names of the packages so that we know what needs to be installed first, in case we don't have some of the packages you are using. Also, I think it would be useful to put a note for people that are less experienced in r (like me) that they need to follow the prompts when openening the libraries of the packages you have, like lme4, lmerTest, and cowplot. At first I didn't do that and I was not being able to see the tidied data. 
+
+
+# Install required packages
+
+# install.packages("tidyverse")
+# install.packages("lme4")
+# install.packages("lmerTest")
+# install.packages("cowplot")
+# install.packages("wesanderson")
+# install.packages("here")
+# install.packages("rio")
+# install.packages("lubridate")
+# install.packages("cowplot")
+# install.packages("wesanderson")
+# install.packages("forcats")
+# install.packages("pander")
+
 #load required packages
 library(tidyverse)
 library(lme4)
@@ -27,12 +45,14 @@ library(pander)
 
 #import data
 df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
-  janitor::clean_names()
+  janitor::clean_names() 
+
+head(df) # AG: I like to use head() and View() to check if my data frame looks how I expect. I will be using it here and there to see how your data frame changes with each step. 
 
 #characterize all columns except for age and books1 (the spss labels were causing the numeric values to be recorded as NAs for those columns)
 df[, -c(.rcol("age"), 
         .rcol("books1"))] <- characterize(df[, -c(.rcol("age"), 
-                                                  .rcol("books1"))])
+                                                  .rcol("books1"))]) # AG: Such an efficient way to characterize the variables, I am wriying it down in my notes! 
 
 ###############################
 ###data tidying
@@ -55,10 +75,12 @@ df <- df %>%
 df <- df %>%
   mutate(int_date = ymd(int_date))
 
+head(df)
+
 #remove participants who do not occasionally use the internet or email
 df <- df %>% 
-  filter(eminuse == "Yes") %>%
-  select(-eminuse)
+  filter(eminuse == "Yes") %>% 
+  select(-eminuse) # AG: Did you needed to filter it if you were going to delete the column altogether? 
 
 #over gather the sns_use and sns_freq_use columns, and spread them back out
 df <- df %>%
@@ -66,12 +88,18 @@ df <- df %>%
   separate(websites, into = c("temp", "website"), sep = "[[:digit:]]") %>%
   spread(key = "temp", value = "value")
 
+# View(df)
+
 #change "no, do not do this" in the sns_use column to "Rarely if ever" in the sns_freq_use columns
 df[which(df[, "web"] == "No, do not do this"), "sns"] <- "Rarely if ever"
+
+# View(df)
 
 #drop now unneeded sns_use column
 df <- df %>%
   select(-web)
+
+head(df)
 
 #rename the values in the website column
 df <- df %>%
@@ -80,6 +108,7 @@ df <- df %>%
                                    c = "Facebook",
                                    d = "Snapchat",
                                    e = "YouTube"))
+head(df)
 
 #rename poorly named columns for sanity
 df <- df %>%
@@ -97,6 +126,8 @@ df <- df %>%
          sns_freq_use = sns,
          sns = website)
 
+head(df)
+
 #convert factors to factors
 df <- df %>%
   mutate(books_print = factor(books_print),
@@ -110,6 +141,8 @@ df <- df %>%
          int_good_self = factor(int_good_self),
          int_use_freq = factor(int_use_freq),
          sns_freq_use = factor(sns_freq_use))
+
+# View(df)
 
 df <- df %>%
   mutate(int_good_self    = fct_recode(int_good_self,
@@ -163,6 +196,9 @@ df <- df %>%
                                               "About once a day", 
                                               "Several times a day")))
 
+
+# View(df) # AG: This is a very nice looking tidy data frame. I was able to follow along each step. Really Well done, you make it look easy! 
+
 #################################################
 ########### Analyses and Data Viz ###############
 #################################################
@@ -179,6 +215,9 @@ plot_data <- df %>%
   filter(!is.na(yn) & !str_detect(yn, "VOL")) %>% 
   mutate(book_format = factor(book_format),
          yn = factor(yn)) 
+
+head(plot_data) # AG: You really have this tidy skills down. I am impressed! 
+
 
 ####
 
@@ -197,7 +236,7 @@ bar_plot <- plot_data %>%
   theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
         plot.title = element_text(size = 15, hjust = 0))
 
-bar_plot
+bar_plot # AG: Beautiful plot! You use some "tricks" in here that will definitely make my plots look better.
 
 
 
@@ -267,7 +306,7 @@ model <- lm(mean_books ~ age * book_format, data = reg_data)
 model
 
 # Put anova of regression model into a table
-pander(anova(model))
+pander(anova(model)) # AG: I didn't know this way of making a table. Going to my notes too!
 
 ###############################################
 ######### Ash's Data Visualizations ###########
@@ -285,9 +324,9 @@ plot_data_ash <- df %>%
 #Graphing ratings of how good vs bad the internet is for society as a function of political party
 
 plot_ash1 <- plot_data_ash %>%
-  mutate(int_good_self = as.numeric(int_good_self),
+  mutate(int_good_self = as.numeric(int_good_self), # AG: Interesting. I didn't know you could do this. Good idea!
          int_good_society = as.numeric(int_good_society)) %>%
-  filter(party != "Refused") %>%
+  filter(party != "Refused") %>% # AG: I'll try this in my plot to avoid cluttering the view. Thanks!
   group_by(party) %>%
   summarize(m_age = mean(age),
             m_self = mean(int_good_self),
@@ -301,6 +340,7 @@ plot_ash1 <- plot_data_ash %>%
        x = "Political Party", 
        y = "Mean Rating") +
   coord_cartesian(ylim = c(2.5, 4)) 
+
 
 plot_ash1
 
@@ -319,9 +359,11 @@ plot2_data_ash <- plot_data_ash %>%
 plot2_data_ash <- plot2_data_ash %>%
   mutate(self_vs_society = m_self - m_society)
 
+head(plot2_data_ash)
+
 #Plot comparing ratings between how good the internet is for the self.. 
 #relative to how good the internet is for society.. 
-#as a funtion of race and region in the US
+#as a function of race and region in the US
 
 plot_ash2 <- ggplot(plot2_data_ash, aes(x = race, y = self_vs_society, fill = race)) +
   geom_col(alpha = 0.8) +
@@ -333,7 +375,8 @@ plot_ash2 <- ggplot(plot2_data_ash, aes(x = race, y = self_vs_society, fill = ra
        subtitle = "Mean difference in ratings between how good the internet is for the self 
 relative to how good the internet is for society as a funtion of race and region in the US",
        x = "Race", 
-       y = "Mean rating for self - Mean rating for society")
+       y = "Mean rating for self - Mean rating for society") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) # AG: I added this so the labels don't overlap. 
 
 plot_ash2
 
@@ -379,6 +422,13 @@ plot_ash4 <- plot_data_ash %>%
        subtitle = "The relation between age and frequency of social media use as a function of gender identity and social media site",
        x = "Age", 
        y = "Frequency of social media use",
-       colour = "Gender identity")
+       colour = "Gender identity") # AG: I suggest changing "gender identity" for "sex" as female and male are just the options for assigned sex. Using gender identity may lead your readers to think that you are including the several other possibilities in the spectrum ;) 
 
 plot_ash4
+
+# Overall: You did a fantastic job tyding the data. Honestly, I couldn't have done it better, thus I have really no suggestions to make in this area. You maintain a consistent use of the coding style that is easy to read. Your comments were useful to guide me to the process of what you were doing in each step. Some of your code is new to me. I found it very efficient and even elegant! Several things I saw here will enhance my tiding skills. Thank you! 
+
+# To me, it is evident that you know how to do this, so my only suggestion is in relation to enhancing reproducibilit, especially for less experenced r users. In general, your code is very reproducible and easy to follow, but It took my a while to "set up" the libraries with all the functions needed to run the code. I suggest just including a few messages at the beginning so your reader does not get stuck in the first part. 
+
+# Again, really great job! I hope you find my very few suggestions useful. I made comments and used my initials "AG" before the comments. 
+
