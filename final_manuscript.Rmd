@@ -197,19 +197,6 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
 
 
-
-# Methods
-We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
-
-## Participants
-
-## Material
-
-## Procedure
-
-## Data analysis
-We used `r cite_r("r-references.bib")` for all our analyses.
-
 ```{r books analyses & viz, include = FALSE}
 
 # Examine whether age trends in reading differs as a function of book format 
@@ -318,7 +305,7 @@ pander(anova(model))
 ```
 
 
-```{r ash analyses $ viz}
+```{r ash analyses & viz, include = FALSE}
 
 #Examine whether perceptions of social media use vary as age, political party, and social media site
 
@@ -431,6 +418,18 @@ plot_ash4 <- plot_data_ash %>%
 plot_ash4
 
 ```
+
+# Methods
+We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
+
+## Participants
+
+## Material
+
+## Procedure
+
+## Data analysis
+We used `r cite_r("r-references.bib")` for all our analyses.
 
 
 # Results
