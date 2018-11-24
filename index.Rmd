@@ -48,12 +48,6 @@ mono_accent_inverse(
 ```
 
 ```{r code_from_script, echo=FALSE}
-
-#create function to find column numbers given column names
-.rcol <- function(column.name.as.string = NULL, data = df) {
-  grep(column.name.as.string, colnames(data))
-}
-
 #import data
 df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
   janitor::clean_names()
