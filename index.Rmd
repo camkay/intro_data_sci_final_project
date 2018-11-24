@@ -13,7 +13,7 @@ output:
       countIncrementalSlides: TRUE
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 options(htmltools.dir.version = FALSE)
 
 #load required packages
@@ -27,6 +27,7 @@ library(cowplot)
 library(wesanderson)
 library(forcats)
 library(pander)
+#devtools::install_github("gadenbuie/xaringanthemer")
 library(xaringanthemer)
 library(magrittr)
 
@@ -47,20 +48,122 @@ mono_accent_inverse(
 
 ```
 
-```{r code_from_script, echo=FALSE}
-#import data
+# The Dataset
+
+The [Core Trends Survey](http://www.pewinternet.org/dataset/jan-3-10-2018-core-trends-survey/) (2018) from the [Pew Research Center](http://www.pewresearch.org).
+
+--
+
+- *N* = 2,002
+
+--
+
+- Collected between January 3rd and January 10th, 2018
+
+--
+
+- Conducted by telephone (75.02% cell phone; 24.98% landline)
+
+---
+
+# Tidying the Dataset
+
+Step 1: Import the data.
+
+```{r import_data}
 df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
+  janitor::clean_names() %>%
+  characterize()
+```
+
+--
+
+```{r look_at_the_data_total, echo = FALSE}
+df
+```
+
+---
+
+# Tidying the Dataset
+
+.pull-left[
+```{r look_at_data_wanted, echo = FALSE}
+temp <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
   janitor::clean_names()
 
-#characterize all columns except for age and books1 (the spss labels were causing the numeric values to be recorded as NAs for those columns)
+temp[, c("age", "books1")]
+
+```
+]
+
+--
+
+.pull-right[
+```{r look_at_data_unwanted, echo = FALSE}
+df[, c("age", "books1")]
+rm(temp)
+
+df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
+  janitor::clean_names()
+```
+]
+
+---
+
+# Tidying the Dataset
+
+Functional but bulky. 
+```{r characterize_allbut_ugly, eval = FALSE}
+.rcol <- function(column = NULL, data = df) {
+  grep(column, colnames(data))
+}
+
+df[, -c(.rcol("age"), 
+        .rcol("books1"))] <- characterize(df[, -c(.rcol("age"), 
+                                                  .rcol("books1"))])
+```
+
+--
+
+Equally functional and far less bulky. 
+```{r characterize_allbut_pretty}
 df %<>%
   mutate_at(vars(-age, -books1), characterize)
+```
 
-###############################
-###data tidying
-###############################
+---
 
-#select only variables of interest
+# Tidying the Dataset
+
+.pull-left[
+```{r look_at_age_with_99, echo = FALSE}
+df[, c("age")]
+```
+]
+
+.pull-right[
+```{r look_at_age_without_99, echo = FALSE}
+df %<>%
+  mutate(age = replace(age, age == 99, NA))
+
+df[, c("age")]
+```
+]
+
+--
+
+```{r look_at_99na_code, eval = FALSE}
+df %<>%
+  mutate(age = replace(age, age == 99, NA))
+```
+
+---
+
+# Tidying the Dataset
+
+Step 2: Remove extraneous rows and columns. 
+
+```{r drop_unneeded_columns}
 df %<>%
   select(-comp, 
          -state:-qs1,
@@ -72,38 +175,75 @@ df %<>%
          -marital:-racem4,
          -birth_hisp,
          -partyln:-cellweight)
-  
-#parse date for interview date column
-df %<>%
-  mutate(int_date = ymd(int_date))
 
-#remove participants who do not occasionally use the internet or email
 df %<>%
   filter(eminuse == "Yes") %>%
   select(-eminuse)
+```
 
-#over gather the sns_use and sns_freq_use columns, and spread them back out
+---
+
+# Tidying the Dataset
+
+Step 3: Tidy!
+
+```{r gather}
 df %<>%
-  gather(key = "websites", value = "value", starts_with("sns"), starts_with("web")) %>%
-  separate(websites, into = c("temp", "website"), sep = "[[:digit:]]") %>%
-  spread(key = "temp", value = "value")
+  gather(key = "websites", value = "value", starts_with("sns"), starts_with("web"))
 
-#change "no, do not do this" in the sns_use column to "Rarely if ever" in the sns_freq_use columns
+
+```
+--
+```{r gather_show, echo = FALSE}
+df[, c("websites", "value")]
+```
+---
+
+# Tidying the Dataset
+
+```{r sep}
+df %<>%
+  separate(websites, into = c("temp", "website"), sep = "[[:digit:]]") 
+```
+--
+```{r sep_show, echo = FALSE}
+df[, c("temp", "website", "value")]
+```
+
+---
+
+# Tidying the Dataset
+```{r spread}
+df %<>%
+  spread(key = "temp", value = "value")
+```
+
+--
+```{r spread_show, echo = FALSE}
+df[, c("website", "sns", "web")]
+```
+---
+
+# Tidying the Dataset
+```{r combine_cols}
 df[which(df[, "web"] == "No, do not do this"), "sns"] <- "Rarely if ever"
 
-#drop now unneeded sns_use column
 df %<>%
   select(-web)
+```
 
-#rename the values in the website column
-df %<>%
-  mutate(website = recode(website, a = "Twitter",
-                                   b = "Instagram",
-                                   c = "Facebook",
-                                   d = "Snapchat",
-                                   e = "YouTube"))
+--
 
-#rename poorly named columns for sanity
+```{r combine_cols_show, echo = FALSE}
+df[, c("website", "sns")]
+```
+---
+
+# Tidying the Dataset
+
+Step 4: Rename, convert, and recode!
+
+```{r rename}
 df %<>%
   rename(id = respid,
          date = int_date,
@@ -118,6 +258,25 @@ df %<>%
          income = inc,
          sns_freq_use = sns,
          sns = website)
+```
+
+---
+
+# Tidying the Dataset
+
+```{r recode}
+df %<>%
+  mutate(sns = recode(sns, a = "Twitter",
+                           b = "Instagram",
+                           c = "Facebook",
+                           d = "Snapchat",
+                           e = "YouTube"))
+```
+
+```{r extra_tidying, echo = FALSE}
+#parse date
+df %<>%
+  mutate(date_date = ymd(date))
 
 #convert factors to factors
 df %<>%
@@ -187,47 +346,12 @@ df %<>%
 
 ```
 
-# Cam, here is where you can begin talking about the data
-
-You can see an insert links like this [click here to view demo for how to modify these slides](https://ashlynnmiller.github.io/Lab14_DemoSlides/).
-
---
-
-Note (only if looking at Rmd file) that the above "--" means that this info is on the same slide as above.. it just won't appear until you hit a button. A new slide is preceded by the "---". Here is some more interesting information:
-
---
-
-1. Here is a subpoint of the above
-
---
-
-1. And here is another subpoint of the above
-
---
-
-Basically just a bunch of **nonsense**!
-
 ---
+# Tidying the Dataset
 
-# Cam, here you can try to walk people through how you tidied the data.. 
-
-Good luck doing this in 6 min ;)
-
---
-
-I recommend leaving the code as is above, but inserting chunks of code with **r eval = FALSE** (see my section) so people can see what you did
-
---
-
-- Add bullet points like this
-
---
-
-- Add bullet points like this
-
---
-
-- Add bullet points like this
+```{r peek_at_cleaning, echo = FALSE}
+df[, c("sns", "sns_freq_use")]
+```
 
 ---
 class: inverse, middle, center
