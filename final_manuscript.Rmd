@@ -66,26 +66,20 @@ library(Hmisc)
 
 # Load required functions
 source(here::here("functions", "numbers2words.R")) #writes out a number; found on github from James Fox (https://github.com/ateucher/useful_code/blob/master/R/numbers2words.r)
-source(here::here("functions", "rcol.R")) #returns the column numbers for all column names that contain a string
 source(here::here("functions", "perble.R")) #creates a table but with percentages
 source(here::here("functions", "spround.R")) #combines round and sprintf
 ```
 
 
 ```{r prep_data}
-# create function to find column numbers given column names
-.rcol <- function(column.name.as.string = NULL, data = df) {
-  grep(column.name.as.string, colnames(data))
-}
-
 # import data
 df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
   janitor::clean_names()
 
 # characterize all columns except for age and books1 (the spss labels were causing the numeric values to be recorded as NAs for those columns)
-df[, -c(.rcol("age"), 
-        .rcol("books1"))] <- characterize(df[, -c(.rcol("age"), 
-                                                  .rcol("books1"))])
+df %<>%
+  mutate_at(vars(-age, -books1), characterize)
+
 # select only variables of interest
 df_td <- df %>% 
   select(-comp, 
