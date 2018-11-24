@@ -189,15 +189,7 @@ df_td %<>%
 ```
 
 
-```{r analysis-preferences}
-# Seed for random number generation
-set.seed(42)
-knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
-
-```
-
-
-```{r books analyses & viz, include = FALSE}
+```{r books_analyses_viz, include = FALSE}
 
 # Examine whether age trends in reading differs as a function of book format 
 # (e.g. do older readers spend more time with paper copy books whereas younger users may spend more time with audiobooks or digital print?). 
@@ -305,7 +297,7 @@ pander(anova(model))
 ```
 
 
-```{r ash analyses & viz, include = FALSE}
+```{r ash_analyses_viz, include = FALSE}
 
 #Examine whether perceptions of social media use vary as age, political party, and social media site
 
