@@ -71,7 +71,7 @@ source(here::here("functions", "spround.R")) #combines round and sprintf
 ```
 
 
-```{r prep_data}
+```{r prep_data, include = FALSE}
 # import data
 df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
   janitor::clean_names()
@@ -79,6 +79,10 @@ df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
 # characterize all columns except for age and books1 (the spss labels were causing the numeric values to be recorded as NAs for those columns)
 df %<>%
   mutate_at(vars(-age, -books1), characterize)
+
+#switch 99 ages with refused
+df %<>%
+  mutate(age = replace(age, age == 99, NA))
 
 # select only variables of interest
 df_td <- df %>% 
@@ -189,6 +193,8 @@ df_td %<>%
                                               "A few times a week", 
                                               "About once a day", 
                                               "Several times a day")))
+
+
 ```
 
 A common definition for a social media site is that it is an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
@@ -199,7 +205,7 @@ The data for the current study was collected by the @Pew.
 
 ## Participants
 
-`r capitalize(.numbers2words(nrow(df)))` people were surveyed by telephone (`r .spround(.perble(df$sample)["Percent", "Cell phone"])`% cell phone; `r .spround(.perble(df$sample)["Percent", "Landline"])`% landline) over a period of `r interval(min(df_td$date), max(df_td$date)) %/% days(1)` days in `r unique(months(df_td$date))` of `r unique(year(df_td$date))`. We excluded any participants who reported that they do not even occasionally use the internet or email (*n* = `r nrow(df) - length(unique(df_td$id))`). The resulting sample comprised `r length(unique(df_td$id))` people (`r .spround(.perble(df_td$sex)["Percent", "Female"])`% female). Ages ranged from `r range(df_td$age)[1]` to `r range(df_td$age)[2]` (*M* age = `r .spround(mean(df_td$age))`; *SD* age = `r .spround(sd(df_td$age))`). Concerning race, `r .spround(.perble(df_td$race)["Percent", "White"])`% identified as white, `r .spround(.perble(df_td$race)["Percent", "Black"])`% identified as black, `r .spround(.perble(df_td$race)["Percent", "Asian"])`% identified as Asian, `r .spround(.perble(df_td$race)["Percent", "Mixed"])`% identified as mixed race, and `r .spround(.perble(df_td$race)["Percent", "Don't know/Refused (VOL.)"] + .perble(df_td$race)["Percent", "Other"])`% refused to answer or reported being from some other race.  
+`r capitalize(.numbers2words(nrow(df)))` people were surveyed by telephone (`r .spround(.perble(df$sample)["Percent", "Cell phone"])`% cell phone; `r .spround(.perble(df$sample)["Percent", "Landline"])`% landline) over a period of `r interval(min(df_td$date), max(df_td$date)) %/% days(1)` days in `r unique(months(df_td$date))` of `r unique(year(df_td$date))`. We excluded any participants who reported that they do not even occasionally use the internet or email (*n* = `r nrow(df) - length(unique(df_td$id))`). The resulting sample comprised `r length(unique(df_td$id))` people (`r .spround(.perble(df_td$sex)["Percent", "Female"])`% female). Ages ranged from `r min(df_td$age, na.rm = TRUE)` to `r max(df_td$age, na.rm = TRUE)` (*M* age = `r .spround(mean(df_td$age, na.rm = TRUE))`; *SD* age = `r .spround(sd(df_td$age, na.rm = TRUE))`)\footnote{Note that the descriptive statistics for age are slightly lower than reality. Ages 97 and older were recorded as simply 97 in the data.}. Concerning race, `r .spround(.perble(df_td$race)["Percent", "White"])`% identified as white, `r .spround(.perble(df_td$race)["Percent", "Black"])`% identified as black, `r .spround(.perble(df_td$race)["Percent", "Asian"])`% identified as Asian, `r .spround(.perble(df_td$race)["Percent", "Mixed"])`% identified as mixed race, and `r .spround(.perble(df_td$race)["Percent", "Don't know/Refused (VOL.)"] + .perble(df_td$race)["Percent", "Other"])`% refused to answer or reported being from some other race.  
 
 ## Material
 
