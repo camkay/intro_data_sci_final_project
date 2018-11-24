@@ -422,6 +422,8 @@ plot_ash4
 
 # Methods
 
+The data for the current study was collected by the @Pew.
+
 ## Participants
 
 `r capitalize(.numbers2words(nrow(df)))` people were surveyed by telephone (`r .spround(.perble(df$sample)["Percent", "Cell phone"])`% cell phone; `r .spround(.perble(df$sample)["Percent", "Landline"])`% landline) over a period of `r interval(min(df_td$date), max(df_td$date)) %/% days(1)` days in `r unique(months(df_td$date))` of `r unique(year(df_td$date))`. We excluded any participants who reported that they do not even occasionally use the internet or email (*n* = `r nrow(df) - length(unique(df_td$id))`). The resulting sample comprised `r length(unique(df_td$id))` people (`r .spround(.perble(df_td$sex)["Percent", "Female"])`% female). Ages ranged from `r range(df_td$age)[1]` to `r range(df_td$age)[2]` (*M* age = `r .spround(mean(df_td$age))`; *SD* age = `r .spround(sd(df_td$age))`). Concerning race, `r .spround(.perble(df_td$race)["Percent", "White"])`% identified as white, `r .spround(.perble(df_td$race)["Percent", "Black"])`% identified as black, `r .spround(.perble(df_td$race)["Percent", "Asian"])`% identified as Asian, `r .spround(.perble(df_td$race)["Percent", "Mixed"])`% identified as mixed race, and `r .spround(.perble(df_td$race)["Percent", "Don't know/Refused (VOL.)"] + .perble(df_td$race)["Percent", "Other"])`% refused to answer or reported being from some other race.  
