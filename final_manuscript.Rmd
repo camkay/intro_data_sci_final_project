@@ -62,11 +62,13 @@ library(wesanderson)
 library(forcats)
 library(pander)
 library(magrittr)
+library(Hmisc)
 
 # Load required functions
-source(here::here("functions", "numbers2words.R")) # a cool function I found on github from James Fox (https://github.com/ateucher/useful_code/blob/master/R/numbers2words.r)
+source(here::here("functions", "numbers2words.R")) #writes out a number; found on github from James Fox (https://github.com/ateucher/useful_code/blob/master/R/numbers2words.r)
 source(here::here("functions", "rcol.R")) #returns the column numbers for all column names that contain a string
-
+source(here::here("functions", "perble.R")) #creates a table but with percentages
+source(here::here("functions", "spround.R")) #combines round and sprintf
 ```
 
 
@@ -216,7 +218,7 @@ plot_data <- df_td %>%
 # Bar Chart: looking at average books read across age.
 bar_plot <- plot_data %>% 
   group_by(age) %>% 
-  summarize(mean_books = mean(total_books_read)) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
   ggplot(aes(x = age, y = mean_books, fill = age)) + 
   geom_col() +
   scale_fill_viridis_c() + 
@@ -235,7 +237,7 @@ bar_plot
 # Bar Chart: Average books read by format
 bar_plot2 <- plot_data %>% 
   group_by(age, book_format) %>% 
-  summarize(mean_books = mean(total_books_read)) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
   ggplot(aes(x = age, y = mean_books, fill = book_format)) + 
   geom_col() +
   facet_wrap(~book_format, nrow = 3, ncol = 1) +
@@ -272,7 +274,7 @@ point_plot
 # Average books read by format
 point_plot2 <- plot_data %>% 
   group_by(age, book_format) %>% 
-  summarize(mean_books = mean(total_books_read)) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
   ggplot(aes(x = age, y = mean_books)) + 
   geom_point() +
   geom_smooth(method = 'lm',
@@ -292,7 +294,7 @@ point_plot2
 # Regression model to see how age and format of books relates to average number of books read. 
 reg_data <- plot_data %>%
   group_by(age, book_format) %>% 
-  summarize(mean_books = mean(total_books_read))
+  dplyr::summarize(mean_books = mean(total_books_read))
 
 model <- lm(mean_books ~ age * book_format, data = reg_data)
 model
@@ -322,7 +324,7 @@ plot_ash1 <- plot_data_ash %>%
          int_good_society = as.numeric(int_good_society)) %>%
   filter(party != "Refused") %>%
   group_by(party) %>%
-  summarize(m_age = mean(age),
+  dplyr::summarize(m_age = mean(age),
             m_self = mean(int_good_self),
             m_society = mean(int_good_society)) %>%
   ggplot(aes(x = party, y = m_society)) +
@@ -346,7 +348,7 @@ plot2_data_ash <- plot_data_ash %>%
   filter(int_use_freq != "(VOL) Don't know",
          race != "Don't know/Refused (VOL.)") %>%
   group_by(cregion, race) %>%
-  summarize(m_self = mean(int_good_self),
+  dplyr::summarize(m_self = mean(int_good_self),
             m_society = mean(int_good_society))
 
 plot2_data_ash <- plot2_data_ash %>%
@@ -421,6 +423,8 @@ plot_ash4
 # Methods
 
 ## Participants
+
+`r capitalize(.numbers2words(nrow(df)))` people were surveyed by telephone (`r .spround(.perble(df$sample)["Percent", "Cell phone"])`% cell phone; `r .spround(.perble(df$sample)["Percent", "Landline"])`% landline) over a period of `r interval(min(df_td$date), max(df_td$date)) %/% days(1)` days in `r unique(months(df_td$date))` of `r unique(year(df_td$date))`. We excluded any participants who reported that they do not even occasionally use the internet or email (*n* = `r nrow(df) - length(unique(df_td$id))`). The resulting sample comprised `r length(unique(df_td$id))` people (`r .spround(.perble(df_td$sex)["Percent", "Female"])`% female). Ages ranged from `r range(df_td$age)[1]` to `r range(df_td$age)[2]` (*M* age = `r .spround(mean(df_td$age))`; *SD* age = `r .spround(sd(df_td$age))`). Concerning race, `r .spround(.perble(df_td$race)["Percent", "White"])`% identified as white, `r .spround(.perble(df_td$race)["Percent", "Black"])`% identified as black, `r .spround(.perble(df_td$race)["Percent", "Asian"])`% identified as Asian, `r .spround(.perble(df_td$race)["Percent", "Mixed"])`% identified as mixed race, and `r .spround(.perble(df_td$race)["Percent", "Don't know/Refused (VOL.)"] + .perble(df_td$race)["Percent", "Other"])`% refused to answer or reported being from some other race.  
 
 ## Material
 
