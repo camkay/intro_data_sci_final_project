@@ -4,7 +4,7 @@
     <title>EDLD 610 Final Presentation:</title>
     <meta charset="utf-8">
     <meta name="author" content="Cameron S. Kay, Stefania R. Ashby, &amp; Ashley L. Miller" />
-    <meta name="date" content="2018-11-25" />
+    <meta name="date" content="2018-11-26" />
     <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -15,7 +15,7 @@ class: center, middle, inverse, title-slide
 # EDLD 610 Final Presentation:
 ## An analysis of internet and social media trends
 ### Cameron S. Kay, Stefania R. Ashby, &amp; Ashley L. Miller
-### 2018-11-25
+### 2018-11-26
 
 ---
 
@@ -48,7 +48,8 @@ Step 1: Import the data.
 
 
 ```r
-df &lt;- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %&gt;%
+df &lt;- import(here::here("data", "dataSPSS.sav"), 
+             setclass = "tibble") %&gt;%
   janitor::clean_names() %&gt;%
   characterize()
 ```
@@ -222,7 +223,7 @@ df %&lt;&gt;%
          -state:-qs1,
          -intmob,
          -home4nw:-device1d,
-         -web1f:-web1h, #dropped because we don't have frequency values
+         -web1f:-web1h, #dropped b/c we don't have freq values
          -pial5a:-pial5d,
          -pial11a:-pial11_igbm,
          -marital:-racem4,
@@ -243,9 +244,12 @@ Step 3: Tidy!
 
 ```r
 df %&lt;&gt;%
-  gather(key = "websites", value = "value", starts_with("sns"), starts_with("web"))
+  gather(key = "websites", value = "value", 
+         starts_with("sns"), starts_with("web"))
 ```
+
 --
+
 
 ```
 ## # A tibble: 17,290 x 2
@@ -263,6 +267,7 @@ df %&lt;&gt;%
 ## 10 sns2a    &lt;NA&gt;               
 ## # ... with 17,280 more rows
 ```
+
 ---
 
 # Tidying the Dataset
@@ -270,7 +275,8 @@ df %&lt;&gt;%
 
 ```r
 df %&lt;&gt;%
-  separate(websites, into = c("temp", "website"), sep = "[[:digit:]]") 
+  separate(websites, into = c("temp", "website"), 
+           sep = "[[:digit:]]") 
 ```
 --
 
@@ -323,7 +329,8 @@ df %&lt;&gt;%
 # Tidying the Dataset
 
 ```r
-df[which(df[, "web"] == "No, do not do this"), "sns"] &lt;- "Rarely if ever"
+df[which(df[, "web"] == "No, do not do this"), 
+   "sns"] &lt;- "Rarely if ever"
 
 df %&lt;&gt;%
   select(-web)
@@ -412,19 +419,17 @@ df %&lt;&gt;%
 ---
 class: inverse, middle, center
 
-# Examining perceptions of social media use
+# Examining social media use frequency
 
 ---
 
-# A Bar Chart: Final Product
+# A Line Graph: Final Product
 
-
-
-&lt;img src="index_files/figure-html/ash_plot1_run-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/ash_plot1_prep-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# A Bar Chart's Journey:
+# A Line Graphs's Journey:
 
 First, I put together a dataframe with variables of interest:
 
@@ -439,7 +444,7 @@ plot_data_ash &lt;- df %&gt;%
 
 Next, I came up with a question:
 
-- Namely, are there differences in **how good people believe the internet is for society** as a function of **political party**?
+- Namely, how might **frequency of social media use** vary as a function of **age**, **political party**, and **social media site**?
 
 --
 
@@ -465,13 +470,10 @@ More data tidying:
 
 ```r
 plot_ash1 &lt;- plot_data_ash %&gt;%
-  mutate(int_good_self = as.numeric(int_good_self),
-*        int_good_society = as.numeric(int_good_society)) %&gt;%
-  filter(party != "Refused") %&gt;%
-  group_by(party) %&gt;%
-  summarize(m_age = mean(age),
-            m_self = mean(int_good_self),
-*           m_society = mean(int_good_society))
+* mutate(sns_freq_use = as.numeric(sns_freq_use)) %&gt;%
+  filter(party != "Refused",
+         sns_freq_use != "&lt;NA&gt;",
+         sns_freq_use != "(VOL) Don't know") 
 ```
 
 --
@@ -480,83 +482,16 @@ Plotting the data:
 
 
 ```r
-ggplot(plot_ash1, aes(x = party, y = m_society)) +
-  geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
-  geom_hline(yintercept = 3.5, color = "red") + 
-  theme_bw() +
-  labs(title = "Figure 1.",
-       subtitle = "Ratings on a 4 point scale of how good or bad the 
-       internet is for society as a function of political party",
-       x = "Political Party", 
-       y = "Mean Rating") +
-  coord_cartesian(ylim = c(2.5, 4))
-```
-
----
-class: inverse, middle, center
-
-# Examining social media use frequency
-
----
-
-# A Line Graph: Final Product
-
-
-```
-## Warning: Removed 150 rows containing non-finite values (stat_smooth).
-```
-
-&lt;img src="index_files/figure-html/ash_plot2_run-1.png" style="display: block; margin: auto;" /&gt;
-
----
-
-# A Line Graph's Journey
-
-Again, I first came up with a question. This time I wanted to examine how **frequency of social media use** might vary as a function of **age**, **political party**, and **social media site**.
-
---
-
-
-```r
-head(plot_data_ash, 1)
-```
-
-```
-## # A tibble: 1 x 10
-##     age sex   race  cregion party sns   sns_freq_use int_good_society
-##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;        &lt;fct&gt;           
-## 1    33 Fema… White Northe… Demo… Twit… Rarely if e… Good            
-## # ... with 2 more variables: int_good_self &lt;fct&gt;, int_use_freq &lt;fct&gt;
-```
-
---
-
-Minor data tidying:
-
-
-```r
-plot_ash2 &lt;- plot_data_ash %&gt;%
-* mutate(sns_freq_use = as.numeric(sns_freq_use)) %&gt;%
-  filter(party != "Refused",
-         sns_freq_use != "&lt;NA&gt;",
-         sns_freq_use != "(VOL) Don't know") 
-```
-
----
-
-# Plotting the data:
-
-
-```r
-ggplot(plot_ash2, aes(x = age, y = sns_freq_use)) +
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   geom_smooth(aes(group = party, colour = party), 
               method = "lm", se = FALSE) +
   facet_wrap(~sns, nrow = 1) +
   scale_colour_viridis_d() +
   theme_bw() +
   labs(title = "Figure 2.",
-       subtitle = "The relation between age and frequency of social media use 
-       as a function of political party and social media site",
+       subtitle = "The relation between age and frequency of 
+       social media use as a function of political party and 
+       social media site",
        x = "Age", 
        y = "Frequency of social media use",
        colour = "Political party")
@@ -571,11 +506,6 @@ class: inverse, middle, center
 
 # Another Line Graph: 
 
-
-```
-## Warning: Removed 150 rows containing non-finite values (stat_smooth).
-```
-
 &lt;img src="index_files/figure-html/ash_plot3_run-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
@@ -585,7 +515,7 @@ First, inspect the data frame
 
 
 ```r
-head(plot_ash2, 1)
+head(plot_ash1, 1)
 ```
 
 ```
@@ -606,7 +536,7 @@ Luckily, it appears that I do not need to tidy the data beyond what has already 
 
 
 ```r
-ggplot(plot_ash3, aes(x = age, y = sns_freq_use)) +
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 * geom_smooth(aes(group = sex, colour = sex),
               method = "lm", se = FALSE, lwd = 2) +
   scale_color_manual(values = c("turquoise3", "purple3")) +
