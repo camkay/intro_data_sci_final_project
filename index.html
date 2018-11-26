@@ -553,20 +553,23 @@ First, inspect the data frame
 
 
 ```r
-head(plot_ash1, 1)
+head(plot_ash1, 4)
 ```
 
 ```
-## # A tibble: 1 x 10
+## # A tibble: 4 x 10
 ##     age sex   race  cregion party sns   sns_freq_use int_good_society
 ##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt;        &lt;dbl&gt;            &lt;dbl&gt;
 ## 1    33 Fema… White Northe… Demo… Twit…            2                4
+## 2    NA Fema… White Northe… Repu… Twit…            2                4
+## 3    60 Fema… White South   Demo… Twit…            2                2
+## 4    55 Male  White Northe… Repu… Twit…            2                4
 ## # ... with 2 more variables: int_good_self &lt;dbl&gt;, int_use_freq &lt;dbl&gt;
 ```
 
 --
 
-Luckily, it appears that I do not need to tidy the data beyond what has already been done. So, all I need to do is plot the data
+Luckily, it appears that I do **not** need to tidy the data beyond what has already been done. So, all I need to do is plot the data
 
 ---
 
@@ -612,21 +615,20 @@ I wanted to examine **the total number of books read in a year** by **age group*
 ```r
 # Subset the original data and tidy for plotting
 plot_data &lt;- df %&gt;% 
-  select(age, total_books_read, books_print, books_audio, books_elect)
+  select(age, total_books_read, books_print, 
+         books_audio, books_elect)
 
-head(plot_data)
+head(plot_data, 4)
 ```
 
 ```
-## # A tibble: 6 x 5
+## # A tibble: 4 x 5
 ##     age total_books_read books_print books_audio books_elect
 ##   &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt;       &lt;fct&gt;      
 ## 1    33                1 Yes         No          No         
 ## 2    NA                0 &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;       
 ## 3    60                2 Yes         No          No         
-## 4    55                6 Yes         No          Yes        
-## 5    58               18 Yes         No          Yes        
-## 6    NA                3 Yes         No          Yes
+## 4    55                6 Yes         No          Yes
 ```
 
 ---
@@ -635,40 +637,44 @@ head(plot_data)
 ```r
 # Use gather and separate to pull media formats into one column
 plot_data &lt;- df %&gt;% 
-  select(age, total_books_read, books_print, books_audio, books_elect) %&gt;% 
+  select(age, total_books_read, books_print, 
+         books_audio, books_elect) %&gt;% 
   gather(book_format, yn, -age, -total_books_read) %&gt;% 
-  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %&gt;% 
+  separate(book_format, c("dis", "book_format"), 
+           sep = "_", convert = TRUE) %&gt;% 
   select(-dis) %&gt;% 
   filter(!str_detect(yn, "VOL"))
 
-head(plot_data)
+head(plot_data, 4)
 ```
 
 ```
-## # A tibble: 6 x 4
+## # A tibble: 4 x 4
 ##     age total_books_read book_format yn   
 ##   &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;
 ## 1    33                1 print       Yes  
 ## 2    60                2 print       Yes  
 ## 3    55                6 print       Yes  
-## 4    58               18 print       Yes  
-## 5    NA                3 print       Yes  
-## 6    72                2 print       Yes
+## 4    58               18 print       Yes
 ```
 
 ---
-- Lastly, factorize the new columns and recode age_group for intuitive plotting:
+- Lastly, factorize new columns and recode age_group:
 
 ```r
 plot_data &lt;- df %&gt;% 
-  select(age, total_books_read, books_print, books_audio, books_elect) %&gt;% 
+  select(age, total_books_read, books_print, 
+         books_audio, books_elect) %&gt;% 
   gather(book_format, yn, -age, -total_books_read) %&gt;% 
-  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %&gt;% 
+  separate(book_format, c("dis", "book_format"), 
+           sep = "_", convert = TRUE) %&gt;% 
   select(-dis) %&gt;% 
   filter(!str_detect(yn, "VOL")) %&gt;% 
   mutate(book_format = factor(book_format),
          yn = factor(yn),
-         age_group = factor(findInterval(age, c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)))) %&gt;% 
+         age_group = factor(
+           findInterval(age, c(10, 20, 30, 40, 50, 
+                               60, 70, 80, 90, 100)))) %&gt;% 
   mutate(age_group = recode(age_group, "1" = "18-19",
                             "2" = "20-29",
                             "3" = "30-39",
@@ -680,7 +686,8 @@ plot_data &lt;- df %&gt;%
                             "9" = "90-99"))
 ```
 
---
+---
+
 
 ```r
 head(plot_data)
@@ -703,10 +710,8 @@ head(plot_data)
 
 
 ```r
-# Pick color palette for plot
-pal &lt;- jcolors("pal10")
+pal &lt;- jcolors("pal10") # Select color palette for plot
 
-# Bar Chart: looking at average books read across age.
 bar_plot &lt;- plot_data %&gt;%
   filter(!is.na(age_group)) %&gt;% 
   group_by(age_group) %&gt;% 
@@ -719,7 +724,10 @@ bar_plot &lt;- plot_data %&gt;%
        x = "Ages",
        title = "Books Read by Age",
        subtitle = "Books read in the past year.") +
-  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
         plot.title = element_text(size = 21, hjust = 0))
 ```
 
@@ -759,16 +767,21 @@ bar_plot2 &lt;- plot_data %&gt;%
   dplyr::summarize(mean_books = mean(total_books_read)) %&gt;% 
   ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
   geom_col() +
-  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, 
+             labeller = as_labeller(media_labels)) +
   scale_fill_manual(values = pal) +
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
        x = "Age Bin",
        title = "Average Books Read by Format",
        subtitle = "Average books read in past year.") +
-  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
         plot.title = element_text(size = 21, hjust = 0),
-        axis.text.x = element_text(angle = 90, vjust = .5)) # Rotate and center text
+        axis.text.x = element_text(angle = 90, vjust = .5)) 
+# note that the line above rotates and centers text
 ```
 
 ---

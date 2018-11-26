@@ -536,12 +536,12 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 First, inspect the data frame
 
 ```{r ash_plot3_view}
-head(plot_ash1, 1)
+head(plot_ash1, 4)
 ```
 
 --
 
-Luckily, it appears that I do not need to tidy the data beyond what has already been done. So, all I need to do is plot the data
+Luckily, it appears that I do **not** need to tidy the data beyond what has already been done. So, all I need to do is plot the data
 
 ---
 
@@ -628,9 +628,10 @@ I wanted to examine **the total number of books read in a year** by **age group*
 
 # Subset the original data and tidy for plotting
 plot_data <- df %>% 
-  select(age, total_books_read, books_print, books_audio, books_elect)
+  select(age, total_books_read, books_print, 
+         books_audio, books_elect)
 
-head(plot_data)
+head(plot_data, 4)
 ```
 
 ---
@@ -638,27 +639,33 @@ head(plot_data)
 ```{r}
 # Use gather and separate to pull media formats into one column
 plot_data <- df %>% 
-  select(age, total_books_read, books_print, books_audio, books_elect) %>% 
+  select(age, total_books_read, books_print, 
+         books_audio, books_elect) %>% 
   gather(book_format, yn, -age, -total_books_read) %>% 
-  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
+  separate(book_format, c("dis", "book_format"), 
+           sep = "_", convert = TRUE) %>% 
   select(-dis) %>% 
   filter(!str_detect(yn, "VOL"))
 
-head(plot_data)
+head(plot_data, 4)
 ```
 
 ---
-- Lastly, factorize the new columns and recode age_group for intuitive plotting:
+- Lastly, factorize new columns and recode age_group:
 ```{r}
 plot_data <- df %>% 
-  select(age, total_books_read, books_print, books_audio, books_elect) %>% 
+  select(age, total_books_read, books_print, 
+         books_audio, books_elect) %>% 
   gather(book_format, yn, -age, -total_books_read) %>% 
-  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
+  separate(book_format, c("dis", "book_format"), 
+           sep = "_", convert = TRUE) %>% 
   select(-dis) %>% 
   filter(!str_detect(yn, "VOL")) %>% 
   mutate(book_format = factor(book_format),
          yn = factor(yn),
-         age_group = factor(findInterval(age, c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)))) %>% 
+         age_group = factor(
+           findInterval(age, c(10, 20, 30, 40, 50, 
+                               60, 70, 80, 90, 100)))) %>% 
   mutate(age_group = recode(age_group, "1" = "18-19",
                             "2" = "20-29",
                             "3" = "30-39",
@@ -668,10 +675,10 @@ plot_data <- df %>%
                             "7" = "70-79",
                             "8" = "80-89",
                             "9" = "90-99"))
-
 ```
 
---
+---
+
 ```{r}
 head(plot_data)
 ```
@@ -680,10 +687,8 @@ head(plot_data)
 # Building the plot
 
 ```{r stef_plot_show, eval = TRUE}
-# Pick color palette for plot
-pal <- jcolors("pal10")
+pal <- jcolors("pal10") # Select color palette for plot
 
-# Bar Chart: looking at average books read across age.
 bar_plot <- plot_data %>%
   filter(!is.na(age_group)) %>% 
   group_by(age_group) %>% 
@@ -696,9 +701,11 @@ bar_plot <- plot_data %>%
        x = "Ages",
        title = "Books Read by Age",
        subtitle = "Books read in the past year.") +
-  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
         plot.title = element_text(size = 21, hjust = 0))
-
 ```
 
 ---
@@ -726,14 +733,18 @@ bar_plot2 <- plot_data %>%
   dplyr::summarize(mean_books = mean(total_books_read)) %>% 
   ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
   geom_col() +
-  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, 
+             labeller = as_labeller(media_labels)) +
   scale_fill_manual(values = pal) +
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
        x = "Age Bin",
        title = "Average Books Read by Format",
        subtitle = "Average books read in past year.") +
-  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
         plot.title = element_text(size = 21, hjust = 0),
         axis.text.x = element_text(angle = 90, vjust = .5))
 
@@ -767,16 +778,21 @@ bar_plot2 <- plot_data %>%
   dplyr::summarize(mean_books = mean(total_books_read)) %>% 
   ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
   geom_col() +
-  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, 
+             labeller = as_labeller(media_labels)) +
   scale_fill_manual(values = pal) +
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
        x = "Age Bin",
        title = "Average Books Read by Format",
        subtitle = "Average books read in past year.") +
-  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
         plot.title = element_text(size = 21, hjust = 0),
-        axis.text.x = element_text(angle = 90, vjust = .5)) # Rotate and center text
+        axis.text.x = element_text(angle = 90, vjust = .5)) 
+# note that the line above rotates and centers text
 ```
 
 ---
