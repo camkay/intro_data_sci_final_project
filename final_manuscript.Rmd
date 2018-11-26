@@ -222,7 +222,7 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 # Examine whether age trends in reading differs as a function of book format 
 # (e.g. do older readers spend more time with paper copy books whereas younger users may spend more time with audiobooks or digital print?). 
 
-# Subset the original data and tidy for plotting
+# Subset the original data and tidy for plotting, added a age bin variable
 plot_data <- df_td %>% 
   select(age, total_books_read, books_print, books_audio, books_elect) %>% 
   gather(book_format, yn, -age, -total_books_read) %>% 
@@ -230,43 +230,52 @@ plot_data <- df_td %>%
   select(-dis) %>% 
   filter(!is.na(yn) & !str_detect(yn, "VOL")) %>% 
   mutate(book_format = factor(book_format),
-         yn = factor(yn)) 
+         yn = factor(yn),
+         age_group = factor(findInterval(age, c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)))) 
 
 ####
 
 # Bar Chart: looking at average books read across age.
-bar_plot <- plot_data %>% 
-  group_by(age) %>% 
+bar_plot <- plot_data %>%
+  filter(!is.na(age_group)) %>% 
+  group_by(age_group) %>% 
   dplyr::summarize(mean_books = mean(total_books_read)) %>% 
-  ggplot(aes(x = age, y = mean_books, fill = age)) + 
+  ggplot(aes(x = age_group, y = mean_books, fill = age_group)) + 
   geom_col() +
-  scale_fill_viridis_c() + 
+  scale_fill_viridis_d() + 
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
-       x = "Age",
+       x = "Age Bin",
        title = "Average Number of Books Read by Age",
-       subtitle = "Books Read in the Past Year. Respondents 18-99.") +
+       subtitle = "Books Read in the Past Year.") +
   theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
         plot.title = element_text(size = 15, hjust = 0))
 
 bar_plot
 
-
+# Facet Labels
+media_labels <- c(`audio` = "Audio",
+                    `elect` = "Electronic",
+                    `print` = "Print")
 
 # Bar Chart: Average books read by format
 bar_plot2 <- plot_data %>% 
-  group_by(age, book_format) %>% 
+  filter(!is.na(age_group)) %>% 
+  group_by(age_group, book_format) %>% 
   dplyr::summarize(mean_books = mean(total_books_read)) %>% 
-  ggplot(aes(x = age, y = mean_books, fill = book_format)) + 
+  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
   geom_col() +
-  facet_wrap(~book_format, nrow = 3, ncol = 1) +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
+  scale_fill_manual(values = pal) +
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
-       x = "Age",
+       x = "Age Bin",
        title = "Average Books Read by Format",
-       subtitle = "Average Books Read in the Past Year. Respondents 18-99.") +
+       subtitle = "Average Books Read in the Past Year.") +
   theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0))
+        plot.title = element_text(size = 15, hjust = 0),
+        axis.text.x = element_text(angle = 90, vjust = .5),
+        )
 
 bar_plot2
 
@@ -299,7 +308,7 @@ point_plot2 <- plot_data %>%
   geom_smooth(method = 'lm',
               aes(color = book_format)) +
   scale_color_manual(values = wes_palette("Darjeeling1")) +
-  facet_wrap(~book_format, nrow = 3, ncol = 1) +
+  #facet_wrap(~book_format, nrow = 3, ncol = 1) +
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
        x = "Age",

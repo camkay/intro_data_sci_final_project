@@ -23,13 +23,17 @@ library(lmerTest)
 library(here)
 library(rio)
 library(lubridate)
+#install.packages("cowplot")
 library(cowplot)
+#install.packages("wesanderson")
 library(wesanderson)
 library(forcats)
 library(pander)
 #devtools::install_github("gadenbuie/xaringanthemer")
 library(xaringanthemer)
 library(magrittr)
+#devtools::install_github("jaredhuling/jcolors")
+library(jcolors)
 
 #Disable scientific notation
 options(scipen = 999)
@@ -409,7 +413,7 @@ plot_data_ash <- df %>%
 
 Next, I came up with a question:
 
-- Namely, are there differences in **how good people belief the internet is for society** as a function of **political party**?
+- Namely, are there differences in **how good people believe the internet is for society** as a function of **political party**?
 
 --
 
@@ -586,6 +590,206 @@ ggplot(plot_ash3, aes(x = age, y = sns_freq_use)) +
        x = "Age", 
        y = "Frequency of social media use",
        colour = "Sex")
+```
+
+---
+
+class: inverse, middle, center
+
+# Examining age trends in print media
+
+---
+# Do older adults read more than young adults?
+
+```{r stef_plot1_run, fig.height = 8, fig.width = 15, fig.align = 'center', echo = FALSE}
+# Subset the original data and tidy for plotting, added age bin variable & renamed
+plot_data <- df %>% 
+  select(age, total_books_read, books_print, books_audio, books_elect) %>% 
+  gather(book_format, yn, -age, -total_books_read) %>% 
+  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
+  select(-dis) %>% 
+  filter(!str_detect(yn, "VOL")) %>% 
+  mutate(book_format = factor(book_format),
+         yn = factor(yn),
+         age_group = factor(findInterval(age, c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)))) %>% 
+  mutate(age_group = recode(age_group, "1" = "18-19",
+                            "2" = "20-29",
+                            "3" = "30-39",
+                            "4" = "40-49",
+                            "5" = "50-59",
+                            "6" = "60-69",
+                            "7" = "70-79",
+                            "8" = "80-89",
+                            "9" = "90-99"))
+
+# Pick color palette for plot
+pal <- jcolors("pal10")
+
+# Bar Chart: looking at average books read across age.
+bar_plot <- plot_data %>%
+  filter(!is.na(age_group)) %>% 
+  group_by(age_group) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
+  ggplot(aes(x = age_group, y = mean_books, fill = age_group)) + 
+  geom_col() +
+  scale_fill_manual(values = pal) + 
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Ages",
+       title = "Books Read by Age",
+       subtitle = "Books read in the past year.") +
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 15, hjust = 0))
+
+bar_plot
+
+```
+
+---
+# Average Books Journey
+I wanted to examine **the total number of books read in a year** by **age group**.
+
+- On average, how many books are read a year irrespective of media format?
+
+--
+- First I selected variables that I wanted to use: 
+
+```{r plot_data_prep, echo = TRUE}
+
+# Subset the original data and tidy for plotting
+plot_data <- df %>% 
+  select(age, total_books_read, books_print, books_audio, books_elect)
+
+head(plot_data)
+```
+
+---
+- Next, I needed all formats to be in one column:
+```{r}
+# Use gather and separate to pull media formats into one column
+plot_data <- df %>% 
+  select(age, total_books_read, books_print, books_audio, books_elect) %>% 
+  gather(book_format, yn, -age, -total_books_read) %>% 
+  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
+  select(-dis) %>% 
+  filter(!str_detect(yn, "VOL"))
+
+head(plot_data)
+```
+
+---
+- Lastly, factorize the new columns and recode age_group for intuitive plotting:
+```{r}
+plot_data <- df %>% 
+  select(age, total_books_read, books_print, books_audio, books_elect) %>% 
+  gather(book_format, yn, -age, -total_books_read) %>% 
+  separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
+  select(-dis) %>% 
+  filter(!str_detect(yn, "VOL")) %>% 
+  mutate(book_format = factor(book_format),
+         yn = factor(yn),
+         age_group = factor(findInterval(age, c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)))) %>% 
+  mutate(age_group = recode(age_group, "1" = "18-19",
+                            "2" = "20-29",
+                            "3" = "30-39",
+                            "4" = "40-49",
+                            "5" = "50-59",
+                            "6" = "60-69",
+                            "7" = "70-79",
+                            "8" = "80-89",
+                            "9" = "90-99"))
+
+```
+
+--
+```{r}
+head(plot_data)
+```
+
+---
+# Building the plot
+
+```{r stef_plot_show, eval = TRUE}
+# Pick color palette for plot
+pal <- jcolors("pal10")
+
+# Bar Chart: looking at average books read across age.
+bar_plot <- plot_data %>%
+  filter(!is.na(age_group)) %>% 
+  group_by(age_group) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
+  ggplot(aes(x = age_group, y = mean_books, fill = age_group)) + 
+  geom_col() +
+  scale_fill_manual(values = pal) + 
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Ages",
+       title = "Books Read by Age",
+       subtitle = "Books read in the past year.") +
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 15, hjust = 0))
+
+```
+
+---
+# Final Product!
+```{r, fig.height = 8, fig.width = 15, fig.align = 'center', echo = FALSE}
+bar_plot
+```
+
+
+---
+# How does age and format of print media relate to reading? 
+I wanted to examine how **the total number of books read in a year** might vary as a function of **age** and  **print format (electronic, audio, or print)**.
+
+```{r stef_plot2_run, fig.height = 8, fig.width = 15, fig.align = 'center', echo = FALSE}
+
+# Pick color palette for plot
+pal <- jcolors("pal10")
+
+# Facet Labels
+media_labels <- c(`audio` = "Audio",
+                    `elect` = "Electronic",
+                    `print` = "Print")
+
+# Bar Chart: Average books read by format
+bar_plot2 <- plot_data %>% 
+  filter(!is.na(age_group)) %>% 
+  group_by(age_group, book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
+  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
+  geom_col() +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
+  scale_fill_manual(values = pal) +
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Age Bin",
+       title = "Average Books Read by Format",
+       subtitle = "Average Books Read in the Past Year.") +
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 15, hjust = 0),
+        axis.text.x = element_text(angle = 90, vjust = .5),
+        )
+
+bar_plot2
+
+```
+
+
+---
+```{r regression model}
+# Prepare the data
+reg_data <- plot_data %>%
+  filter(!is.na(age)) %>% 
+  group_by(age, book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read))
+
+# Fit the model
+model <- lm(mean_books ~ age * book_format, data = reg_data)
+model
+
+pander(anova(model))
+
 ```
 
 ---
