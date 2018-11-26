@@ -364,8 +364,7 @@ df %<>%
 
 ```
 
----
-# Tidying the Dataset
+--
 
 ```{r peek_at_cleaning, echo = FALSE}
 df[, c("sns", "sns_freq_use")]
@@ -428,26 +427,61 @@ Next, I came up with a question:
 
 - Namely, how might **frequency of social media use** vary as a function of **age**, **political party**, and **social media site**?
 
---
+---
+#More tidying?
 
-- Do I need to tidy the data any more?
+Inspect the current data:
 
 ```{r ash_plot1_view}
 head(plot_data_ash, 1)
 ```
 
+--
+
+Note that to get to this point, we first had to **convert** all necessary variables to factors:
+
+```{r ash_plot1_convert, eval=FALSE}
+plot_data_ash %<>%
+  mutate(sex = factor(sex),
+         party = factor(party),
+         sns = factor(sns),
+         sns_freq_use = factor(sns_freq_use))
+```
+
 ---
 
-More data tidying:
+We also had to **recode** factor levels:
+
+```{r ash_plot1_recode, eval=FALSE}
+plot_data_ash %<>%
+  mutate(party = fct_recode(party, 
+                            "Other" = "(VOL) Other party",
+                            "Other" = "(VOL) Don't know",
+                            "Other" = "(VOL) No preference",
+                            "Refused" = "(VOL) Refused"))
+
+plot_data_ash %<>%
+  mutate(sns_freq_use = factor(sns_freq_use,
+                               levels = c(
+                                 "(VOL) Don't know",
+                                 "Rarely if ever",
+                                 "Less often",
+                                 "Every few weeks",
+                                 "A few times a week", 
+                                 "About once a day", 
+                                 "Several times a day")))
+```
+
+---
+
+Final tidying:
 
 ```{r ash_plot1_tidy, eval=FALSE}
-
 plot_ash1 <- plot_data_ash %>%
   mutate(sns_freq_use = as.numeric(sns_freq_use)) %>% #<<
   filter(party != "Refused",
          sns_freq_use != "<NA>",
          sns_freq_use != "(VOL) Don't know") 
-
 ```
 
 --
@@ -462,7 +496,7 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   facet_wrap(~sns, nrow = 1) +
   scale_colour_viridis_d() +
   theme_bw() +
-  labs(title = "Figure 2.",
+  labs(title = "Figure 1.",
        subtitle = "The relation between age and frequency of 
        social media use as a function of political party and 
        social media site",
@@ -488,7 +522,7 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   scale_color_manual(values = c("turquoise3", "purple3")) +
   facet_wrap(~sns, nrow = 1) +
   theme_bw(base_size = 21) +
-  labs(title = "Figure 3.",
+  labs(title = "Figure 2.",
        subtitle = "The relation between age and frequency of social media use as a function of sex and social media site",
        x = "Age", 
        y = "Frequency of social media use",
@@ -520,7 +554,7 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   scale_color_manual(values = c("turquoise3", "purple3")) +
   facet_wrap(~sns, nrow = 1) +
   theme_bw(base_size = 21) +
-  labs(title = "Figure 3.",
+  labs(title = "Figure 2.",
        subtitle = "Relation between age and frequency of social 
        media use as a function of sex and social media site",
        x = "Age", 
@@ -574,8 +608,8 @@ bar_plot <- plot_data %>%
        x = "Ages",
        title = "Books Read by Age",
        subtitle = "Books read in the past year.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0))
+  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 21, hjust = 0))
 
 bar_plot
 
@@ -662,8 +696,8 @@ bar_plot <- plot_data %>%
        x = "Ages",
        title = "Books Read by Age",
        subtitle = "Books read in the past year.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0))
+  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 21, hjust = 0))
 
 ```
 
@@ -699,8 +733,8 @@ bar_plot2 <- plot_data %>%
        x = "Age Bin",
        title = "Average Books Read by Format",
        subtitle = "Average books read in past year.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0),
+  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 21, hjust = 0),
         axis.text.x = element_text(angle = 90, vjust = .5))
 
 bar_plot2
@@ -740,8 +774,8 @@ bar_plot2 <- plot_data %>%
        x = "Age Bin",
        title = "Average Books Read by Format",
        subtitle = "Average books read in past year.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0),
+  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 21, hjust = 0),
         axis.text.x = element_text(angle = 90, vjust = .5)) # Rotate and center text
 ```
 
