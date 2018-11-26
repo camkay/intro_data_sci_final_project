@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="Cameron S. Kay, Stefania R. Ashby, &amp; Ashley L. Miller" />
     <meta name="date" content="2018-11-25" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -760,13 +761,58 @@ bar_plot &lt;- plot_data %&gt;%
 
 
 ---
-# How does age and format of print media relate to reading? 
-I wanted to examine how **the total number of books read in a year** might vary as a function of **age** and  **print format (electronic, audio, or print)**.
-
+# Are there differences in media type? 
 &lt;img src="index_files/figure-html/stef_plot2_run-1.png" style="display: block; margin: auto;" /&gt;
 
+---
+# Building the plot
+- Pick a new palette and create labels for renaming facets
+
+
+```r
+# Pick color palette for plot
+pal &lt;- wes_palette("Darjeeling1")
+
+# Facet Labels
+media_labels &lt;- c(`audio` = "Audio",
+                    `elect` = "Electronic",
+                    `print` = "Print")
+```
 
 ---
+- Build plot, use `as_labeller` function to rename facet labels
+
+```r
+bar_plot2 &lt;- plot_data %&gt;% 
+  filter(!is.na(age_group)) %&gt;% 
+  group_by(age_group, book_format) %&gt;% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %&gt;% 
+  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
+  geom_col() +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
+  scale_fill_manual(values = pal) +
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Age Bin",
+       title = "Average Books Read by Format",
+       subtitle = "Average books read in past year.") +
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 15, hjust = 0),
+        axis.text.x = element_text(angle = 90, vjust = .5)) # Rotate and center text
+```
+
+---
+# Final Product!
+&lt;img src="index_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# How does age and media format relate to reading? 
+I wanted to examine how **the average number of books read in a year** might vary as a function of **age** and  **book format (electronic, audio, or print)**.
+
+--
+
+I fit a linear model predicting the average number of books read from age, book_format, and their interaction
+
 
 ```r
 # Prepare the data
@@ -777,47 +823,64 @@ reg_data &lt;- plot_data %&gt;%
 
 # Fit the model
 model &lt;- lm(mean_books ~ age * book_format, data = reg_data)
-model
 ```
-
-```
-## 
-## Call:
-## lm(formula = mean_books ~ age * book_format, data = reg_data)
-## 
-## Coefficients:
-##          (Intercept)                   age      book_formatelect  
-##           14.9000474             0.0552705            -0.0268955  
-##     book_formatprint  age:book_formatelect  age:book_formatprint  
-##           -0.1818591            -0.0004792             0.0028848
-```
-
-```r
-pander(anova(model))
-```
-
-
---------------------------------------------------------------------
-       &amp;nbsp;          Df    Sum Sq   Mean Sq    F value    Pr(&gt;F)  
---------------------- ----- -------- --------- ----------- ---------
-       **age**          1    322.9     322.9      3.507     0.06246 
-
-   **book_format**      2    0.1044   0.05218   0.0005667   0.9994  
-
- **age:book_format**    2    0.2267   0.1134    0.001231    0.9988  
-
-    **Residuals**      216   19890     92.08       NA         NA    
---------------------------------------------------------------------
-
-Table: Analysis of Variance Table
 
 ---
+Then I used `kable` to generate a table with output from the regression
 
-#Stefania, add whatever plots/code you want! Could you add your pretty table? :)
 
-- Note that I will likely delete one of my figure.. I'm leaning towards Figure 1. Thoughts?
+```r
+# Ouput a table
+kable(anova(model)) %&gt;%
+  kable_styling(bootstrap_options = "striped", full_width = F)
+```
 
-- In case you didn't see this above, you can also insert links like this [click here to view demo for how to modify these slides](https://ashlynnmiller.github.io/Lab14_DemoSlides/).
+&lt;table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum Sq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mean Sq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Pr(&amp;gt;F) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 322.9251393 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 322.9251393 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.5069298 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0624636 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; book_format &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1043620 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0521810 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0005667 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9994335 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age:book_format &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2267453 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1133727 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0012312 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9987696 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Residuals &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 216 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19889.7140146 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 92.0820093 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

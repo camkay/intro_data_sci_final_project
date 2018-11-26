@@ -34,6 +34,8 @@ library(xaringanthemer)
 library(magrittr)
 #devtools::install_github("jaredhuling/jcolors")
 library(jcolors)
+#devtools::install_github("haozhu233/kableExtra")
+library(kableExtra)
 
 #Disable scientific notation
 options(scipen = 999)
@@ -739,13 +741,10 @@ bar_plot
 
 
 ---
-# How does age and format of print media relate to reading? 
-I wanted to examine how **the total number of books read in a year** might vary as a function of **age** and  **print format (electronic, audio, or print)**.
-
+# Are there differences in media type? 
 ```{r stef_plot2_run, fig.height = 8, fig.width = 15, fig.align = 'center', echo = FALSE}
-
 # Pick color palette for plot
-pal <- jcolors("pal10")
+pal <- wes_palette("Darjeeling1")
 
 # Facet Labels
 media_labels <- c(`audio` = "Audio",
@@ -765,18 +764,67 @@ bar_plot2 <- plot_data %>%
   labs(y = "Average Books Read",
        x = "Age Bin",
        title = "Average Books Read by Format",
-       subtitle = "Average Books Read in the Past Year.") +
+       subtitle = "Average books read in past year.") +
   theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
         plot.title = element_text(size = 15, hjust = 0),
-        axis.text.x = element_text(angle = 90, vjust = .5),
-        )
+        axis.text.x = element_text(angle = 90, vjust = .5))
 
 bar_plot2
 
 ```
 
+---
+# Building the plot
+- Data has already been tidied
+
+- Pick a new palette and create labels for renaming facets
+
+```{r}
+# Pick color palette for plot
+pal <- wes_palette("Darjeeling1")
+
+# Facet Labels
+media_labels <- c(`audio` = "Audio",
+                    `elect` = "Electronic",
+                    `print` = "Print")
+
+```
 
 ---
+- Build plot, use `as_labeller` function to rename facet labels
+```{r}
+bar_plot2 <- plot_data %>% 
+  filter(!is.na(age_group)) %>% 
+  group_by(age_group, book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
+  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
+  geom_col() +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
+  scale_fill_manual(values = pal) +
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Age Bin",
+       title = "Average Books Read by Format",
+       subtitle = "Average books read in past year.") +
+  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 15, hjust = 0),
+        axis.text.x = element_text(angle = 90, vjust = .5)) # Rotate and center text
+```
+
+---
+# Final Product!
+```{r, fig.height = 8, fig.width = 15, fig.align = 'center', echo = FALSE}
+bar_plot2
+```
+
+---
+# How does age and media format relate to reading? 
+I wanted to examine how **the average number of books read in a year** might vary as a function of **age** and  **book format (electronic, audio, or print)**.
+
+--
+
+I fit a linear model predicting the average number of books read from age, book_format, and their interaction
+
 ```{r regression model}
 # Prepare the data
 reg_data <- plot_data %>%
@@ -786,16 +834,16 @@ reg_data <- plot_data %>%
 
 # Fit the model
 model <- lm(mean_books ~ age * book_format, data = reg_data)
-model
-
-pander(anova(model))
 
 ```
 
 ---
+Then I used `kable` to generate a table with output from the regression
 
-#Stefania, add whatever plots/code you want! Could you add your pretty table? :)
+```{r}
 
-- Note that I will likely delete one of my figure.. I'm leaning towards Figure 1. Thoughts?
+# Ouput a table
+kable(anova(model)) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F)
 
-- In case you didn't see this above, you can also insert links like this [click here to view demo for how to modify these slides](https://ashlynnmiller.github.io/Lab14_DemoSlides/).
+```
