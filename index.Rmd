@@ -741,7 +741,7 @@ bar_plot
 
 
 ---
-# Are there differences in media type? 
+# Are there differences by media type? 
 ```{r stef_plot2_run, fig.height = 8, fig.width = 15, fig.align = 'center', echo = FALSE}
 # Pick color palette for plot
 pal <- wes_palette("Darjeeling1")
@@ -823,7 +823,7 @@ I wanted to examine how **the average number of books read in a year** might var
 
 --
 
-I fit a linear model predicting the average number of books read from age, book_format, and their interaction
+- I fit a linear model predicting the average number of books read from age, book_format, and their interaction
 
 ```{r regression model}
 # Prepare the data
@@ -847,3 +847,8 @@ kable(anova(model)) %>%
   kable_styling(bootstrap_options = "striped", full_width = F)
 
 ```
+
+---
+class: inverse, middle, center
+
+# The END!
