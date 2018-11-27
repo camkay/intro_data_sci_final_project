@@ -615,20 +615,20 @@ I wanted to examine **the total number of books read in a year** by **age group*
 ```r
 # Subset the original data and tidy for plotting
 plot_data &lt;- df %&gt;% 
-  select(age, total_books_read, books_print, 
+  select(id, age, total_books_read, books_print, 
          books_audio, books_elect)
 
 head(plot_data, 4)
 ```
 
 ```
-## # A tibble: 4 x 5
-##     age total_books_read books_print books_audio books_elect
-##   &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt;       &lt;fct&gt;      
-## 1    33                1 Yes         No          No         
-## 2    NA                0 &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;       
-## 3    60                2 Yes         No          No         
-## 4    55                6 Yes         No          Yes
+## # A tibble: 4 x 6
+##      id   age total_books_read books_print books_audio books_elect
+##   &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt;       &lt;fct&gt;      
+## 1     1    33                1 Yes         No          No         
+## 2     3    NA                0 &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;       
+## 3     4    60                2 Yes         No          No         
+## 4     5    55                6 Yes         No          Yes
 ```
 
 ---
@@ -637,9 +637,10 @@ head(plot_data, 4)
 ```r
 # Use gather and separate to pull media formats into one column
 plot_data &lt;- df %&gt;% 
-  select(age, total_books_read, books_print, 
+  select(id, age, total_books_read, books_print, 
          books_audio, books_elect) %&gt;% 
-  gather(book_format, yn, -age, -total_books_read) %&gt;% 
+  filter(!duplicated(id)) %&gt;% 
+  gather(book_format, yn, -age, -total_books_read, -id) %&gt;% 
   separate(book_format, c("dis", "book_format"), 
            sep = "_", convert = TRUE) %&gt;% 
   select(-dis) %&gt;% 
@@ -649,23 +650,29 @@ head(plot_data, 4)
 ```
 
 ```
-## # A tibble: 4 x 4
-##     age total_books_read book_format yn   
-##   &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;
-## 1    33                1 print       Yes  
-## 2    60                2 print       Yes  
-## 3    55                6 print       Yes  
-## 4    58               18 print       Yes
+## # A tibble: 4 x 5
+##      id   age total_books_read book_format yn   
+##   &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;
+## 1     1    33                1 print       Yes  
+## 2     4    60                2 print       Yes  
+## 3     5    55                6 print       Yes  
+## 4     6    58               18 print       Yes
 ```
+
+---
+- But what about age bins?
+
+![](index_files/figure-html/ugly_plot-1.png)&lt;!-- --&gt;
 
 ---
 - Lastly, factorize new columns and recode age_group:
 
 ```r
 plot_data &lt;- df %&gt;% 
-  select(age, total_books_read, books_print, 
-         books_audio, books_elect) %&gt;% 
-  gather(book_format, yn, -age, -total_books_read) %&gt;% 
+  select(id, age, total_books_read, books_print, 
+         books_audio, books_elect) %&gt;%
+  filter(!duplicated(id)) %&gt;% 
+  gather(book_format, yn, -age, -total_books_read, -id) %&gt;% 
   separate(book_format, c("dis", "book_format"), 
            sep = "_", convert = TRUE) %&gt;% 
   select(-dis) %&gt;% 
@@ -694,15 +701,15 @@ head(plot_data)
 ```
 
 ```
-## # A tibble: 6 x 5
-##     age total_books_read book_format yn    age_group
-##   &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt; &lt;fct&gt;    
-## 1    33                1 print       Yes   30-39    
-## 2    60                2 print       Yes   60-69    
-## 3    55                6 print       Yes   50-59    
-## 4    58               18 print       Yes   50-59    
-## 5    NA                3 print       Yes   &lt;NA&gt;     
-## 6    72                2 print       Yes   70-79
+## # A tibble: 6 x 6
+##      id   age total_books_read book_format yn    age_group
+##   &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt; &lt;fct&gt;    
+## 1     1    33                1 print       Yes   30-39    
+## 2     4    60                2 print       Yes   60-69    
+## 3     5    55                6 print       Yes   50-59    
+## 4     6    58               18 print       Yes   50-59    
+## 5     7    NA                3 print       Yes   &lt;NA&gt;     
+## 6     8    72                2 print       Yes   70-79
 ```
 
 ---
@@ -713,7 +720,8 @@ head(plot_data)
 pal &lt;- jcolors("pal10") # Select color palette for plot
 
 bar_plot &lt;- plot_data %&gt;%
-  filter(!is.na(age_group)) %&gt;% 
+  filter(!is.na(age_group)) %&gt;%
+  filter(!duplicated(id)) %&gt;% 
   group_by(age_group) %&gt;% 
   dplyr::summarize(mean_books = mean(total_books_read)) %&gt;% 
   ggplot(aes(x = age_group, y = mean_books, fill = age_group)) + 
@@ -728,7 +736,10 @@ bar_plot &lt;- plot_data %&gt;%
                                      hjust = 0, 
                                      face = "italic", 
                                      color = "black"),
-        plot.title = element_text(size = 21, hjust = 0))
+        plot.title = element_text(size = 21, hjust = 0),
+        axis.title.x = element_text(size = 17), 
+        axis.title.y = element_text(size = 17),
+        axis.text = element_text(size = 13))
 ```
 
 ---
@@ -762,9 +773,10 @@ media_labels &lt;- c(`audio` = "Audio",
 
 ```r
 bar_plot2 &lt;- plot_data %&gt;% 
-  filter(!is.na(age_group)) %&gt;% 
+  filter(!is.na(age_group) &amp; yn == 'Yes') %&gt;% 
   group_by(age_group, book_format) %&gt;% 
-  dplyr::summarize(mean_books = mean(total_books_read)) %&gt;% 
+  dplyr::summarize(mean_books = mean(total_books_read),
+                   count = n()) %&gt;% 
   ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
   geom_col() +
   facet_wrap(~book_format, nrow = 1, ncol = 3, 
@@ -779,7 +791,7 @@ bar_plot2 &lt;- plot_data %&gt;%
                                      hjust = 0, 
                                      face = "italic", 
                                      color = "black"),
-        plot.title = element_text(size = 21, hjust = 0),
+        plot.title = element_text(size = 25, hjust = 0),
         axis.text.x = element_text(angle = 90, vjust = .5)) 
 # note that the line above rotates and centers text
 ```
@@ -799,8 +811,8 @@ I wanted to examine how **the average number of books read in a year** might var
 
 ```r
 # Prepare the data
-reg_data &lt;- plot_data %&gt;%
-  filter(!is.na(age)) %&gt;% 
+reg_data &lt;- plot_data %&gt;% 
+  filter(!is.na(age_group) &amp; yn == 'Yes') %&gt;% 
   group_by(age, book_format) %&gt;% 
   dplyr::summarize(mean_books = mean(total_books_read))
 
@@ -833,37 +845,50 @@ kable(anova(model)) %&gt;%
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; age &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 322.9251393 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 322.9251393 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.5069298 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0624636 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1473.9621 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1473.9621 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.9215792 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0158094 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; book_format &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.1043620 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0521810 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0005667 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.9994335 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2652.0292 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1326.0146 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.3272066 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0055497 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; age:book_format &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.2267453 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.1133727 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0012312 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.9987696 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 290.2839 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 145.1420 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5831015 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5590831 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Residuals &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 216 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 19889.7140146 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 92.0820093 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 206 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 51276.2191 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 248.9137 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
+---
+
+&lt;img src="index_files/figure-html/unnamed-chunk-9-1.png"  /&gt;
+
+---
+# The caveat- a newly discovered challenge
+- These are not mutually exclusive
+
+# Goals
+- Find out who uses audio, electronic, and print media exclusively + who uses more than one.
+
+- Re-run analyses
 
 ---
 class: inverse, middle, center
