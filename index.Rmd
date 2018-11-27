@@ -562,11 +562,13 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
        colour = "Sex")
 ```
 
+
+
 ---
 
 class: inverse, middle, center
 
-# Examining age trends in print media
+# Examining age trends in media format
 
 ---
 # Do older adults read more than young adults?
@@ -582,7 +584,7 @@ plot_data <- df %>%
   filter(!str_detect(yn, "VOL")) %>% 
   mutate(book_format = factor(book_format),
          yn = factor(yn),
-         age_group = factor(findInterval(age, c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)))) %>% 
+         age_group = factor(findInterval(age, seq(10, 100, by = 10)))) %>% 
   mutate(age_group = recode(age_group, "1" = "18-19",
                             "2" = "20-29",
                             "3" = "30-39",
@@ -592,6 +594,28 @@ plot_data <- df %>%
                             "7" = "70-79",
                             "8" = "80-89",
                             "9" = "90-99"))
+
+# #  Build new format column that exclusively represents books read by format 
+# subj <- unique(plot_data$id)
+# plot_data$new_format <- NA
+# 
+# # Loop through subjects to populate new column
+# for (i in 1:length(subj)){
+#   foo <- plot_data[plot_data$id == subj[i],]
+#   if (length(which(foo$yn == "Yes")) == 1) {
+#     plot_data$new_format[plot_data$id == subj[i]] <- as.character(rep(foo$book_format[foo$yn == "Yes"], 3))
+#   } else if (length(which(foo$yn == "Yes")) >= 2) {
+#     plot_data$new_format[plot_data$id == subj[i]] <- as.character(rep("mixed media", 3))
+#   }
+# }
+#   
+# # Reformat to have one observation per subject 
+# plot_data %<>% 
+#   select(-book_format) %>% 
+#   mutate(book_format = new_format) %>% 
+#   select(-new_format, -yn) %>% 
+#   filter(!duplicated(id) & !is.na(book_format) & !is.na(age))
+#   
 
 # Pick color palette for plot
 pal <- jcolors("pal10")
@@ -699,9 +723,7 @@ plot_data <- df %>%
   filter(!str_detect(yn, "VOL")) %>% 
   mutate(book_format = factor(book_format),
          yn = factor(yn),
-         age_group = factor(
-           findInterval(age, c(10, 20, 30, 40, 50, 
-                               60, 70, 80, 90, 100)))) %>% 
+         age_group = factor(findInterval(age, seq(10, 100, by = 10)))) %>%
   mutate(age_group = recode(age_group, "1" = "18-19",
                             "2" = "20-29",
                             "3" = "30-39",
@@ -910,7 +932,7 @@ bar_plot3
 # Goals
 - Find out who uses audio, electronic, and print media exclusively + who uses more than one.
 
-- Re-run analyses
+- Re-run analyses for paper
 
 ---
 class: inverse, middle, center

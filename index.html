@@ -591,11 +591,13 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
        colour = "Sex")
 ```
 
+
+
 ---
 
 class: inverse, middle, center
 
-# Examining age trends in print media
+# Examining age trends in media format
 
 ---
 # Do older adults read more than young adults?
@@ -679,9 +681,7 @@ plot_data &lt;- df %&gt;%
   filter(!str_detect(yn, "VOL")) %&gt;% 
   mutate(book_format = factor(book_format),
          yn = factor(yn),
-         age_group = factor(
-           findInterval(age, c(10, 20, 30, 40, 50, 
-                               60, 70, 80, 90, 100)))) %&gt;% 
+         age_group = factor(findInterval(age, seq(10, 100, by = 10)))) %&gt;%
   mutate(age_group = recode(age_group, "1" = "18-19",
                             "2" = "20-29",
                             "3" = "30-39",
@@ -888,7 +888,7 @@ kable(anova(model)) %&gt;%
 # Goals
 - Find out who uses audio, electronic, and print media exclusively + who uses more than one.
 
-- Re-run analyses
+- Re-run analyses for paper
 
 ---
 class: inverse, middle, center
