@@ -507,6 +507,26 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 ```
 
 ---
+
+# Revisiting A Line Graph:
+
+```{r ash_plot1_revisit, fig.height=8, fig.width=15, fig.align='center', echo = FALSE}
+
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
+  facet_wrap(~sns, nrow = 1) +
+  scale_colour_viridis_d() +
+  theme_bw(base_size = 21) +
+  labs(title = "Figure 1.",
+       subtitle = "Relation between age and frequency of social media use as a function of political party and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Political party")
+
+```
+
+---
+
 class: inverse, middle, center
 
 #What happens if we swap out political party for sex?
