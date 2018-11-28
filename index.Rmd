@@ -407,6 +407,22 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 
 ```
 
+```{r fig1_insert_dots, eval=FALSE}
+
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
+  geom_jitter(aes(colour = party), alpha = 0.5) +
+  facet_wrap(~sns, nrow = 1) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  labs(title = "Figure 1.",
+       subtitle = "Relation between age and frequency of social media use as a function of political party and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Political party")
+
+```
+
 ---
 
 # A Line Graphs's Journey:
@@ -542,6 +558,22 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   scale_color_manual(values = c("turquoise3", "purple3")) +
   facet_wrap(~sns, nrow = 1) +
   theme_bw(base_size = 21) +
+  labs(title = "Figure 2.",
+       subtitle = "The relation between age and frequency of social media use as a function of sex and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+
+```
+
+```{r fig2_insert_dots, eval=FALSE}
+
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = sex, colour = sex), method = "lm", se = FALSE, lwd = 2) +
+  scale_color_manual(values = c("turquoise3", "purple3")) +
+  geom_jitter(aes(colour = sex), alpha = 0.3) +
+  facet_wrap(~sns, nrow = 1) +
+  theme_bw() +
   labs(title = "Figure 2.",
        subtitle = "The relation between age and frequency of social media use as a function of sex and social media site",
        x = "Age", 
