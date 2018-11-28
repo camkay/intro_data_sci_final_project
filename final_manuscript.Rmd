@@ -63,6 +63,8 @@ library(forcats)
 library(pander)
 library(magrittr)
 library(Hmisc)
+library(jcolors)
+
 
 # Load required functions
 source(here::here("functions", "numbers2words.R")) #writes out a number; found on github from James Fox (https://github.com/ateucher/useful_code/blob/master/R/numbers2words.r)
@@ -217,120 +219,86 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 
 # Results
 
-```{r books_analyses_viz, include = FALSE}
+```{r books_analyses, include = FALSE, warning = FALSE}
+#####################################
+### Tidying Data for Analyses:
 
-# Examine whether age trends in reading differs as a function of book format 
-# (e.g. do older readers spend more time with paper copy books whereas younger users may spend more time with audiobooks or digital print?). 
-
-# Subset the original data and tidy for plotting, added a age bin variable
+# Subset the original data and tidy for plotting, added age_group variable and recoded
 plot_data <- df_td %>% 
-  select(age, total_books_read, books_print, books_audio, books_elect) %>% 
-  gather(book_format, yn, -age, -total_books_read) %>% 
+  select(id, age, total_books_read, books_print, books_audio, books_elect) %>% 
+  filter(!duplicated(id) & !is.na(age)) %>% # Remove duplicate id's so we have one observation per subject
+  gather(book_format, yn, -age, -total_books_read, -id) %>% 
   separate(book_format, c("dis", "book_format"), sep = "_", convert = TRUE) %>% 
-  select(-dis) %>% 
-  filter(!is.na(yn) & !str_detect(yn, "VOL")) %>% 
+  select(-dis) %>%
+  mutate(yn = replace(yn, str_detect(yn, 'VOL'), NA)) %>% 
   mutate(book_format = factor(book_format),
          yn = factor(yn),
-         age_group = factor(findInterval(age, c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)))) 
+         age_group = factor(findInterval(age, seq(10, 100, by = 10)))) %>% 
+  mutate(age_group = recode(age_group, "1" = "18-19",
+                            "2" = "20-29",
+                            "3" = "30-39",
+                            "4" = "40-49",
+                            "5" = "50-59",
+                            "6" = "60-69",
+                            "7" = "70-79",
+                            "8" = "80-89",
+                            "9" = "90-99"))
 
-####
+#  Build new format column that exclusively represents one type of media format: exclusively print, audiobook, or electronic, plus a mixed-media option for poeple who use more than one type. 
+subj <- unique(plot_data$id)
+plot_data$new_format <- NA
+
+# Loop through subjects to populate new_format column which will later replace the book_format column.
+for (i in 1:length(subj)) {
+  foo <- plot_data[plot_data$id == subj[i],]
+  if (length(which(foo$yn == "Yes")) == 1) {
+    plot_data$new_format[plot_data$id == subj[i]] <- as.character(rep(foo$book_format[foo$yn == "Yes"], 3))
+  } else if (length(which(foo$yn == "Yes")) >= 2) {
+    plot_data$new_format[plot_data$id == subj[i]] <- as.character(rep("mixed media", 3))
+  }
+}
+
+# Replace the book_format column with the new_format column, remove redundant columns (new_format and yn)
+plot_data %<>%
+  select(-book_format) %>%
+  mutate(book_format = new_format) %>%
+  select(-new_format, -yn) %>%
+  filter(!duplicated(id)) # remove duplicate rows
+
+#####################################
+###  Reading and Age Analysis:
+
+# Pick color palette for plot
+pal <- jcolors("pal10")
 
 # Bar Chart: looking at average books read across age.
 bar_plot <- plot_data %>%
-  filter(!is.na(age_group)) %>% 
   group_by(age_group) %>% 
-  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read),
+                   se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
   ggplot(aes(x = age_group, y = mean_books, fill = age_group)) + 
   geom_col() +
-  scale_fill_viridis_d() + 
+  geom_linerange(aes(ymin = mean_books - se_books, ymax = mean_books + se_books), 
+                width = .2, position = position_dodge(.9)) +
+  scale_y_continuous(expand = c(0,0),
+                     limits = c(0,25)) +
+  scale_fill_manual(values = pal) + 
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
-       x = "Age Bin",
-       title = "Average Number of Books Read by Age",
-       subtitle = "Books Read in the Past Year.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0))
+       x = "Ages",
+       title = "Books Read by Age",
+       subtitle = "Books read in the past year.") +
+  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 21, hjust = 0),
+        axis.title.x = element_text(size = 17), 
+        axis.title.y = element_text(size = 17),
+        axis.text = element_text(size = 13))
 
 bar_plot
 
-# Facet Labels
-media_labels <- c(`audio` = "Audio",
-                    `elect` = "Electronic",
-                    `print` = "Print")
 
-# Bar Chart: Average books read by format
-bar_plot2 <- plot_data %>% 
-  filter(!is.na(age_group)) %>% 
-  group_by(age_group, book_format) %>% 
-  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
-  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
-  geom_col() +
-  facet_wrap(~book_format, nrow = 1, ncol = 3, labeller = as_labeller(media_labels)) +
-  scale_fill_manual(values = pal) +
-  theme(legend.position = "none") +
-  labs(y = "Average Books Read",
-       x = "Age Bin",
-       title = "Average Books Read by Format",
-       subtitle = "Average Books Read in the Past Year.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0),
-        axis.text.x = element_text(angle = 90, vjust = .5),
-        )
-
-bar_plot2
-
-## Scatter Plots: 
-# Total books read by format
-point_plot <- plot_data %>% 
-  filter(yn == 'Yes') %>% 
-  group_by(age, book_format) %>% 
-  count(yn) %>% 
-  ggplot(aes(x = age, y = n)) + 
-  geom_point() +
-  geom_smooth(method = 'lm') +
-  facet_wrap(~book_format, nrow = 3, ncol = 1) +
-  theme(legend.position = "none") +
-  labs(y = "Total Books Read",
-       x = "Age",
-       title = "Total Books Read by Format",
-       subtitle = "Total Books Read in the Past Year. Respondents 18-99.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0))
-
-point_plot
-
-# Average books read by format
-point_plot2 <- plot_data %>% 
-  group_by(age, book_format) %>% 
-  dplyr::summarize(mean_books = mean(total_books_read)) %>% 
-  ggplot(aes(x = age, y = mean_books)) + 
-  geom_point() +
-  geom_smooth(method = 'lm',
-              aes(color = book_format)) +
-  scale_color_manual(values = wes_palette("Darjeeling1")) +
-  #facet_wrap(~book_format, nrow = 3, ncol = 1) +
-  theme(legend.position = "none") +
-  labs(y = "Average Books Read",
-       x = "Age",
-       title = "Average Books Read by Format",
-       subtitle = "Average Books Read in the Past Year. Respondents 18-99.") +
-  theme(plot.subtitle = element_text(size = 11, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0))
-
-point_plot2
-
-# Regression model to see how age and format of books relates to average number of books read. 
-reg_data <- plot_data %>%
-  group_by(age, book_format) %>% 
-  dplyr::summarize(mean_books = mean(total_books_read))
-
-model <- lm(mean_books ~ age * book_format, data = reg_data)
-model
-
-# Put anova of regression model into a table
-pander(anova(model))
-
-
+geom_errorbar(aes(ymin=len-sd, ymax=len+sd), width=.2,
+                 position=position_dodge(.9))
 ```
 
 
