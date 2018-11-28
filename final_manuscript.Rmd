@@ -266,7 +266,7 @@ plot_data %<>%
   filter(!duplicated(id)) # remove duplicate rows
 
 #####################################
-###  Reading and Age Analysis:
+###  Reading and Age Visualization:
 
 # Pick color palette for plot
 pal <- jcolors("pal10")
@@ -325,12 +325,11 @@ bar_plot2 <- plot_data %>%
 
 bar_plot2
 
-# 
-# Facet Labels
+# Bar Chart: looking at average books read, by age group and media format
 media_labels <- c(`audio` = "Audio",
                     `elect` = "Electronic",
                     `print` = "Print",
-                    `mixed media` = "Mixed Media")
+                    `mixed media` = "Mixed Media") # Facet Labels
 
 bar_plot3 <- plot_data %>%
   filter(!is.na(book_format)) %>% 
@@ -355,6 +354,18 @@ bar_plot3 <- plot_data %>%
 
 bar_plot3
 
+#####################################
+###  Reading and Age Analysis:
+reg_data <- plot_data %>% 
+  filter(!is.na(book_format)) %>% 
+  group_by(age, book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read))
+  
+# Fit the model
+model <- lm(mean_books ~ age * book_format, data = reg_data)
+
+# summary(model)
+# anova(model)
 
 ```
 
