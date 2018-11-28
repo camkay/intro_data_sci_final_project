@@ -280,8 +280,8 @@ bar_plot <- plot_data %>%
   geom_col() +
   geom_linerange(aes(ymin = mean_books - se_books, ymax = mean_books + se_books), 
                 width = .2, position = position_dodge(.9)) +
-  scale_y_continuous(expand = c(0,0),
-                     limits = c(0,25)) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 25)) +
   scale_fill_manual(values = pal) + 
   theme(legend.position = "none") +
   labs(y = "Average Books Read",
@@ -289,16 +289,73 @@ bar_plot <- plot_data %>%
        title = "Books Read by Age",
        subtitle = "Books read in the past year.") +
   theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 21, hjust = 0),
-        axis.title.x = element_text(size = 17), 
-        axis.title.y = element_text(size = 17),
-        axis.text = element_text(size = 13))
+        plot.title = element_text(size = 25, hjust = 0),
+        axis.title.x = element_text(size = 20), 
+        axis.title.y = element_text(size = 20),
+        axis.text = element_text(size = 15))
 
 bar_plot
 
+# Bar Chart: looking at average books read by media format
+pal2 <- wes_palette("Darjeeling1")
 
-geom_errorbar(aes(ymin=len-sd, ymax=len+sd), width=.2,
-                 position=position_dodge(.9))
+bar_plot2 <- plot_data %>% 
+  filter(!is.na(book_format)) %>% 
+  group_by(book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read),
+                   se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
+  ggplot(aes(x = reorder(book_format, -mean_books), y = mean_books, fill = book_format)) + 
+  geom_col() +
+  geom_linerange(aes(ymin = mean_books - se_books, ymax = mean_books + se_books), 
+                width = .2, position = position_dodge(.9)) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 28)) +
+  scale_fill_manual(values = pal2) +
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Media Format",
+       title = "Average Books Read by Format",
+       subtitle = "Average books read in past year.") +
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
+        plot.title = element_text(size = 25, hjust = 0),
+        axis.text.x = element_text(angle = 0, vjust = .5)) 
+
+bar_plot2
+
+# 
+# Facet Labels
+media_labels <- c(`audio` = "Audio",
+                    `elect` = "Electronic",
+                    `print` = "Print",
+                    `mixed media` = "Mixed Media")
+
+bar_plot3 <- plot_data %>%
+  filter(!is.na(book_format)) %>% 
+  group_by(age_group, book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read),
+                   se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
+  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
+  geom_col(position = position_dodge(.9)) +
+  facet_wrap(~book_format, labeller = as_labeller(media_labels)) +
+  scale_fill_manual(values = pal2) + 
+  theme(legend.position = "right") +
+  labs(y = "Average Books Read",
+       x = "Age",
+       title = "Relationship Between Age and Books Read by Media Format",
+       subtitle = "Books read in the past year.") +
+  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 25, hjust = 0),
+        axis.title.x = element_text(size = 20), 
+        axis.title.y = element_text(size = 20),
+        axis.text = element_text(size = 15),
+        axis.text.x = element_text(angle = 90, vjust = .5))
+
+bar_plot3
+
+
 ```
 
 
