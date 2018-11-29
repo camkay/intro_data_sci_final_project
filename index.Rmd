@@ -441,8 +441,7 @@ fig1a<- ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   geom_smooth(aes(group = sns, colour = sns), method = "lm", se = TRUE, lwd = 1.5) +
   scale_colour_viridis_d() +
   theme_bw() +
-  labs(title = "Figure 1.",
-    subtitle = "Relation between age and frequency of social media use as a function of social media site",
+  labs(title = "Interaction between age and social media site",
        x = "Age", 
        y = "Frequency of Social Media Use",
        colour = "Social Media Site")
@@ -455,7 +454,7 @@ fig1b <- plot_ash1 %>%
     scale_fill_viridis_d() +
     theme_bw() +
     theme(legend.position = "") +
-    labs(subtitle = "Frequency of social media use as a function of social media site",
+    labs(title = "Main effect of social media site",
         x = "Social Media Site",
         y = "Frequency of Social Media Use",
         colour = "")
@@ -468,7 +467,7 @@ fig1c <- plot_ash1 %>%
     geom_smooth(color = "grey", method = lm, se = FALSE) +
     theme_bw() +
     theme(legend.position = "") +
-    labs(subtitle = "The relation between age and frequency of social media use",
+    labs(title = "Main effect of age",
         x = "Age",
         y = "Frequency of Social Media Use")
 
@@ -627,14 +626,14 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 
 #Adding layer of scatter points
 
-ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
-  geom_smooth(aes(group = sex, colour = sex), method = "lm", se = FALSE, lwd = 2) +
+fig2a <- ggplot(transform(plot_ash1, 
+                 sns = factor(sns,levels=c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+  geom_smooth(aes(x = age, y = sns_freq_use, group = sex, colour = sex), method = "lm", se = FALSE, lwd = 2) +
   scale_color_manual(values = c("turquoise3", "purple3")) +
-  geom_jitter(aes(colour = sex), alpha = 0.3) +
+  geom_jitter(aes(x = age, y = sns_freq_use, colour = sex), alpha = 0.3) +
   facet_wrap(~sns, nrow = 1) +
   theme_bw() +
-  labs(title = "Figure 2.",
-       subtitle = "The relation between age and frequency of social media use as a function of sex and social media site",
+  labs(title = "Interaction between sex, age, and social media site",
        x = "Age", 
        y = "Frequency of social media use",
        colour = "Sex")
@@ -652,6 +651,42 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
        y = "Frequency of social media use",
        colour = "Sex")
 
+###########EXPLORING MORE DATA###########
+
+plot_snsxsex <- plot_ash1 %>%
+  group_by(sex, sns) %>%
+  summarize(freq_sns_mean = mean(sns_freq_use))
+
+fig2b <- ggplot(transform(plot_snsxsex,
+                                 sns = factor(sns,levels=c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+    geom_col(aes(x = sex, y = freq_sns_mean, group = sex, fill = sex)) +
+    scale_fill_manual(values = c("turquoise3", "purple3")) +
+    facet_wrap(~sns, nrow = 1) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Interaction between sex and social media site",
+       x = "Sex", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+
+plot_ash1 %>%
+  group_by(sex) %>%
+  summarize(freq_sns_mean = mean(sns_freq_use),
+            freq_sns_sd = sd(sns_freq_use)) %>%
+
+fig2c <- plot_ash1 %>%
+  ggplot(aes(x = sex, y = sns_freq_use)) +
+    geom_boxplot(aes(group = sex, fill = sex)) +
+    scale_fill_manual(values = c("turquoise3", "purple3")) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Lack of overall effect of sex",
+       x = "Sex", 
+       y = "Frequency of social media use")
+
+fig2d <- plot_grid(fig2b, fig2c, labels = c("B", "C"), align = "h", ncol = 2)
+
+plot_grid(fig2a, fig2d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
 
 ```
 
