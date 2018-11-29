@@ -372,115 +372,102 @@ model <- lm(mean_books ~ age * book_format, data = reg_data)
 
 ```{r ash_analyses_viz, include = FALSE}
 
-#Examine whether perceptions of social media use vary as age, political party, and social media site
-
-#Prep data
-
 plot_data_ash <- df_td %>% 
-  select(age, sex, race, cregion, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq)
-
-#FINALLY ready for the first graph:
-
-#Graphing ratings of how good vs bad the internet is for society as a function of political party
-
-plot_ash1 <- plot_data_ash %>%
-  mutate(int_good_self = as.numeric(int_good_self),
-         int_good_society = as.numeric(int_good_society)) %>%
-  filter(party != "Refused") %>%
-  group_by(party) %>%
-  dplyr::summarize(m_age = mean(age),
-            m_self = mean(int_good_self),
-            m_society = mean(int_good_society)) %>%
-  ggplot(aes(x = party, y = m_society)) +
-  geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
-  geom_hline(yintercept = 3.5) + #Note that this line represents the overall mean
-  theme_bw() +
-  labs(title = "Ash's Plot 1.",
-       subtitle = "Ratings on a 4 point scale of how good or bad the internet is for society as a function of political party",
-       x = "Political Party", 
-       y = "Mean Rating") +
-  coord_cartesian(ylim = c(2.5, 4)) 
-
-plot_ash1
-
-#Graph number 2 data prep:
-
-plot2_data_ash <- plot_data_ash %>%
-  mutate(int_good_self = as.numeric(int_good_self),
-         int_good_society = as.numeric(int_good_society)) %>%
-  select(-party, -age) %>%
-  filter(int_use_freq != "(VOL) Don't know",
-         race != "Don't know/Refused (VOL.)") %>%
-  group_by(cregion, race) %>%
-  dplyr::summarize(m_self = mean(int_good_self),
-            m_society = mean(int_good_society))
-
-plot2_data_ash <- plot2_data_ash %>%
-  mutate(self_vs_society = m_self - m_society)
-
-#Plot comparing ratings between how good the internet is for the self.. 
-#relative to how good the internet is for society.. 
-#as a funtion of race and region in the US
-
-plot_ash2 <- ggplot(plot2_data_ash, aes(x = race, y = self_vs_society, fill = race)) +
-  geom_col(alpha = 0.8) +
-  facet_wrap(~cregion, ncol = 4) +
-  scale_fill_viridis_d() +
-  theme_bw() +
-  theme(legend.position = "") +
-  labs(title = "Ash's Plot 2.",
-       subtitle = "Mean difference in ratings between how good the internet is for the self 
-relative to how good the internet is for society as a funtion of race and region in the US",
-       x = "Race", 
-       y = "Mean rating for self - Mean rating for society")
-
-plot_ash2
-
-#Another plot
-
-plot_ash3 <- plot_data_ash %>%
+  select(age, sex, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq) %>%
   mutate(int_good_self = as.numeric(int_good_self),
          int_good_society = as.numeric(int_good_society),
          int_use_freq = as.numeric(int_use_freq),
          sns_freq_use = as.numeric(sns_freq_use)) %>%
   filter(party != "Refused",
          sns_freq_use != "<NA>",
-         sns_freq_use != "(VOL) Don't know") %>%
-  ggplot(aes(x = age, y = sns_freq_use)) +
-  geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
-  facet_wrap(~sns) +
+         sns_freq_use != "(VOL) Don't know")
+
+#Examining frequency of social media use as a function of age and social media site
+
+fig1a <- ggplot(transform(plot_data_ash,
+                          sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+  geom_smooth(aes(x = age, y = sns_freq_use, group = sns, colour = sns), method = "lm", se = TRUE, lwd = 1.5) +
   scale_colour_viridis_d() +
   theme_bw() +
-  labs(title = "Ash's Plot 3.",
-       subtitle = "The relation between age and frequency of social media use as a function of political party and social media site",
+  labs(title = "Interaction between age and social media site",
        x = "Age", 
-       y = "Frequency of social media use",
-       colour = "Political party")
+       y = "Frequency of Social Media Use",
+       colour = "Social Media Site")
 
-plot_ash3
+plot_sns <- plot_data_ash %>%
+  group_by(sns) %>%
+  summarize(freq_sns_mean = mean(sns_freq_use)) 
 
-#Yet another plot
+fig1b <- ggplot(transform(plot_sns,
+                          sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+    geom_col(aes(x = sns, y = freq_sns_mean, fill = sns)) +
+    scale_fill_viridis_d() +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Main effect of social media site",
+        x = "Social Media Site",
+        y = "Frequency of Social Media Use",
+        colour = "")
 
-plot_ash4 <- plot_data_ash %>%
-  mutate(int_good_self = as.numeric(int_good_self),
-         int_good_society = as.numeric(int_good_society),
-         int_use_freq = as.numeric(int_use_freq),
-         sns_freq_use = as.numeric(sns_freq_use)) %>%
-  filter(party != "Refused",
-         sns_freq_use != "<NA>",
-         sns_freq_use != "(VOL) Don't know") %>%
-  ggplot(aes(x = age, y = sns_freq_use)) +
-  geom_smooth(aes(group = sex, colour = sex), method = "lm", se = FALSE, lwd = 2) +
-  scale_color_manual(values = c("turquoise3", "purple3")) +
-  facet_wrap(~sns) +
+fig1c <- plot_data_ash %>%
+  group_by(age) %>%
+  summarize(freq_sns_mean = mean(sns_freq_use, fill = age)) %>%
+  ggplot(aes(x = age, y = freq_sns_mean)) +
+    geom_point(alpha = 0.9, fill = "turquoise3", color = "turquoise4", size = 2.5) +
+    geom_smooth(color = "grey", method = lm, se = FALSE) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Main effect of age",
+        x = "Age",
+        y = "Frequency of Social Media Use")
+
+fig1d <- plot_grid(fig1b, fig1c, labels = c("B", "C"), align = "h", ncol = 2)
+
+plot_grid(fig1a, fig1d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+
+#Examing the potential influence of sex on the aforementioned effects
+
+fig2a <- ggplot(transform(plot_data_ash, 
+                 sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+  geom_smooth(aes(x = age, y = sns_freq_use, group = sex, colour = sex), method = "lm", se = TRUE, lwd = 2) +
+  scale_color_manual(values = c("turquoise4", "darkorchid4")) +
+  geom_jitter(aes(x = age, y = sns_freq_use, colour = sex), alpha = 0.2) +
+  facet_wrap(~sns, nrow = 1) +
   theme_bw() +
-  labs(title = "Ash and Cam's plot 4.",
-       subtitle = "The relation between age and frequency of social media use as a function of gender identity and social media site",
+  labs(title = "Interaction between sex, age, and social media site",
        x = "Age", 
        y = "Frequency of social media use",
-       colour = "Gender identity")
+       colour = "Sex")
 
-plot_ash4
+plot_snsxsex <- plot_data_ash %>%
+  group_by(sex, sns) %>%
+  summarize(freq_sns_mean = mean(sns_freq_use))
+
+fig2b <- ggplot(transform(plot_snsxsex,
+                                 sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+    geom_col(aes(x = sex, y = freq_sns_mean, group = sex, fill = sex)) +
+    scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
+    facet_wrap(~sns, nrow = 1) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Interaction between sex and social media site",
+       x = "Sex", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+
+fig2c <- plot_data_ash %>%
+  ggplot(aes(x = sex, y = sns_freq_use)) +
+    geom_boxplot(aes(group = sex, fill = sex)) +
+    scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Lack of overall effect of sex",
+       x = "Sex", 
+       y = "Frequency of social media use")
+
+fig2d <- plot_grid(fig2b, fig2c, labels = c("B", "C"), align = "h", ncol = 2)
+
+plot_grid(fig2a, fig2d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
 
 ```
  
