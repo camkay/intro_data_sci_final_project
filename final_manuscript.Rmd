@@ -199,7 +199,7 @@ df_td %<>%
 
 ```
 
-A common definition for a social media site is that it is an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
+Social media sites are commonly defined as an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
 
 # Methods
 
@@ -218,6 +218,122 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 
 
 # Results
+
+```{r ash_analyses_viz, include = FALSE}
+
+plot_data_ash <- df_td %>% 
+  select(age, sex, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq) %>%
+  mutate(int_good_self = as.numeric(int_good_self),
+         int_good_society = as.numeric(int_good_society),
+         int_use_freq = as.numeric(int_use_freq),
+         sns_freq_use = as.numeric(sns_freq_use)) %>%
+  filter(party != "Refused",
+         sns_freq_use != "<NA>",
+         sns_freq_use != "(VOL) Don't know")
+
+#Examining frequency of social media use as a function of age and social media site
+
+fig1a <- ggplot(transform(plot_data_ash,
+                          sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+  geom_smooth(aes(x = age, y = sns_freq_use, group = sns, colour = sns), method = "lm", se = TRUE, lwd = 1.5) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  labs(title = "Interaction between age and social media site",
+       x = "Age", 
+       y = "Frequency of Social Media Use",
+       colour = "Social Media Site")
+
+plot_sns <- plot_data_ash %>%
+  group_by(sns) %>%
+  summarise(freq_sns_mean = mean(sns_freq_use)) 
+
+fig1b <- ggplot(transform(plot_sns,
+                          sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+    geom_col(aes(x = sns, y = freq_sns_mean, fill = sns)) +
+    scale_fill_viridis_d() +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Main effect of social media site",
+        x = "Social Media Site",
+        y = "Frequency of Social Media Use",
+        colour = "")
+
+fig1c <- plot_data_ash %>%
+  group_by(age) %>%
+  summarise(freq_sns_mean = mean(sns_freq_use, fill = age)) %>%
+  ggplot(aes(x = age, y = freq_sns_mean)) +
+    geom_point(alpha = 0.9, fill = "turquoise3", color = "turquoise4", size = 2.5) +
+    geom_smooth(color = "grey", method = lm, se = FALSE) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Main effect of age",
+        x = "Age",
+        y = "Frequency of Social Media Use")
+
+fig1d <- plot_grid(fig1b, fig1c, labels = c("B", "C"), align = "h", ncol = 2)
+
+plot_grid(fig1a, fig1d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+
+#Examing the potential influence of sex on the aforementioned effects
+
+fig2a <- ggplot(transform(plot_data_ash, 
+                 sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+  geom_smooth(aes(x = age, y = sns_freq_use, group = sex, colour = sex), method = "lm", se = TRUE, lwd = 2) +
+  scale_color_manual(values = c("turquoise4", "darkorchid4")) +
+  geom_jitter(aes(x = age, y = sns_freq_use, colour = sex), alpha = 0.2) +
+  facet_wrap(~sns, nrow = 1) +
+  theme_bw() +
+  labs(title = "Interaction between sex, age, and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+
+plot_snsxsex <- plot_data_ash %>%
+  group_by(sex, sns) %>%
+  summarise(freq_sns_mean = mean(sns_freq_use))
+
+fig2b <- ggplot(transform(plot_snsxsex,
+                                 sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
+    geom_col(aes(x = sex, y = freq_sns_mean, group = sex, fill = sex)) +
+    scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
+    facet_wrap(~sns, nrow = 1) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Interaction between sex and social media site",
+       x = "Sex", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+
+fig2c <- plot_data_ash %>%
+  ggplot(aes(x = sex, y = sns_freq_use)) +
+    geom_boxplot(aes(group = sex, fill = sex)) +
+    scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(title = "Lack of overall effect of sex",
+       x = "Sex", 
+       y = "Frequency of social media use")
+
+fig2d <- plot_grid(fig2b, fig2c, labels = c("B", "C"), align = "h", ncol = 2)
+
+plot_grid(fig2a, fig2d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+
+#Regressions
+
+sns_model <- lm(sns_freq_use ~ age * sex * sns, data = plot_data_ash)
+#anova(sns_model)
+#summary(sns_model)
+
+female_sns_model <- plot_data_ash %>%
+  filter(sex == "Female")
+
+female_sns_model <- lm(sns_freq_use ~ age * sns, female_sns_model)
+
+#anova(female_sns_model)
+#summary(female_sns_model)
+
+```
+
 
 ```{r books_analyses, include = FALSE, warning = FALSE}
 #####################################
@@ -364,110 +480,8 @@ reg_data <- plot_data %>%
 # Fit the model
 model <- lm(mean_books ~ age * book_format, data = reg_data)
 
-# summary(model)
-# anova(model)
-
-```
-
-
-```{r ash_analyses_viz, include = FALSE}
-
-plot_data_ash <- df_td %>% 
-  select(age, sex, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq) %>%
-  mutate(int_good_self = as.numeric(int_good_self),
-         int_good_society = as.numeric(int_good_society),
-         int_use_freq = as.numeric(int_use_freq),
-         sns_freq_use = as.numeric(sns_freq_use)) %>%
-  filter(party != "Refused",
-         sns_freq_use != "<NA>",
-         sns_freq_use != "(VOL) Don't know")
-
-#Examining frequency of social media use as a function of age and social media site
-
-fig1a <- ggplot(transform(plot_data_ash,
-                          sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
-  geom_smooth(aes(x = age, y = sns_freq_use, group = sns, colour = sns), method = "lm", se = TRUE, lwd = 1.5) +
-  scale_colour_viridis_d() +
-  theme_bw() +
-  labs(title = "Interaction between age and social media site",
-       x = "Age", 
-       y = "Frequency of Social Media Use",
-       colour = "Social Media Site")
-
-plot_sns <- plot_data_ash %>%
-  group_by(sns) %>%
-  summarize(freq_sns_mean = mean(sns_freq_use)) 
-
-fig1b <- ggplot(transform(plot_sns,
-                          sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
-    geom_col(aes(x = sns, y = freq_sns_mean, fill = sns)) +
-    scale_fill_viridis_d() +
-    theme_bw() +
-    theme(legend.position = "") +
-    labs(title = "Main effect of social media site",
-        x = "Social Media Site",
-        y = "Frequency of Social Media Use",
-        colour = "")
-
-fig1c <- plot_data_ash %>%
-  group_by(age) %>%
-  summarize(freq_sns_mean = mean(sns_freq_use, fill = age)) %>%
-  ggplot(aes(x = age, y = freq_sns_mean)) +
-    geom_point(alpha = 0.9, fill = "turquoise3", color = "turquoise4", size = 2.5) +
-    geom_smooth(color = "grey", method = lm, se = FALSE) +
-    theme_bw() +
-    theme(legend.position = "") +
-    labs(title = "Main effect of age",
-        x = "Age",
-        y = "Frequency of Social Media Use")
-
-fig1d <- plot_grid(fig1b, fig1c, labels = c("B", "C"), align = "h", ncol = 2)
-
-plot_grid(fig1a, fig1d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
-
-#Examing the potential influence of sex on the aforementioned effects
-
-fig2a <- ggplot(transform(plot_data_ash, 
-                 sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
-  geom_smooth(aes(x = age, y = sns_freq_use, group = sex, colour = sex), method = "lm", se = TRUE, lwd = 2) +
-  scale_color_manual(values = c("turquoise4", "darkorchid4")) +
-  geom_jitter(aes(x = age, y = sns_freq_use, colour = sex), alpha = 0.2) +
-  facet_wrap(~sns, nrow = 1) +
-  theme_bw() +
-  labs(title = "Interaction between sex, age, and social media site",
-       x = "Age", 
-       y = "Frequency of social media use",
-       colour = "Sex")
-
-plot_snsxsex <- plot_data_ash %>%
-  group_by(sex, sns) %>%
-  summarize(freq_sns_mean = mean(sns_freq_use))
-
-fig2b <- ggplot(transform(plot_snsxsex,
-                                 sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
-    geom_col(aes(x = sex, y = freq_sns_mean, group = sex, fill = sex)) +
-    scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
-    facet_wrap(~sns, nrow = 1) +
-    theme_bw() +
-    theme(legend.position = "") +
-    labs(title = "Interaction between sex and social media site",
-       x = "Sex", 
-       y = "Frequency of social media use",
-       colour = "Sex")
-
-fig2c <- plot_data_ash %>%
-  ggplot(aes(x = sex, y = sns_freq_use)) +
-    geom_boxplot(aes(group = sex, fill = sex)) +
-    scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
-    theme_bw() +
-    theme(legend.position = "") +
-    labs(title = "Lack of overall effect of sex",
-       x = "Sex", 
-       y = "Frequency of social media use")
-
-fig2d <- plot_grid(fig2b, fig2c, labels = c("B", "C"), align = "h", ncol = 2)
-
-plot_grid(fig2a, fig2d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+#summary(model)
+#anova(model)
 
 ```
  
