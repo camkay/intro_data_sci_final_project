@@ -395,7 +395,7 @@ plot_ash1 <- plot_data_ash %>%
 
 
 ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
-  geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
+  geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE, lwd = 2) +
   facet_wrap(~sns, nrow = 1) +
   scale_colour_viridis_d() +
   theme_bw(base_size = 21) +
@@ -408,6 +408,7 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 ```
 
 ```{r fig1_insert_dots, eval=FALSE}
+#Adding layer of scatter points
 
 ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   geom_smooth(aes(group = party, colour = party), method = "lm", se = FALSE) +
@@ -420,6 +421,62 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
        x = "Age", 
        y = "Frequency of social media use",
        colour = "Political party")
+
+#Adding shaded region reflecting standard error
+
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = party, colour = party), method = "lm", se = TRUE) +
+  facet_wrap(~sns, nrow = 1) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  labs(title = "Figure 1.",
+       subtitle = "Relation between age and frequency of social media use as a function of political party and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Political party")
+
+###########EXPLORING MORE DATA###########
+
+fig1a<- ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = sns, colour = sns), method = "lm", se = TRUE, lwd = 1.5) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  labs(title = "Figure 1.",
+    subtitle = "Relation between age and frequency of social media use as a function of social media site",
+       x = "Age", 
+       y = "Frequency of Social Media Use",
+       colour = "Social Media Site")
+
+fig1b <- plot_ash1 %>%
+  group_by(sns) %>%
+  summarize(freq_sns_mean = mean(sns_freq_use)) %>%
+  ggplot(aes(x = sns, y = freq_sns_mean)) +
+    geom_col(aes(fill = sns)) +
+    scale_fill_viridis_d() +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(subtitle = "Frequency of social media use as a function of social media site",
+        x = "Social Media Site",
+        y = "Frequency of Social Media Use",
+        colour = "")
+
+fig1c <- plot_ash1 %>%
+  group_by(age) %>%
+  summarize(freq_sns_mean = mean(sns_freq_use, fill = age)) %>%
+  ggplot(aes(x = age, y = freq_sns_mean)) +
+    geom_point(alpha = 0.9, fill = "turquoise3", color = "turquoise4", size = 2.5) +
+    geom_smooth(color = "grey", method = lm, se = FALSE) +
+    theme_bw() +
+    theme(legend.position = "") +
+    labs(subtitle = "The relation between age and frequency of social media use",
+        x = "Age",
+        y = "Frequency of Social Media Use")
+
+library(cowplot)
+
+fig1d <- plot_grid(fig1b, fig1c, labels = c("B", "C"), align = "h", ncol = 2)
+
+plot_grid(fig1a, fig1d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
 
 ```
 
@@ -568,6 +625,8 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 
 ```{r fig2_insert_dots, eval=FALSE}
 
+#Adding layer of scatter points
+
 ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   geom_smooth(aes(group = sex, colour = sex), method = "lm", se = FALSE, lwd = 2) +
   scale_color_manual(values = c("turquoise3", "purple3")) +
@@ -579,6 +638,20 @@ ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
        x = "Age", 
        y = "Frequency of social media use",
        colour = "Sex")
+
+#Adding shaded regions reflecting standard error
+
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
+  geom_smooth(aes(group = sex, colour = sex), method = "lm", se = TRUE, lwd = 2) +
+  scale_color_manual(values = c("turquoise3", "purple3")) +
+  facet_wrap(~sns, nrow = 1) +
+  theme_bw() +
+  labs(title = "Figure 2.",
+       subtitle = "The relation between age and frequency of social media use as a function of sex and social media site",
+       x = "Age", 
+       y = "Frequency of social media use",
+       colour = "Sex")
+
 
 ```
 
