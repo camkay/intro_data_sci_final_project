@@ -209,9 +209,7 @@ The data for the current study was collected by the @Pew.
 
 `r capitalize(.numbers2words(nrow(df)))` people were surveyed by telephone (`r .spround(.perble(df$sample)["Percent", "Cell phone"])`% cell phone; `r .spround(.perble(df$sample)["Percent", "Landline"])`% landline) over a period of `r interval(min(df_td$date), max(df_td$date)) %/% days(1)` days in `r unique(months(df_td$date))` of `r unique(year(df_td$date))`. We excluded any participants who reported that they do not even occasionally use the internet or email (*n* = `r nrow(df) - length(unique(df_td$id))`). The resulting sample comprised `r length(unique(df_td$id))` people (`r .spround(.perble(df_td$sex)["Percent", "Female"])`% female). Ages ranged from `r min(df_td$age, na.rm = TRUE)` to `r max(df_td$age, na.rm = TRUE)` (*M* age = `r .spround(mean(df_td$age, na.rm = TRUE))`; *SD* age = `r .spround(sd(df_td$age, na.rm = TRUE))`)\footnote{Note that the descriptive statistics for age are slightly lower than reality. Ages 97 and older were recorded as simply 97 in the data.}. Concerning race, `r .spround(.perble(df_td$race)["Percent", "White"])`% identified as white, `r .spround(.perble(df_td$race)["Percent", "Black"])`% identified as black, `r .spround(.perble(df_td$race)["Percent", "Asian"])`% identified as Asian, `r .spround(.perble(df_td$race)["Percent", "Mixed"])`% identified as mixed race, and `r .spround(.perble(df_td$race)["Percent", "Don't know/Refused (VOL.)"] + .perble(df_td$race)["Percent", "Other"])`% refused to answer or reported being from some other race.  
 
-## Material
-
-## Procedure
+## Materials and Procedure
 
 Research personnel were instructed to read from a script while interviewing each participant. For landline users, the script began as follows:
 
@@ -226,8 +224,9 @@ Once participants passed initial screening (e.g., 18 years of age or older) and 
 ## Data analysis
 We used `r cite_r("r-references.bib")` for all our analyses.
 
-
 # Results
+
+First, we sought to examine how frequency of social media use might vary as a function of age, social media site, and sex (female vs male). We submitted age, social media site, sex, and the interactions among these variables to a simultaneous linear regression model predicting frequency of social media use. All of the predictors together accounted for 33% of the variability in frequency of social media use, F(19, 8136) = 206.9, p < .001. Figure 1 reveals that younger people used social media more frequently than older people, F(1, 8136) = 1151.27, p < .001. People also tended to use Facebook the most, followed by YouTube, Instagram, Snapchat, and Twitter, F(4, 8136) =611.65, p < .001. Critically, though, the effect of age on frequency of social media use varied as a function of social media site, F(4, 8136) = 40.42, p < .001. That is, age-related differences in frequency of social media use emerged primarily for Instagram (β = -0.26, p < .001), Snapchat (β = -0.31, p < .001), and YouTube (β = -.13, p = .01).
 
 ```{r ash_analyses_viz, include = FALSE}
 
@@ -282,7 +281,16 @@ fig1c <- plot_data_ash %>%
 
 fig1d <- plot_grid(fig1b, fig1c, labels = c("B", "C"), align = "h", ncol = 2)
 
-plot_grid(fig1a, fig1d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+Figure1 <- plot_grid(fig1a, fig1d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+
+Figure1
+
+```
+
+Of note, frequency of social media use also varied by sex, F(1, 8136) = 28.50, p < .001. Figure 2(c) reveals that, on average, females tended to report higher frequency of social media use than did males. Moreover, sex interacted with age, F(1, 8136) = 19.79, p < .001, as well as social media site, F(1, 8136) = 40.42, p < .001, in predicting frequency of social media use. Figure 2(b) shows that the interaction between sex and social media site is primarily driven by the finding that women reported higher Facebook use than men, and men reported higher YouTube use than women. 
+While the three-way interaction between sex, age, and social media site approached significance (p = .10), an examination of Figure 2(a) suggests a possible age x social media site interaction for exclusively females, not males. Excluding males from the analysis indeed revealed a significant interaction, F(4, 3662) = 22.93, p < .001, suggesting that—for females—the largest age-related differences emerged for Facebook, Instagram, and Snapchat. 
+
+```{r ash_analyses_viz2, include = FALSE}
 
 #Examing the potential influence of sex on the aforementioned effects
 
@@ -326,13 +334,19 @@ fig2c <- plot_data_ash %>%
 
 fig2d <- plot_grid(fig2b, fig2c, labels = c("B", "C"), align = "h", ncol = 2)
 
-plot_grid(fig2a, fig2d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+Figure2 <- plot_grid(fig2a, fig2d, labels = c("A", ""), align = "v", axis = "t", nrow = 2)
+
+Figure2
 
 #Regressions
 
-sns_model <- lm(sns_freq_use ~ age * sex * sns, data = plot_data_ash)
+library(sjstats)
+
+sns_model <- lm(sns_freq_use ~  age * sex * sns, data = plot_data_ash)
+
 #anova(sns_model)
 #summary(sns_model)
+#std_beta(sns_model)
 
 female_sns_model <- plot_data_ash %>%
   filter(sex == "Female")
@@ -341,6 +355,7 @@ female_sns_model <- lm(sns_freq_use ~ age * sns, female_sns_model)
 
 #anova(female_sns_model)
 #summary(female_sns_model)
+#std_beta(female_sns_model)
 
 ```
 
