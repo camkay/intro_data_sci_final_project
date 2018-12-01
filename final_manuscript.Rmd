@@ -66,6 +66,7 @@ options(scipen = 999)
 #install.packages("jcolors")
 #install.packages("sjstats")
 #install.packages("emmeans")
+#install.packages("plotrix")
 
 # load required libraries
 library(car)
@@ -85,6 +86,7 @@ library(Hmisc)
 library(jcolors)
 library(sjstats)
 library(emmeans)
+library(plotrix)
 
 # Load required functions
 source(here::here("functions", "numbers2words.R")) #writes out a number; found on github from James Fox (https://github.com/ateucher/useful_code/blob/master/R/numbers2words.r)
@@ -250,7 +252,7 @@ First, we sought to examine how frequency of social media use might vary as a fu
 
 Our second model added gender, followed by age in our third model. The fourth model included the social media site in question. The fifth through seventh models added (1) the interaction between sex and age, (2) the interaction between sex and social media site, and (3) the interaction between age and social media site. 
 
-```{r df_f_lmer_desless, include = FALSE, cache = TRUE, autodep = TRUE}
+```{r df_lmer, include = FALSE}
 #remove unknowns and "rarely if ever and change sns_freq_use to numeric
 df_td_lmer <- df_td %>%
   filter(sns_freq_use != "(VOL) Don't know",
@@ -328,7 +330,7 @@ qqnorm(resid(model_6))
 qqline(resid(model_6))
 
 ###check out VIF
-(model_vif_desless <- vif(model_3))
+(model_vif <- vif(model_3))
 
 #check out full model results
 (sum_model_6 <- summary(model_6))
@@ -338,15 +340,19 @@ model_var <- print(VarCorr(model_6), comp = "Variance")
 (model_var <- data.frame(model_var)[, c("grp", "vcov")])
 
 #check out contasts
-emm_options(pbkrtest.limit = nrow(df_td_lmer))
-emms_results <- emmeans(model_6, ~ sns | sex)
-(emms_contrast <- contrast(emms_results, interaction = "pairwise"))
+#emm_options(pbkrtest.limit = nrow(df_td_lmer))
+#emms_results <- emmeans(model_6, ~ sns | sex)
+#(emms_contrast <- contrast(emms_results, interaction = "pairwise"))
 ```
 
 
+As shown in Table XXX, we found that the addition of age, social media site, the interaction between sex and social media site, and the interaction between social media site all explained a significant proportion of variance in social media site usage frequency. Using Satterthwaite's method for approximating degrees of freedom, we found that age is associated with lower social media use, *b* = `r .spround(sum_model_6$coefficients[["age", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["age", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["age", "Pr(>|t|)"]], 3, l_zero = FALSE)`. Furthermore, Snapchat is used more often than Facebook (*b* = `r .spround(sum_model_6$coefficients[["snsSnapchat", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["snsSnapchat", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["snsSnapchat", "Pr(>|t|)"]], 3, l_zero = FALSE)`) and Twitter is used more often than Facebook (*b* = `r .spround(sum_model_6$coefficients[["snsTwitter", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["snsTwitter", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["snsTwitter", "Pr(>|t|)"]], 3, l_zero = FALSE)`). However, age interacts with the specific social media site, insofar that age results in even lower rates of social media use in the case of Instagram (*b* = `r .spround(sum_model_6$coefficients[["age:snsInstagram", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["age:snsInstagram", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["age:snsInstagram", "Pr(>|t|)"]], 3, l_zero = FALSE)`), Snapchat (*b* = `r .spround(sum_model_6$coefficients[["age:snsSnapchat", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["age:snsSnapchat", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["age:snsSnapchat", "Pr(>|t|)"]], 3, l_zero = FALSE)`), Twitter (*b* = `r .spround(sum_model_6$coefficients[["age:snsTwitter", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["age:snsTwitter", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["age:snsTwitter", "Pr(>|t|)"]], 3, l_zero = FALSE)`), and YouTube (*b* = `r .spround(sum_model_6$coefficients[["age:snsYouTube", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["age:snsYouTube", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["age:snsYouTube", "Pr(>|t|)"]], 3, l_zero = FALSE)`) when compared to Facebook. 
 
+Although the model comparison did not indicate an increase in predictive ability from the introduction of participant gender, we did find that males reported less frequency of social media use when using the approximated degrees of freedom, *b* = `r .spround(sum_model_6$coefficients[["sexMale", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["sexMale", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["sexMale", "Pr(>|t|)"]], 3, l_zero = FALSE)`. When compared to Facebook, however, men exhibitted a greater frequency of using Twitter (*b* = `r .spround(sum_model_6$coefficients[["sexMale:snsTwitter", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["sexMale:snsTwitter", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["sexMale:snsTwitter", "Pr(>|t|)"]], 3, l_zero = FALSE)`) and YouTube (*b* = `r .spround(sum_model_6$coefficients[["sexMale:snsYouTube", "Estimate"]], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6$coefficients[["sexMale:snsYouTube", "Std. Error"]], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients[["sexMale:snsYouTube", "Pr(>|t|)"]], 3, l_zero = FALSE)`). 
 
-All of the predictors together accounted for 33% of the variability in frequency of social media use, *F*(19, 8136) = 206.9, *p* < .001. Figure 1 reveals that younger people used social media more frequently than older people, *F*(1, 8136) = 1151.27, *p* < .001. People also tended to use Facebook the most, followed by YouTube, Instagram, Snapchat, and Twitter, *F*(4, 8136) =611.65, *p* < .001. Critically, though, the effect of age on frequency of social media use varied as a function of social media site, *F*(4, 8136) = 40.42, *p* < .001. That is, age-related differences in frequency of social media use emerged primarily for Instagram (*β* = -0.26, *p* < .001), Snapchat (*β* = -0.31, *p* < .001), and YouTube (*β* = -.13, *p* = .01).
+A comparison of the full model with random effects to the full model without random effects, revealed that the random effects explained a significant proportion of the variance in social media site use, $\chi^2$(`r .spround(wo_compared[2, "Chi Df"], 0)`) = `r .spround(wo_compared[2, "Chisq"], 2)`, *p* < `r .spround(wo_compared[2, "Pr(>Chisq)"], 3, l_zero = FALSE)`. In fact, grouping ratings by participant explained `r .spround((model_var[1, "vcov"]/sum(model_var$vcov)) * 100)`% of the variance in the frequency of using a social media site. A visual inspection of model residuals did not suggest non-normality nor heteroscedasticity. We also quantitively inspected the variables for potential multicollinearity within the fullest model without the interaction effects. No multicollinearity was detected (*VIF* = `r min(model_vif[, "GVIF"])` - `r max(model_vif[, "GVIF"])`). 
+
+All of the predictors together accounted for 33% of the variability in frequency of social media use, *F*(19, 8136) = 206.9, *p* < .001. Figure 1 reveals that younger people used social media more frequently than older people, *F*(1, 8136) = 1151.27, *p* < .001. People also tended to use Facebook the most, followed by YouTube, Instagram, Snapchat, and Twitter, *F*(4, 8136) =611.65, *p* < .001. Critically, though, the effect of age on frequency of social media use varied as a function of social media site, *F*(4, 8136) = 40.42, *p* < .001. That is, age-related differences in frequency of social media use emerged primarily for Instagram ($\beta$ = -0.26, *p* < .001), Snapchat ($\beta$ = -0.31, *p* < .001), and YouTube ($\beta$ = -.13, *p* = .01).
 
 ```{r ash_analyses_viz, include = FALSE}
 
