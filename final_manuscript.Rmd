@@ -49,6 +49,7 @@ knitr::opts_chunk$set(echo = FALSE,
 options(scipen = 999) 
 
 # if you do not have the following packages, you will need to install them
+#install.packages("car")
 #install.packages("papaja")
 #install.packages("tidyverse")
 #install.packages("lme4")
@@ -62,8 +63,12 @@ options(scipen = 999)
 #install.packages("pander")
 #install.packages("magrittr")
 #install.packages("Hmisc")
+#install.packages("jcolors")
+#install.packages("sjstats")
+#install.packages("emmeans")
 
 # load required libraries
+library(car)
 library(papaja)
 library(tidyverse)
 library(lme4)
@@ -79,7 +84,7 @@ library(magrittr)
 library(Hmisc)
 library(jcolors)
 library(sjstats)
-
+library(emmeans)
 
 # Load required functions
 source(here::here("functions", "numbers2words.R")) #writes out a number; found on github from James Fox (https://github.com/ateucher/useful_code/blob/master/R/numbers2words.r)
@@ -216,7 +221,7 @@ df_td %<>%
 
 Social media sites are commonly defined as an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
 
-# Methods
+# Method
 
 The data for the current study was collected by the @Pew.
 
@@ -234,14 +239,114 @@ For cell phone users, the script was slightly different:
 
 "Hello, I am _____ calling on behalf of the Pew Research Center. We are conducting a telephone opinion survey about some important issues today. I know I am calling you on a cell phone. If you would like to be reimbursed for your cell phone minutes, we will pay all eligible respondents $5 for participating in this survey. This is NOT a sales call."
 
-Once participants passed initial screening (e.g., 18 years of age or older) and provided verbal consent to the interview, they were asked a series of questions pertaining to internet use  (e.g., "How often do you use the internet?"; Options ranged from 1-Almost Constantly to 5-Less Often), social media use (e.g., "Do you use any of the following social media sites online or on your cell phone: Twitter, Instagram, Facebook, Snapchat, YouTube, WhatsApp, Interest, and LinkedIn?), as well as perceptions of social media's influence on the self and society (e.g., "When you add up all the advantages and disadvantages of the internet, would you say the internet has mostly been a good thing or a bad thing for society?"; Options included: Good thing, bad thing, some of both, and don't know). Participants were also asked about reading habits (e.g., "During the past 12 months, how many books (print, electroninc, and audiobooks) did you read either all or part of the way through?") and reading format preferences (e.g., "Thinking about all of the books you have read iin the past 12 months, were any of those printed books, audiobooks, or E-books?"). The interview ended with a series of demographic questions assessing variables like participant sex, age, race, marrital status, education, current employment status, income, political affiliation, etc. 
+Once participants passed initial screening (e.g., 18 years of age or older) and provided verbal consent to the interview, they were asked a series of questions pertaining to internet use  (e.g., "How often do you use the internet?"; options ranged from 1 = "Almost Constantly" to 5 = "Less Often"), social media use (e.g., "Do you use any of the following social media sites online or on your cell phone: Twitter, Instagram, Facebook, Snapchat, YouTube, WhatsApp, Interest, and LinkedIn?), as well as perceptions of social media's influence on the self and society (e.g., "When you add up all the advantages and disadvantages of the internet, would you say the internet has mostly been a good thing or a bad thing for society?"; options included: "Good thing", "bad thing", "Some of Both", and "Don't Know"). Participants were also asked about reading habits (e.g., "During the past 12 months, how many books (print, electroninc, and audiobooks) did you read either all or part of the way through?") and reading format preferences (e.g., "Thinking about all of the books you have read iin the past 12 months, were any of those printed books, audiobooks, or E-books?"). The interview ended with a series of demographic questions assessing variables including participant sex, age, race, marrital status, education, current employment status, income, and political affiliation.
 
 ## Data analysis
 We used `r cite_r("r-references.bib")` for all our analyses.
 
 # Results
 
-First, we sought to examine how frequency of social media use might vary as a function of age, social media site, and sex (female vs male). We submitted age, social media site, sex, and the interactions among these variables to a simultaneous linear regression model predicting frequency of social media use. All of the predictors together accounted for 33% of the variability in frequency of social media use, *F*(19, 8136) = 206.9, *p* < .001. Figure 1 reveals that younger people used social media more frequently than older people, *F*(1, 8136) = 1151.27, *p* < .001. People also tended to use Facebook the most, followed by YouTube, Instagram, Snapchat, and Twitter, *F*(4, 8136) =611.65, *p* < .001. Critically, though, the effect of age on frequency of social media use varied as a function of social media site, *F*(4, 8136) = 40.42, *p* < .001. That is, age-related differences in frequency of social media use emerged primarily for Instagram (*β* = -0.26, *p* < .001), Snapchat (*β* = -0.31, *p* < .001), and YouTube (*β* = -.13, *p* = .01).
+First, we sought to examine how frequency of social media use might vary as a function of sex, age, social media site, and the interaction between these variables. We ran iterative comparisons of XXX linear mixed-effects models predicting frequency of social media use from age, social media site, sex, and the interactions among these variables. Our first model included only the random effects. Specifically, we suspected that participants may have certain response style in evaluating their frequency of social media use. We entered the subject as a random intercept to account for interdependence in the participants ratings. Although in many cases the scenario or context (i.e., social media site) would be entered as a random slope, we do not intend to generalize beyond these sites. 
+
+Our second model added gender, followed by age in our third model. The fourth model included the social media site in question. The fifth through seventh models added (1) the interaction between sex and age, (2) the interaction between sex and social media site, and (3) the interaction between age and social media site. 
+
+```{r df_f_lmer_desless, include = FALSE, cache = TRUE, autodep = TRUE}
+#remove unknowns and "rarely if ever and change sns_freq_use to numeric
+df_td_lmer <- df_td %>%
+  filter(sns_freq_use != "(VOL) Don't know",
+         #rarely if ever was leading to blocky residuals
+         sns_freq_use != "Rarely if ever",
+         !is.na(sns_freq_use),
+         !is.na(age)) %>%
+  mutate(sns_freq_use = as.numeric(sns_freq_use))
+
+#NULL
+model_null <- lmer(sns_freq_use ~ (1 | id), data = df_td_lmer, REML = FALSE)
+
+#sex
+model_1    <- lmer(sns_freq_use ~ sex + 
+                                  (1 | id), data = df_td_lmer, REML = FALSE)
+
+#age
+model_2    <- lmer(sns_freq_use ~ sex + 
+                                  age +
+                                  (1 | id), data = df_td_lmer, REML = FALSE)
+
+#sns
+model_3    <- lmer(sns_freq_use ~ sex + 
+                                  age +
+                                  sns +
+                                  (1 | id), data = df_td_lmer, REML = FALSE)
+
+
+#sex x age
+model_4    <- lmer(sns_freq_use ~ sex + 
+                                  age +
+                                  sns +
+                                  sex * age +
+                                  (1 | id), data = df_td_lmer, REML = FALSE)
+
+#sex x sns
+model_5    <- lmer(sns_freq_use ~ sex + 
+                                  age +
+                                  sns +
+                                  sex * age +
+                                  sex * sns +
+                                  (1 | id), data = df_td_lmer, REML = FALSE)
+
+#age x sns
+model_6    <- lmer(sns_freq_use ~ sex + 
+                                  age +
+                                  sns +
+                                  sex * age +
+                                  sex * sns +
+                                  age * sns +
+                                  (1 | id), data = df_td_lmer, REML = FALSE)
+
+#compare models
+(models_compared <- anova(model_null,
+                          model_1,
+                          model_2,
+                          model_3,
+                          model_4,
+                          model_5,
+                          model_6))
+
+#compare model without random effects to that with random effects
+model_wo <- lm(sns_freq_use ~ sex + 
+                              age +
+                              sns +
+                              sex * age +
+                              sex * sns +
+                              age * sns, data = df_td_lmer)
+
+(wo_compared <- anova(model_6, model_wo))
+
+###plot residuals
+plot(resid(model_6))
+qqnorm(resid(model_6))
+qqline(resid(model_6))
+
+###check out VIF
+(model_vif_desless <- vif(model_3))
+
+#check out full model results
+(sum_model_6 <- summary(model_6))
+
+#check out the variances
+model_var <- print(VarCorr(model_6), comp = "Variance")
+(model_var <- data.frame(model_var)[, c("grp", "vcov")])
+
+#check out contasts
+emm_options(pbkrtest.limit = nrow(df_td_lmer))
+emms_results <- emmeans(model_6, ~ sns | sex)
+(emms_contrast <- contrast(emms_results, interaction = "pairwise"))
+```
+
+
+
+
+All of the predictors together accounted for 33% of the variability in frequency of social media use, *F*(19, 8136) = 206.9, *p* < .001. Figure 1 reveals that younger people used social media more frequently than older people, *F*(1, 8136) = 1151.27, *p* < .001. People also tended to use Facebook the most, followed by YouTube, Instagram, Snapchat, and Twitter, *F*(4, 8136) =611.65, *p* < .001. Critically, though, the effect of age on frequency of social media use varied as a function of social media site, *F*(4, 8136) = 40.42, *p* < .001. That is, age-related differences in frequency of social media use emerged primarily for Instagram (*β* = -0.26, *p* < .001), Snapchat (*β* = -0.31, *p* < .001), and YouTube (*β* = -.13, *p* = .01).
 
 ```{r ash_analyses_viz, include = FALSE}
 
