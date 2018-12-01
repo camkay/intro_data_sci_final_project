@@ -4,7 +4,8 @@
     <title>EDLD 610 Final Presentation:</title>
     <meta charset="utf-8">
     <meta name="author" content="Cameron S. Kay, Stefania R. Ashby, &amp; Ashley L. Miller" />
-    <meta name="date" content="2018-11-21" />
+    <meta name="date" content="2018-11-28" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -14,7 +15,7 @@ class: center, middle, inverse, title-slide
 # EDLD 610 Final Presentation:
 ## An analysis of internet and social media trends
 ### Cameron S. Kay, Stefania R. Ashby, &amp; Ashley L. Miller
-### 2018-11-21
+### 2018-11-28
 
 ---
 
@@ -23,66 +24,411 @@ class: center, middle, inverse, title-slide
 
 
 
+# The Dataset
 
-
-# Cam, here is where you can begin talking about the data
-
-You can see an insert links like this [click here to view demo for how to modify these slides](https://ashlynnmiller.github.io/Lab14_DemoSlides/).
+The [Core Trends Survey](http://www.pewinternet.org/dataset/jan-3-10-2018-core-trends-survey/) (2018) from the [Pew Research Center](http://www.pewresearch.org).
 
 --
 
-Note (only if looking at Rmd file) that the above "--" means that this info is on the same slide as above.. it just won't appear until you hit a button. A new slide is preceded by the "---". Here is some more interesting information:
+- *N* = 2,002
 
 --
 
-1. Here is a subpoint of the above
+- Collected between January 3rd and January 10th, 2018
 
 --
 
-1. And here is another subpoint of the above
-
---
-
-Basically just a bunch of **nonsense**!
+- Conducted by telephone (75.02% cell phone; 24.98% landline)
 
 ---
 
-# Cam, here you can try to walk people through how you tidied the data.. 
+# Tidying the Dataset
 
-Good luck doing this in 6 min ;)
+Step 1: Import the data.
 
---
 
-I recommend leaving the code as is above, but inserting chunks of code with **r eval = FALSE** (see my section) so people can see what you did
-
---
-
-- Add bullet points like this
-
---
-
-- Add bullet points like this
+```r
+df &lt;- import(here::here("data", "dataSPSS.sav"), 
+             setclass = "tibble") %&gt;%
+  janitor::clean_names() %&gt;%
+  characterize()
+```
 
 --
 
-- Add bullet points like this
+
+```
+## # A tibble: 2,002 x 70
+##    respid sample comp  int_date lang  cregion state density usr   qs1  
+##     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;
+##  1      1 Landl… Comp…   180103 Engl… Northe… PA    Highest U     &lt;NA&gt; 
+##  2      2 Landl… Comp…   180103 Engl… South   SC    &lt;NA&gt;    S     &lt;NA&gt; 
+##  3      3 Landl… Comp…   180103 Engl… Northe… NJ    Highest S     &lt;NA&gt; 
+##  4      4 Landl… Comp…   180103 Engl… South   MD    &lt;NA&gt;    S     &lt;NA&gt; 
+##  5      5 Landl… Comp…   180103 Engl… Northe… NH    &lt;NA&gt;    R     &lt;NA&gt; 
+##  6      6 Landl… Comp…   180103 Engl… South   NC    &lt;NA&gt;    U     &lt;NA&gt; 
+##  7      7 Landl… Comp…   180103 Engl… South   FL    Highest U     &lt;NA&gt; 
+##  8      8 Landl… Comp…   180103 Engl… Northe… NJ    Highest S     &lt;NA&gt; 
+##  9      9 Landl… Comp…   180103 Engl… South   VA    Lowest  R     &lt;NA&gt; 
+## 10     11 Landl… Comp…   180103 Engl… South   WV    &lt;NA&gt;    R     &lt;NA&gt; 
+## # ... with 1,992 more rows, and 60 more variables: sex &lt;chr&gt;,
+## #   eminuse &lt;chr&gt;, intmob &lt;chr&gt;, intfreq &lt;chr&gt;, home4nw &lt;chr&gt;,
+## #   bbhome1 &lt;chr&gt;, bbhome2 &lt;chr&gt;, device1a &lt;chr&gt;, smart2 &lt;chr&gt;,
+## #   snsint2 &lt;chr&gt;, device1b &lt;chr&gt;, device1c &lt;chr&gt;, device1d &lt;chr&gt;,
+## #   web1a &lt;chr&gt;, web1b &lt;chr&gt;, web1c &lt;chr&gt;, web1d &lt;chr&gt;, web1e &lt;chr&gt;,
+## #   web1f &lt;chr&gt;, web1g &lt;chr&gt;, web1h &lt;chr&gt;, sns2a &lt;chr&gt;, sns2b &lt;chr&gt;,
+## #   sns2c &lt;chr&gt;, sns2d &lt;chr&gt;, sns2e &lt;chr&gt;, pial5a &lt;chr&gt;, pial5b &lt;chr&gt;,
+## #   pial5c &lt;chr&gt;, pial5d &lt;chr&gt;, pial11 &lt;chr&gt;, pial11a &lt;chr&gt;,
+## #   pial11ao &lt;chr&gt;, pial11_igbm &lt;chr&gt;, pial12 &lt;chr&gt;, books1 &lt;chr&gt;,
+## #   books2a &lt;chr&gt;, books2b &lt;chr&gt;, books2c &lt;chr&gt;, age &lt;chr&gt;, marital &lt;chr&gt;,
+## #   educ2 &lt;chr&gt;, emplnw &lt;chr&gt;, hisp &lt;chr&gt;, racem1 &lt;chr&gt;, racem2 &lt;chr&gt;,
+## #   racem3 &lt;chr&gt;, racem4 &lt;chr&gt;, racecmb &lt;chr&gt;, birth_hisp &lt;chr&gt;,
+## #   inc &lt;chr&gt;, party &lt;chr&gt;, partyln &lt;chr&gt;, hh1 &lt;chr&gt;, hh3 &lt;chr&gt;,
+## #   ql1 &lt;chr&gt;, ql1a &lt;chr&gt;, qc1 &lt;chr&gt;, weight &lt;dbl&gt;, cellweight &lt;dbl&gt;
+```
+
+---
+
+# Tidying the Dataset
+
+.pull-left[
+
+```
+## # A tibble: 2,002 x 2
+##      age books1
+##    &lt;dbl&gt;  &lt;dbl&gt;
+##  1    33      1
+##  2    76      5
+##  3    99      0
+##  4    60      2
+##  5    55      6
+##  6    58     18
+##  7    99      3
+##  8    72      2
+##  9    58      3
+## 10    68     97
+## # ... with 1,992 more rows
+```
+]
+
+--
+
+.pull-right[
+
+```
+## # A tibble: 2,002 x 2
+##    age           books1    
+##    &lt;chr&gt;         &lt;chr&gt;     
+##  1 &lt;NA&gt;          &lt;NA&gt;      
+##  2 &lt;NA&gt;          &lt;NA&gt;      
+##  3 (VOL) Refused &lt;NA&gt;      
+##  4 &lt;NA&gt;          &lt;NA&gt;      
+##  5 &lt;NA&gt;          &lt;NA&gt;      
+##  6 &lt;NA&gt;          &lt;NA&gt;      
+##  7 (VOL) Refused &lt;NA&gt;      
+##  8 &lt;NA&gt;          &lt;NA&gt;      
+##  9 &lt;NA&gt;          &lt;NA&gt;      
+## 10 &lt;NA&gt;          97 or more
+## # ... with 1,992 more rows
+```
+]
+
+---
+
+# Tidying the Dataset
+
+Functional but bulky. 
+
+```r
+.rcol &lt;- function(column = NULL, data = df) {
+  grep(column, colnames(data))
+}
+
+df[, -c(.rcol("age"), 
+        .rcol("books1"))] &lt;- characterize(df[, -c(.rcol("age"), 
+                                                  .rcol("books1"))])
+```
+
+--
+
+Equally functional and far less bulky. 
+
+```r
+df %&lt;&gt;%
+  mutate_at(vars(-age, -books1), characterize)
+```
+
+---
+
+# Tidying the Dataset
+
+.pull-left[
+
+```
+## # A tibble: 2,002 x 1
+##      age
+##    &lt;dbl&gt;
+##  1    33
+##  2    76
+##  3    99
+##  4    60
+##  5    55
+##  6    58
+##  7    99
+##  8    72
+##  9    58
+## 10    68
+## # ... with 1,992 more rows
+```
+]
+
+.pull-right[
+
+```
+## # A tibble: 2,002 x 1
+##      age
+##    &lt;dbl&gt;
+##  1    33
+##  2    76
+##  3    NA
+##  4    60
+##  5    55
+##  6    58
+##  7    NA
+##  8    72
+##  9    58
+## 10    68
+## # ... with 1,992 more rows
+```
+]
+
+--
+
+
+```r
+df %&lt;&gt;%
+  mutate(age = replace(age, age == 99, NA))
+```
+
+---
+
+# Tidying the Dataset
+
+Step 2: Remove extraneous rows and columns. 
+
+
+```r
+df %&lt;&gt;%
+  select(-comp, 
+         -state:-qs1,
+         -intmob,
+         -home4nw:-device1d,
+         -web1f:-web1h, #dropped b/c we don't have freq values
+         -pial5a:-pial5d,
+         -pial11a:-pial11_igbm,
+         -marital:-racem4,
+         -birth_hisp,
+         -partyln:-cellweight)
+
+df %&lt;&gt;%
+  filter(eminuse == "Yes") %&gt;%
+  select(-eminuse)
+```
+
+---
+
+# Tidying the Dataset
+
+Step 3: Tidy!
+
+
+```r
+df %&lt;&gt;%
+  gather(key = "websites", value = "value", 
+         starts_with("sns"), starts_with("web"))
+```
+
+--
+
+
+```
+## # A tibble: 17,290 x 2
+##    websites value              
+##    &lt;chr&gt;    &lt;chr&gt;              
+##  1 sns2a    &lt;NA&gt;               
+##  2 sns2a    &lt;NA&gt;               
+##  3 sns2a    &lt;NA&gt;               
+##  4 sns2a    &lt;NA&gt;               
+##  5 sns2a    About once a day   
+##  6 sns2a    &lt;NA&gt;               
+##  7 sns2a    &lt;NA&gt;               
+##  8 sns2a    &lt;NA&gt;               
+##  9 sns2a    Several times a day
+## 10 sns2a    &lt;NA&gt;               
+## # ... with 17,280 more rows
+```
+
+---
+
+# Tidying the Dataset
+
+
+```r
+df %&lt;&gt;%
+  separate(websites, into = c("temp", "website"), 
+           sep = "[[:digit:]]") 
+```
+--
+
+```
+## # A tibble: 17,290 x 3
+##    temp  website value              
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;              
+##  1 sns   a       &lt;NA&gt;               
+##  2 sns   a       &lt;NA&gt;               
+##  3 sns   a       &lt;NA&gt;               
+##  4 sns   a       &lt;NA&gt;               
+##  5 sns   a       About once a day   
+##  6 sns   a       &lt;NA&gt;               
+##  7 sns   a       &lt;NA&gt;               
+##  8 sns   a       &lt;NA&gt;               
+##  9 sns   a       Several times a day
+## 10 sns   a       &lt;NA&gt;               
+## # ... with 17,280 more rows
+```
+
+---
+
+# Tidying the Dataset
+
+```r
+df %&lt;&gt;%
+  spread(key = "temp", value = "value")
+```
+
+--
+
+```
+## # A tibble: 8,645 x 3
+##    website sns                 web               
+##    &lt;chr&gt;   &lt;chr&gt;               &lt;chr&gt;             
+##  1 a       &lt;NA&gt;                No, do not do this
+##  2 a       &lt;NA&gt;                No, do not do this
+##  3 a       &lt;NA&gt;                No, do not do this
+##  4 a       &lt;NA&gt;                No, do not do this
+##  5 a       About once a day    Yes, do this      
+##  6 a       &lt;NA&gt;                No, do not do this
+##  7 a       &lt;NA&gt;                No, do not do this
+##  8 a       &lt;NA&gt;                No, do not do this
+##  9 a       Several times a day Yes, do this      
+## 10 a       &lt;NA&gt;                No, do not do this
+## # ... with 8,635 more rows
+```
+---
+
+# Tidying the Dataset
+
+```r
+df[which(df[, "web"] == "No, do not do this"), 
+   "sns"] &lt;- "Rarely if ever"
+
+df %&lt;&gt;%
+  select(-web)
+```
+
+--
+
+
+```
+## # A tibble: 8,645 x 2
+##    website sns                
+##    &lt;chr&gt;   &lt;chr&gt;              
+##  1 a       Rarely if ever     
+##  2 a       Rarely if ever     
+##  3 a       Rarely if ever     
+##  4 a       Rarely if ever     
+##  5 a       About once a day   
+##  6 a       Rarely if ever     
+##  7 a       Rarely if ever     
+##  8 a       Rarely if ever     
+##  9 a       Several times a day
+## 10 a       Rarely if ever     
+## # ... with 8,635 more rows
+```
+---
+
+# Tidying the Dataset
+
+Step 4: Rename, convert, and recode!
+
+
+```r
+df %&lt;&gt;%
+  rename(id = respid,
+         date = int_date,
+         int_use_freq = intfreq,
+         int_good_society = pial11,
+         int_good_self = pial12,
+         total_books_read = books1,
+         books_print = books2a,
+         books_audio = books2b,
+         books_elect = books2c,
+         race = racecmb,
+         income = inc,
+         sns_freq_use = sns,
+         sns = website)
+```
+
+---
+
+# Tidying the Dataset
+
+
+```r
+df %&lt;&gt;%
+  mutate(sns = recode(sns, a = "Twitter",
+                           b = "Instagram",
+                           c = "Facebook",
+                           d = "Snapchat",
+                           e = "YouTube"))
+```
+
+
+
+--
+
+
+```
+## # A tibble: 8,645 x 2
+##    sns     sns_freq_use       
+##    &lt;fct&gt;   &lt;fct&gt;              
+##  1 Twitter Rarely if ever     
+##  2 Twitter Rarely if ever     
+##  3 Twitter Rarely if ever     
+##  4 Twitter Rarely if ever     
+##  5 Twitter About once a day   
+##  6 Twitter Rarely if ever     
+##  7 Twitter Rarely if ever     
+##  8 Twitter Rarely if ever     
+##  9 Twitter Several times a day
+## 10 Twitter Rarely if ever     
+## # ... with 8,635 more rows
+```
 
 ---
 class: inverse, middle, center
 
-# Examining perceptions of social media use
+# Examining social media use frequency
 
 ---
 
-# A Bar Chart: Final Product
+# A Line Graph: Final Product
 
-
-
-&lt;img src="index_files/figure-html/ash_plot1_run-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/ash_plot1_prep-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# A Bar Chart's Journey:
+# A Line Graphs's Journey:
 
 First, I put together a dataframe with variables of interest:
 
@@ -97,11 +443,12 @@ plot_data_ash &lt;- df %&gt;%
 
 Next, I came up with a question:
 
-- Namely, are there differences in **how good people belief the internet is for society** as a function of **political party**?
+- Namely, how might **frequency of social media use** vary as a function of **age**, **political party**, and **social media site**?
 
---
+---
+#The Hard Part: More tidying?
 
-- Do I need to tidy the data any more?
+Inspect the current data:
 
 
 ```r
@@ -116,20 +463,55 @@ head(plot_data_ash, 1)
 ## # ... with 2 more variables: int_good_self &lt;fct&gt;, int_use_freq &lt;fct&gt;
 ```
 
+--
+
+Note that to get to this point, we first had to **convert** all necessary variables to factors:
+
+
+```r
+plot_data_ash %&lt;&gt;%
+  mutate(sex = factor(sex),
+         party = factor(party),
+         sns = factor(sns),
+         sns_freq_use = factor(sns_freq_use))
+```
+
 ---
 
-More data tidying:
+We also had to **recode** factor levels:
+
+
+```r
+plot_data_ash %&lt;&gt;%
+  mutate(party = fct_recode(party, 
+                            "Other" = "(VOL) Other party",
+                            "Other" = "(VOL) Don't know",
+                            "Other" = "(VOL) No preference",
+                            "Refused" = "(VOL) Refused"))
+
+plot_data_ash %&lt;&gt;%
+  mutate(sns_freq_use = factor(sns_freq_use,
+                               levels = c(
+                                 "(VOL) Don't know",
+                                 "Rarely if ever",
+                                 "Less often",
+                                 "Every few weeks",
+                                 "A few times a week", 
+                                 "About once a day", 
+                                 "Several times a day")))
+```
+
+---
+
+Final tidying:
 
 
 ```r
 plot_ash1 &lt;- plot_data_ash %&gt;%
-  mutate(int_good_self = as.numeric(int_good_self),
-*        int_good_society = as.numeric(int_good_society)) %&gt;%
-  filter(party != "Refused") %&gt;%
-  group_by(party) %&gt;%
-  summarize(m_age = mean(age),
-            m_self = mean(int_good_self),
-*           m_society = mean(int_good_society))
+* mutate(sns_freq_use = as.numeric(sns_freq_use)) %&gt;%
+  filter(party != "Refused",
+         sns_freq_use != "&lt;NA&gt;",
+         sns_freq_use != "(VOL) Don't know") 
 ```
 
 --
@@ -138,84 +520,29 @@ Plotting the data:
 
 
 ```r
-ggplot(plot_ash1, aes(x = party, y = m_society)) +
-  geom_col(alpha = 0.5, fill = "turquoise3", color = "turquoise4") +
-  geom_hline(yintercept = 3.5, color = "red") + 
-  theme_bw() +
-  labs(title = "Figure 1.",
-       subtitle = "Ratings on a 4 point scale of how good or bad the 
-       internet is for society as a function of political party",
-       x = "Political Party", 
-       y = "Mean Rating") +
-  coord_cartesian(ylim = c(2.5, 4))
-```
-
----
-class: inverse, middle, center
-
-# Examining social media use frequency
-
----
-
-# A Line Graph: Final Product
-
-&lt;img src="index_files/figure-html/ash_plot2_run-1.png" style="display: block; margin: auto;" /&gt;
-
----
-
-# A Line Graph's Journey
-
-Again, I first came up with a question. This time I wanted to examine how **frequency of social media use** might vary as a function of **age**, **political party**, and **social media site**.
-
---
-
-
-```r
-head(plot_data_ash, 1)
-```
-
-```
-## # A tibble: 1 x 10
-##     age sex   race  cregion party sns   sns_freq_use int_good_society
-##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;        &lt;fct&gt;           
-## 1    33 Fema… White Northe… Demo… Twit… Rarely if e… Good            
-## # ... with 2 more variables: int_good_self &lt;fct&gt;, int_use_freq &lt;fct&gt;
-```
-
---
-
-Minor data tidying:
-
-
-```r
-plot_ash2 &lt;- plot_data_ash %&gt;%
-* mutate(sns_freq_use = as.numeric(sns_freq_use)) %&gt;%
-  filter(party != "Refused",
-         sns_freq_use != "&lt;NA&gt;",
-         sns_freq_use != "(VOL) Don't know") 
-```
-
----
-
-# Plotting the data:
-
-
-```r
-ggplot(plot_ash2, aes(x = age, y = sns_freq_use)) +
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
   geom_smooth(aes(group = party, colour = party), 
               method = "lm", se = FALSE) +
   facet_wrap(~sns, nrow = 1) +
   scale_colour_viridis_d() +
   theme_bw() +
-  labs(title = "Figure 2.",
-       subtitle = "The relation between age and frequency of social media use 
-       as a function of political party and social media site",
+  labs(title = "Figure 1.",
+       subtitle = "The relation between age and frequency of 
+       social media use as a function of political party and 
+       social media site",
        x = "Age", 
        y = "Frequency of social media use",
        colour = "Political party")
 ```
 
 ---
+
+# Revisiting A Line Graph:
+
+&lt;img src="index_files/figure-html/ash_plot1_revisit-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
 class: inverse, middle, center
 
 #What happens if we swap out political party for sex?
@@ -233,20 +560,23 @@ First, inspect the data frame
 
 
 ```r
-head(plot_ash2, 1)
+head(plot_ash1, 4)
 ```
 
 ```
-## # A tibble: 1 x 10
+## # A tibble: 4 x 10
 ##     age sex   race  cregion party sns   sns_freq_use int_good_society
 ##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt;        &lt;dbl&gt;            &lt;dbl&gt;
 ## 1    33 Fema… White Northe… Demo… Twit…            2                4
+## 2    NA Fema… White Northe… Repu… Twit…            2                4
+## 3    60 Fema… White South   Demo… Twit…            2                2
+## 4    55 Male  White Northe… Repu… Twit…            2                4
 ## # ... with 2 more variables: int_good_self &lt;dbl&gt;, int_use_freq &lt;dbl&gt;
 ```
 
 --
 
-Luckily, it appears that I do not need to tidy the data beyond what has already been done. So, all I need to do is plot the data
+Luckily, it appears that I do **not** need to tidy the data beyond what has already been done. So, all I need to do is plot the data
 
 ---
 
@@ -254,13 +584,13 @@ Luckily, it appears that I do not need to tidy the data beyond what has already 
 
 
 ```r
-ggplot(plot_ash3, aes(x = age, y = sns_freq_use)) +
+ggplot(plot_ash1, aes(x = age, y = sns_freq_use)) +
 * geom_smooth(aes(group = sex, colour = sex),
               method = "lm", se = FALSE, lwd = 2) +
   scale_color_manual(values = c("turquoise3", "purple3")) +
   facet_wrap(~sns, nrow = 1) +
   theme_bw(base_size = 21) +
-  labs(title = "Figure 3.",
+  labs(title = "Figure 2.",
        subtitle = "Relation between age and frequency of social 
        media use as a function of sex and social media site",
        x = "Age", 
@@ -270,11 +600,315 @@ ggplot(plot_ash3, aes(x = age, y = sns_freq_use)) +
 
 ---
 
-#Stefania, add whatever plots/code you want! Could you add your pretty table? :)
+#Next steps
 
-- Note that I will likely delete one of my figure.. I'm leaning towards Figure 1. Thoughts?
+- Dig into data concerning perceptions of how good social media use is for the self vs society
 
-- In case you didn't see this above, you can also insert links like this [click here to view demo for how to modify these slides](https://ashlynnmiller.github.io/Lab14_DemoSlides/).
+--
+
+- Use this data to make a lollipop graph!
+
+---
+
+class: inverse, middle, center
+
+# Examining age trends in media format
+
+---
+# Do older adults read more than young adults?
+
+&lt;img src="index_files/figure-html/stef_plot1_run-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Average Books Journey
+I wanted to examine **the total number of books read in a year** by **age group**.
+
+- On average, how many books are read a year irrespective of media format?
+
+--
+- First I selected variables that I wanted to use: 
+
+
+```r
+# Subset the original data and tidy for plotting
+plot_data &lt;- df %&gt;% 
+  select(id, age, total_books_read, books_print, 
+         books_audio, books_elect)
+
+head(plot_data, 4)
+```
+
+```
+## # A tibble: 4 x 6
+##      id   age total_books_read books_print books_audio books_elect
+##   &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt;       &lt;fct&gt;      
+## 1     1    33                1 Yes         No          No         
+## 2     3    NA                0 &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;       
+## 3     4    60                2 Yes         No          No         
+## 4     5    55                6 Yes         No          Yes
+```
+
+---
+- Next, I needed all formats to be in one column:
+
+```r
+# Use gather and separate to pull media formats into one column
+plot_data &lt;- df %&gt;% 
+  select(id, age, total_books_read, books_print, 
+         books_audio, books_elect) %&gt;% 
+  filter(!duplicated(id)) %&gt;% 
+  gather(book_format, yn, -age, -total_books_read, -id) %&gt;% 
+  separate(book_format, c("dis", "book_format"), 
+           sep = "_", convert = TRUE) %&gt;% 
+  select(-dis) %&gt;% 
+  filter(!str_detect(yn, "VOL"))
+
+head(plot_data, 4)
+```
+
+```
+## # A tibble: 4 x 5
+##      id   age total_books_read book_format yn   
+##   &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;
+## 1     1    33                1 print       Yes  
+## 2     4    60                2 print       Yes  
+## 3     5    55                6 print       Yes  
+## 4     6    58               18 print       Yes
+```
+
+---
+- But what about age bins?
+
+![](index_files/figure-html/ugly_plot-1.png)&lt;!-- --&gt;
+
+---
+- Lastly, factorize new columns and recode age_group:
+
+```r
+plot_data &lt;- df %&gt;% 
+  select(id, age, total_books_read, books_print, 
+         books_audio, books_elect) %&gt;%
+  filter(!duplicated(id)) %&gt;% 
+  gather(book_format, yn, -age, -total_books_read, -id) %&gt;% 
+  separate(book_format, c("dis", "book_format"), 
+           sep = "_", convert = TRUE) %&gt;% 
+  select(-dis) %&gt;% 
+  filter(!str_detect(yn, "VOL")) %&gt;% 
+  mutate(book_format = factor(book_format),
+         yn = factor(yn),
+         age_group = factor(findInterval(age, seq(10, 100, by = 10)))) %&gt;%
+  mutate(age_group = recode(age_group, "1" = "18-19",
+                            "2" = "20-29",
+                            "3" = "30-39",
+                            "4" = "40-49",
+                            "5" = "50-59",
+                            "6" = "60-69",
+                            "7" = "70-79",
+                            "8" = "80-89",
+                            "9" = "90-99"))
+```
+
+---
+
+
+```r
+head(plot_data)
+```
+
+```
+## # A tibble: 6 x 6
+##      id   age total_books_read book_format yn    age_group
+##   &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt; &lt;fct&gt;    
+## 1     1    33                1 print       Yes   30-39    
+## 2     4    60                2 print       Yes   60-69    
+## 3     5    55                6 print       Yes   50-59    
+## 4     6    58               18 print       Yes   50-59    
+## 5     7    NA                3 print       Yes   &lt;NA&gt;     
+## 6     8    72                2 print       Yes   70-79
+```
+
+---
+# Building the plot
+
+
+```r
+pal &lt;- jcolors("pal10") # Select color palette for plot
+
+bar_plot &lt;- plot_data %&gt;%
+  filter(!is.na(age_group)) %&gt;%
+  filter(!duplicated(id)) %&gt;% 
+  group_by(age_group) %&gt;% 
+  dplyr::summarize(mean_books = mean(total_books_read)) %&gt;% 
+  ggplot(aes(x = age_group, y = mean_books, fill = age_group)) + 
+  geom_col() +
+  scale_fill_manual(values = pal) + 
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Ages",
+       title = "Books Read by Age",
+       subtitle = "Books read in the past year.") +
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
+        plot.title = element_text(size = 21, hjust = 0),
+        axis.title.x = element_text(size = 17), 
+        axis.title.y = element_text(size = 17),
+        axis.text = element_text(size = 13))
+```
+
+---
+# Final Product!
+&lt;img src="index_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Are there differences by media type? 
+&lt;img src="index_files/figure-html/stef_plot2_run-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Building the plot
+- Data has already been tidied
+
+- Pick a new palette and create labels for renaming facets
+
+
+```r
+# Pick color palette for plot
+pal &lt;- wes_palette("Darjeeling1")
+
+# Facet Labels
+media_labels &lt;- c(`audio` = "Audio",
+                    `elect` = "Electronic",
+                    `print` = "Print")
+```
+
+---
+- Build plot, use `as_labeller` function to rename facet labels
+
+```r
+bar_plot2 &lt;- plot_data %&gt;% 
+  filter(!is.na(age_group) &amp; yn == 'Yes') %&gt;% 
+  group_by(age_group, book_format) %&gt;% 
+  dplyr::summarize(mean_books = mean(total_books_read),
+                   count = n()) %&gt;% 
+  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
+  geom_col() +
+  facet_wrap(~book_format, nrow = 1, ncol = 3, 
+             labeller = as_labeller(media_labels)) +
+  scale_fill_manual(values = pal) +
+  theme(legend.position = "none") +
+  labs(y = "Average Books Read",
+       x = "Age Bin",
+       title = "Average Books Read by Format",
+       subtitle = "Average books read in past year.") +
+  theme(plot.subtitle = element_text(size = 17, 
+                                     hjust = 0, 
+                                     face = "italic", 
+                                     color = "black"),
+        plot.title = element_text(size = 25, hjust = 0),
+        axis.text.x = element_text(angle = 90, vjust = .5)) 
+# note that the line above rotates and centers text
+```
+
+---
+# Final Product!
+&lt;img src="index_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# How does age and media format relate to reading? 
+I wanted to examine how **the average number of books read in a year** might vary as a function of **age** and  **book format (electronic, audio, or print)**.
+
+--
+
+- I fit a linear model predicting the average number of books read from age, book_format, and their interaction
+
+
+```r
+# Prepare the data
+reg_data &lt;- plot_data %&gt;% 
+  filter(!is.na(age_group) &amp; yn == 'Yes') %&gt;% 
+  group_by(age, book_format) %&gt;% 
+  dplyr::summarize(mean_books = mean(total_books_read))
+
+# Fit the model
+model &lt;- lm(mean_books ~ age * book_format, data = reg_data)
+```
+
+---
+Then I used `kable` to generate a table with output from the regression
+
+
+```r
+# Ouput a table
+kable(anova(model)) %&gt;%
+  kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+&lt;table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum Sq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mean Sq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Pr(&amp;gt;F) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1473.9621 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1473.9621 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.9215792 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0158094 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; book_format &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2652.0292 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1326.0146 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.3272066 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0055497 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age:book_format &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 290.2839 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 145.1420 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5831015 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5590831 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Residuals &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 206 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 51276.2191 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 248.9137 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+&lt;img src="index_files/figure-html/unnamed-chunk-9-1.png"  /&gt;
+
+---
+# The caveat- a newly discovered challenge
+- These are not mutually exclusive
+
+# Goals
+- Find out who uses audio, electronic, and print media exclusively + who uses more than one.
+
+- Re-run analyses for paper
+
+---
+class: inverse, middle, center
+
+# The END!
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
