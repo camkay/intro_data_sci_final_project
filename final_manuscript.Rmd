@@ -38,7 +38,7 @@ output            : papaja::apa6_pdf
 ---
 
 ```{r setup, include = FALSE}
-# Knit settings
+# knit settings
 knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       warning = FALSE,
@@ -48,6 +48,20 @@ knitr::opts_chunk$set(echo = FALSE,
 # turn off scientific notation
 options(scipen = 999) 
 
+# if you do not have the following packages, you will need to install them
+#install.packages("papaja")
+#install.packages("tidyverse")
+#install.packages("lme4")
+#install.packages("lmerTest")
+#install.packages("here")
+#install.packages("rio")
+#install.packages("lubridate")
+#install.packages("cowplot")
+#install.packages("wesanderson")
+#install.packages("forcats")
+#install.packages("pander")
+#install.packages("magrittr")
+#install.packages("Hmisc")
 
 # load required libraries
 library(papaja)
