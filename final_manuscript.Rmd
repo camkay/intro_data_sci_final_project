@@ -241,7 +241,7 @@ For cell phone users, the script was slightly different:
 
 "Hello, I am _____ calling on behalf of the Pew Research Center. We are conducting a telephone opinion survey about some important issues today. I know I am calling you on a cell phone. If you would like to be reimbursed for your cell phone minutes, we will pay all eligible respondents $5 for participating in this survey. This is NOT a sales call."
 
-Once participants passed initial screening (e.g., 18 years of age or older) and provided verbal consent to the interview, they were asked a series of questions pertaining to internet use  (e.g., "How often do you use the internet?"; options ranged from 1 = "Almost Constantly" to 5 = "Less Often"), social media use (e.g., "Do you use any of the following social media sites online or on your cell phone: Twitter, Instagram, Facebook, Snapchat, YouTube, WhatsApp, Interest, and LinkedIn?), as well as perceptions of social media's influence on the self and society (e.g., "When you add up all the advantages and disadvantages of the internet, would you say the internet has mostly been a good thing or a bad thing for society?"; options included: "Good thing", "bad thing", "Some of Both", and "Don't Know"). Participants were also asked about reading habits (e.g., "During the past 12 months, how many books (print, electroninc, and audiobooks) did you read either all or part of the way through?") and reading format preferences (e.g., "Thinking about all of the books you have read iin the past 12 months, were any of those printed books, audiobooks, or E-books?"). The interview ended with a series of demographic questions assessing variables including participant sex, age, race, marrital status, education, current employment status, income, and political affiliation.
+Once participants passed initial screening (e.g., 18 years of age or older) and provided verbal consent to the interview, they were asked a series of questions pertaining to internet use  (e.g., "How often do you use the internet?"; options ranged from 1 = "Almost Constantly" to 5 = "Less Often"), social media use (e.g., "Do you use any of the following social media sites online or on your cell phone: Twitter, Instagram, Facebook, Snapchat, YouTube, WhatsApp, Interest, and LinkedIn?"), as well as perceptions of social media's influence on the self and society (e.g., "When you add up all the advantages and disadvantages of the internet, would you say the internet has mostly been a good thing or a bad thing for society?"; options included: "Good Thing", "Bad Thing", "Some of Both", and "Don't Know"). Participants were also asked about reading habits (e.g., "During the past 12 months, how many books (print, electronic, and audiobooks) did you read either all or part of the way through?") and reading format preferences (e.g., "Thinking about all of the books you have read in the past 12 months, were any of those printed books, audiobooks, or E-books?"). The interview ended with a series of demographic questions assessing variables including participant sex, age, race, marrital status, education, current employment status, income, and political affiliation.
 
 ## Data analysis
 We used `r cite_r("r-references.bib")` for all our analyses.
@@ -352,7 +352,6 @@ Although the model comparison did not indicate an increase in predictive ability
 
 A comparison of the full model with random effects to the full model without random effects, revealed that the random effects explained a significant proportion of the variance in social media site use, $\chi^2$(`r .spround(wo_compared[2, "Chi Df"], 0)`) = `r .spround(wo_compared[2, "Chisq"], 2)`, *p* < `r .spround(wo_compared[2, "Pr(>Chisq)"], 3, l_zero = FALSE)`. In fact, grouping ratings by participant explained `r .spround((model_var[1, "vcov"]/sum(model_var$vcov)) * 100)`% of the variance in the frequency of using a social media site. A visual inspection of model residuals did not suggest non-normality nor heteroscedasticity. We also quantitively inspected the variables for potential multicollinearity within the fullest model without the interaction effects. No multicollinearity was detected (*VIF* = `r min(model_vif[, "GVIF"])` - `r max(model_vif[, "GVIF"])`). 
 
-All of the predictors together accounted for 33% of the variability in frequency of social media use, *F*(19, 8136) = 206.9, *p* < .001. Figure 1 reveals that younger people used social media more frequently than older people, *F*(1, 8136) = 1151.27, *p* < .001. People also tended to use Facebook the most, followed by YouTube, Instagram, Snapchat, and Twitter, *F*(4, 8136) =611.65, *p* < .001. Critically, though, the effect of age on frequency of social media use varied as a function of social media site, *F*(4, 8136) = 40.42, *p* < .001. That is, age-related differences in frequency of social media use emerged primarily for Instagram ($\beta$ = -0.26, *p* < .001), Snapchat ($\beta$ = -0.31, *p* < .001), and YouTube ($\beta$ = -.13, *p* = .01).
 
 ```{r ash_analyses_viz, include = FALSE}
 
@@ -413,9 +412,6 @@ Figure1
 
 ```
 
-Of note, frequency of social media use also varied by sex, *F*(1, 8136) = 28.50, *p* < .001. Figure 2(c) reveals that, on average, females tended to report higher frequency of social media use than did males. Moreover, sex interacted with age, *F*(1, 8136) = 19.79, *p* < .001, as well as social media site, *F*(1, 8136) = 40.42, *p* < .001, in predicting frequency of social media use. Figure 2(b) shows that the interaction between sex and social media site is primarily driven by the finding that women reported higher Facebook use than men, and men reported higher YouTube use than women. 
-While the three-way interaction between sex, age, and social media site approached significance (*p* = .10), an examination of Figure 2(a) suggests a possible age x social media site interaction for exclusively females, not males. Excluding males from the analysis indeed revealed a significant interaction, *F*(4, 3662) = 22.93, *p* < .001, suggesting that—for females—the largest age-related differences emerged for Facebook, Instagram, and Snapchat. 
-
 ```{r ash_analyses_viz2, include = FALSE}
 
 #Examing the potential influence of sex on the aforementioned effects
@@ -464,26 +460,6 @@ Figure2 <- plot_grid(fig2a, fig2d, labels = c("A", ""), align = "v", axis = "t",
 
 Figure2
 
-#Regressions
-
-##########################################################################
-#Cam, please fix my regression by creating a linear mixed effect model :)
-##########################################################################
-
-sns_model <- lm(sns_freq_use ~  age * sex * sns, data = plot_data_ash)
-
-anova(sns_model)
-#summary(sns_model)
-#std_beta(sns_model)
-
-female_sns_model <- plot_data_ash %>%
-  filter(sex == "Female")
-
-female_sns_model <- lm(sns_freq_use ~ age * sns, female_sns_model)
-
-#anova(female_sns_model)
-#summary(female_sns_model)
-#std_beta(female_sns_model)
 
 ```
 
