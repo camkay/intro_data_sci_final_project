@@ -31,9 +31,13 @@ footnotelist      : no
 linenumbers       : no
 mask              : no
 draft             : no
-
+toc               : no 
+figsintext        : yes #Plots will be referenced in place
+header-includes   :  
+  - \raggedbottom  
+  - \setlength{\parskip}{0pt} #Equations are now left-aligned
 documentclass     : "apa6"
-classoption       : "man"
+classoption       : "man, fleqn, noextraspace" #Odd spacing around paragraphs and headers is removed
 output            : papaja::apa6_pdf
 ---
 
