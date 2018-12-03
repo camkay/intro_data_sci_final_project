@@ -1,4 +1,4 @@
-\documentclass[man]{apa6}
+\documentclass[man, fleqn, noextraspace]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -347,7 +347,7 @@ endorsed only using a single type of media format were grouped into
 their appropriate format bins. Respondents who endorsed using more than
 one type of media format were grouped together into a \enquote{mixed
 media} format bin. Next, we calculated the average number of books read,
-grouped by age and media format see Figure 3.
+grouped by age and media format see Figure \ref{fig:fig3}.
 
 \begin{figure}
 \centering
@@ -355,10 +355,45 @@ grouped by age and media format see Figure 3.
 \caption{\label{fig:fig3}Average books read grouped by age and media format}
 \end{figure}
 
-Next, we ran a multiple regression predicting the average number of
-books read in the past year from age, book format and their interaction.
+To look at the relationships between amount read, age, and media format,
+we ran a multiple regression predicting the average number of books read
+in the past year from age and media format as well as their interaction.
 Results showed a significant main effect of age (STATS) with older
-adults reading more books in 2018 than younger adults.
+adults reading more books in 2018 than younger adults. We also saw a
+significant main effect of media format (STATS) and pairwise comparisons
+revealed that books in electronic format were read more than those in
+either print and audiobook format. We found no difference in media
+consumption between individuals who reported using exclusively a print
+format and those who reported using exclusively an audiobook format.
+Furthermore, we found no difference between media consumed by
+individuals who reported they use mixed media sources compared to those
+who exclusively preferred elecronic formats (see Table \ref{tab:reg}.
+Figure @ref(fig:fig3
+
+\begin{table}[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:reg}Main effects of age and media format predicting the average number of books read in 2018.}
+\begin{tabular}{llllll}
+\toprule
+ & \multicolumn{1}{c}{Df} & \multicolumn{1}{c}{Sum Sq} & \multicolumn{1}{c}{Mean Sq} & \multicolumn{1}{c}{F value} & \multicolumn{1}{c}{Pr(>F)}\\
+\midrule
+age & 1 & 2,165.24 & 2,165.24 & 7.99 & 0.01\\
+book\_format & 3 & 5,012.82 & 1,670.94 & 6.17 & 0.00\\
+age:book\_format & 3 & 2,124.53 & 708.18 & 2.61 & 0.05\\
+Residuals & 200 & 54,193.42 & 270.97 & NA & NA\\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{final_manuscript_files/figure-latex/fig4-1.pdf}
+\caption{\label{fig:fig4}Average media consumed as a function of age and
+media format}
+\end{figure}
 
 \section{Discussion}\label{discussion}
 

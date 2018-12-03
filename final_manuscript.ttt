@@ -26,3 +26,24 @@ Age X SNS & 18 & 4 & -6532.52 & 117.18 & <.001\\
 \end{table*}
 \efloatseparator
  
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:reg}Main effects of age and media format predicting the average number of books read in 2018.}
+\begin{tabular}{llllll}
+\toprule
+ & \multicolumn{1}{c}{Df} & \multicolumn{1}{c}{Sum Sq} & \multicolumn{1}{c}{Mean Sq} & \multicolumn{1}{c}{F value} & \multicolumn{1}{c}{Pr(>F)}\\
+\midrule
+age & 1 & 2,165.24 & 2,165.24 & 7.99 & 0.01\\
+book\_format & 3 & 5,012.82 & 1,670.94 & 6.17 & 0.00\\
+age:book\_format & 3 & 2,124.53 & 708.18 & 2.61 & 0.05\\
+Residuals & 200 & 54,193.42 & 270.97 & NA & NA\\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+\end{table*}
+\efloatseparator
+ 

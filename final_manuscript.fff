@@ -7,3 +7,13 @@
 \end{figure*}
 \efloatseparator
  
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{final_manuscript_files/figure-latex/fig4-1.pdf}
+\caption{\label{fig:fig4}Average media consumed as a function of age and
+media format}
+\end{figure*}
+\efloatseparator
+ 
