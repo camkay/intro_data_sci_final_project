@@ -23,7 +23,7 @@
 }{}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Something Clever\ldots{}},
+            pdftitle={Internet and Social Media Use in American Adults},
             pdfauthor={Cameron S. Kay, Stefania R. Ashby, \& Ashley L. Miller},
             pdfkeywords={american, social media, internet, pew research center},
             pdfborder={0 0 0},
@@ -63,12 +63,12 @@
 \def\footnote{\protect\rmarkdownfootnote}
 
 
-  \title{Something Clever\ldots{}}
+  \title{Internet and Social Media Use in American Adults}
     \author{Cameron S. Kay\textsuperscript{1}, Stefania R. Ashby\textsuperscript{1},
 \& Ashley L. Miller\textsuperscript{1}}
     \date{}
   
-\shorttitle{Title}
+\shorttitle{Internet and Social Media}
 \affiliation{
 \vspace{0.5cm}
 \textsuperscript{1} University of Oregon}
@@ -129,26 +129,25 @@ TBD
 \begin{document}
 \maketitle
 
-A common definition for a social media site is that it is an
-internet-based service allowing for the creation and broadcast of
-user-generated information (Boyd \& Ellison, 2008; Kaplan \& Haenlein,
-2010; Obar \& Wildman, 2015). Obar and Wildman (2015) emphasize the
-user-generated aspect of this definition, arguing that this content is
-the lifeblood of social media. Although that may sound hyperbolic, it
-logically follows that if a site is created with the express purpose of
-providing user-generated content, it must have user-generated content to
-function as intended. By way of illustration, without videos created by
-users, YouTube, a social media site that allows its users to upload and
-share videos, would fail to serve its primary purpose. Netflix, a site
-that allows users to only stream videos, does not require user-generated
-content, as it does not serve user-generated content, and, by extension
-is not a social media site. Beyond the functional aspects of social
-media sites, the user-generated focus also highlights the importance of
-individual differences in the user-service relationship, as users
-invariably have characteristics that affect how they consume and
-generate content.
+Social media sites are commonly defined as an internet-based service
+allowing for the creation and broadcast of user-generated information
+(Boyd \& Ellison, 2008; Kaplan \& Haenlein, 2010; Obar \& Wildman,
+2015). Obar and Wildman (2015) emphasize the user-generated aspect of
+this definition, arguing that this content is the lifeblood of social
+media. Although that may sound hyperbolic, it logically follows that if
+a site is created with the express purpose of providing user-generated
+content, it must have user-generated content to function as intended. By
+way of illustration, without videos created by users, YouTube, a social
+media site that allows its users to upload and share videos, would fail
+to serve its primary purpose. Netflix, a site that allows users to only
+stream videos, does not require user-generated content, as it does not
+serve user-generated content, and, by extension is not a social media
+site. Beyond the functional aspects of social media sites, the
+user-generated focus also highlights the importance of individual
+differences in the user-service relationship, as users invariably have
+characteristics that affect how they consume and generate content.
 
-\section{Methods}\label{methods}
+\section{Method}\label{method}
 
 The data for the current study was collected by the Pew Research Center
 (2018).
@@ -166,37 +165,168 @@ Concerning race, 68.48\% identified as white, 12.78\% identified as
 black, 3.64\% identified as Asian, 2.95\% identified as mixed race, and
 12.15\% refused to answer or reported being from some other race.
 
-\subsection{Material}\label{material}
+\subsection{Materials and Procedure}\label{materials-and-procedure}
 
-\subsection{Procedure}\label{procedure}
+Research personnel were instructed to read from a script while
+interviewing each participant. For landline users, the script began as
+follows:
+
+\enquote{Hello, I am \_\_\_\_\_ calling on behalf of the Pew Research
+Center. We are conducting a telephone opinion survey about some
+important issues today and we would like to include your household. May
+I please speak with the YOUNGEST {[}RANDOMIZE: (MALE / FEMALE){]}, age
+18 or older, who is now at home? {[}IF NO MALE/FEMALE, ASK: May I please
+speak with the YOUNGEST (FEMALE / MALE), age 18 or older, who is now at
+home?{]}}
+
+For cell phone users, the script was slightly different:
+
+\enquote{Hello, I am \_\_\_\_\_ calling on behalf of the Pew Research
+Center. We are conducting a telephone opinion survey about some
+important issues today. I know I am calling you on a cell phone. If you
+would like to be reimbursed for your cell phone minutes, we will pay all
+eligible respondents \$5 for participating in this survey. This is NOT a
+sales call.}
+
+Once participants passed initial screening (e.g., 18 years of age or
+older) and provided verbal consent to the interview, they were asked a
+series of questions pertaining to internet use (e.g., \enquote{How often
+do you use the internet?}; options ranged from 1 = \enquote{Almost
+Constantly} to 5 = \enquote{Less Often}), social media use (e.g.,
+\enquote{Do you use any of the following social media sites online or on
+your cell phone: Twitter, Instagram, Facebook, Snapchat, YouTube,
+WhatsApp, Interest, and LinkedIn?}), as well as perceptions of social
+media's influence on the self and society (e.g., \enquote{When you add
+up all the advantages and disadvantages of the internet, would you say
+the internet has mostly been a good thing or a bad thing for society?};
+options included: \enquote{Good Thing}, \enquote{Bad Thing},
+\enquote{Some of Both}, and \enquote{Don't Know}). Participants were
+also asked about reading habits (e.g., \enquote{During the past 12
+months, how many books (print, electronic, and audiobooks) did you read
+either all or part of the way through?}) and reading format preferences
+(e.g., \enquote{Thinking about all of the books you have read in the
+past 12 months, were any of those printed books, audiobooks, or
+E-books?}). The interview ended with a series of demographic questions
+assessing variables including participant sex, age, race, marrital
+status, education, current employment status, income, and political
+affiliation.
 
 \subsection{Data analysis}\label{data-analysis}
 
 We used R (Version 3.5.1; R Core Team, 2018) and the R-packages
-\emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{cowplot} (Version
-0.9.3; Wilke, 2018), \emph{dplyr} (Version 0.7.8; Wickham, François,
-Henry, \& Müller, 2018), \emph{forcats} (Version 0.3.0; Wickham, 2018a),
-\emph{Formula} (Version 1.2.3; Zeileis \& Croissant, 2010),
-\emph{ggplot2} (Version 3.1.0; Wickham, 2016), \emph{here} (Version 0.1;
-Müller, 2017), \emph{Hmisc} (Version 4.1.1; Harrell Jr, Charles Dupont,
-\& others., 2018), \emph{lattice} (Version 0.20.38; Sarkar, 2008),
-\emph{lme4} (Version 1.1.19; Bates, Mächler, Bolker, \& Walker, 2015),
-\emph{lmerTest} (Version 3.0.1; Kuznetsova, Brockhoff, \& Christensen,
-2017), \emph{lubridate} (Version 1.7.4; Grolemund \& Wickham, 2011),
-\emph{magrittr} (Version 1.5; Bache \& Wickham, 2014), \emph{Matrix}
-(Version 1.2.15; Bates \& Maechler, 2018), \emph{pander} (Version 0.6.3;
-Daróczi \& Tsegelskyi, 2018), \emph{papaja} (Version 0.1.0.9842; Aust \&
-Barth, 2018), \emph{purrr} (Version 0.2.5; Henry \& Wickham, 2018),
-\emph{readr} (Version 1.1.1; Wickham, Hester, \& Francois, 2017),
+\emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{car} (Version
+3.0.2; Fox \& Weisberg, 2011; Fox, Weisberg, \& Price, 2018),
+\emph{carData} (Version 3.0.2; Fox et al., 2018), \emph{cowplot}
+(Version 0.9.3; Wilke, 2018), \emph{dplyr} (Version 0.7.7; Wickham,
+François, Henry, \& Müller, 2018), \emph{emmeans} (Version 1.3.0; Lenth,
+2018), \emph{forcats} (Version 0.3.0; Wickham, 2018a), \emph{Formula}
+(Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggplot2} (Version
+3.1.0; Wickham, 2016), \emph{here} (Version 0.1; Müller, 2017),
+\emph{Hmisc} (Version 4.1.1; Harrell Jr, Charles Dupont, \& others.,
+2018), \emph{jcolors} (Version 0.0.4; Huling, 2018), \emph{lattice}
+(Version 0.20.35; Sarkar, 2008), \emph{lme4} (Version 1.1.18.1; Bates,
+Mächler, Bolker, \& Walker, 2015), \emph{lmerTest} (Version 3.0.1;
+Kuznetsova, Brockhoff, \& Christensen, 2017), \emph{lubridate} (Version
+1.7.4; Grolemund \& Wickham, 2011), \emph{magrittr} (Version 1.5; Bache
+\& Wickham, 2014), \emph{Matrix} (Version 1.2.14; Bates \& Maechler,
+2018), \emph{pander} (Version 0.6.2; Daróczi \& Tsegelskyi, 2018),
+\emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{plotrix}
+(Version 3.7.4; J, 2006), \emph{purrr} (Version 0.2.5; Henry \& Wickham,
+2018), \emph{readr} (Version 1.2.1; Wickham, Hester, \& Francois, 2017),
 \emph{rio} (Version 0.5.10; C.-h. Chan, Chan, Leeper, \& Becker, 2018),
-\emph{stringr} (Version 1.3.1; Wickham, 2018b), \emph{survival} (Version
-2.43.1; Terry M. Therneau \& Patricia M. Grambsch, 2000), \emph{tibble}
-(Version 1.4.2; Müller \& Wickham, 2018), \emph{tidyr} (Version 0.8.2;
-Wickham \& Henry, 2018), \emph{tidyverse} (Version 1.2.1; Wickham,
-2017), and \emph{wesanderson} (Version 0.3.6; Ram \& Wickham, 2018) for
-all our analyses.
+\emph{sjstats} (Version 0.17.2; Lüdecke, 2018), \emph{stringr} (Version
+1.3.1; Wickham, 2018b), \emph{survival} (Version 2.42.3; Terry M.
+Therneau \& Patricia M. Grambsch, 2000), \emph{tibble} (Version 1.4.2;
+Müller \& Wickham, 2018), \emph{tidyr} (Version 0.8.1; Wickham \& Henry,
+2018), \emph{tidyverse} (Version 1.2.1; Wickham, 2017), and
+\emph{wesanderson} (Version 0.3.6; Ram \& Wickham, 2018) for all our
+analyses.
 
 \section{Results}\label{results}
+
+First, we sought to examine how frequency of social media use might vary
+as a function of sex, age, social media site, and the interaction
+between these variables. Using the \emph{lme4} package by (Bates et al.,
+2015), we ran a comparison of seven linear mixed-effects models
+predicting frequency of social media use from age, social media site,
+sex, and the interactions among these variables. Our first model
+included only the random effects. Specifically, we suspected that
+participants may have certain response style in evaluating their
+frequency of social media use. We entered the subject as a random
+intercept to account for interdependence in the participants' ratings.
+Although in many cases the scenario or context (i.e., social media site)
+would be entered as a random slope, we did not wish to generalize beyond
+these sites.
+
+Our second model added gender, followed by age in our third model. The
+fourth model included the social media site in question. The fifth
+through seventh models added (1) the interaction between sex and age,
+(2) the interaction between sex and social media site, and (3) the
+interaction between age and social media site.
+
+As shown in Table 1, we found that the addition of age, social media
+site, the interaction between sex and social media site, and the
+interaction between age and social media site all explained a
+significant proportion of variance in social media site usage frequency.
+Using the \emph{lmerTest} package from Kuznetsova et al. (2017) to
+approximate degrees of freedom with Satterthwaite's method, we found
+that older age is associated with lower social media use, \emph{b} =
+-0.01, \emph{SE} = .00, \emph{p} \textless{} .003. Furthermore, Snapchat
+is used more often than Facebook (\emph{b} = .73, \emph{SE} = .18,
+\emph{p} \textless{} .001), and Twitter is used more often than Facebook
+(\emph{b} = -0.74, \emph{SE} = .18, \emph{p} \textless{} .001). However,
+age interacts with the specific social media site, insofar that
+increased age results in even lower rates of social media use in the
+case of Instagram (\emph{b} = -0.02, \emph{SE} = .00, \emph{p}
+\textless{} .001), Snapchat (\emph{b} = -0.04, \emph{SE} = .00, \emph{p}
+\textless{} .001), Twitter (\emph{b} = -0.01, \emph{SE} = .00, \emph{p}
+\textless{} .017), and YouTube (\emph{b} = -0.02, \emph{SE} = .00,
+\emph{p} \textless{} .001) when compared to Facebook.
+
+Although the model comparison did not indicate an increase in predictive
+ability from the introduction of participant gender, we did find that
+males (in comparison to females) reported less frequency of social media
+use when using the approximated degrees of freedom, \emph{b} = -0.40,
+\emph{SE} = .14, \emph{p} \textless{} .005. When compared to Facebook,
+however, men exhibitted a greater frequency of using Twitter (\emph{b} =
+.49, \emph{SE} = .12, \emph{p} \textless{} .001) and YouTube (\emph{b} =
+.61, \emph{SE} = .09, \emph{p} \textless{} .001) than women did.
+
+A comparison of the full model with random effects to the full model
+without random effects, revealed that the random effects explained a
+significant proportion of the variance in social media site use,
+\(\chi^2\)(1) = 176.01, \emph{p} \textless{} .001. In fact, grouping
+ratings by participant explained 21.65\% of the variance in the
+frequency of using a social media site. A visual inspection of model
+residuals did not suggest non-normality nor heteroscedasticity. We also
+quantitively inspected the variables for potential multicollinearity
+within the fullest model without the interaction effects. No
+multicollinearity was detected (\emph{VIF} = 1.01 - 1.04).
+
+\begin{table}[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:df_lmer_table}Log likelihood comparison of linear mixed-effects models predicting social network site use from sex, age, and specific social network site.}
+\begin{tabular}{lrrrrrlrrrrrlrrrrrlrrrrrlrrrrrlrrrrr}
+\toprule
+ & \multicolumn{1}{c}{\textit{K}} & \multicolumn{1}{c}{$\chi^2$ \textit{df}} & \multicolumn{1}{c}{Loglik.} & \multicolumn{1}{c}{$\chi^2$} & \multicolumn{1}{c}{\textit{p}}\\
+\midrule
+Null & 3 &  & -6857.08 &  & \\
+Sex & 4 & 1 & -6856.28 & 1.61 & .205\\
+Age & 5 & 1 & -6775.08 & 162.39 & <.001\\
+SNS & 9 & 4 & -6620.63 & 308.91 & <.001\\
+Sex X Age & 10 & 1 & -6620.27 & 0.72 & .396\\
+Sex X SNS & 14 & 4 & -6591.10 & 58.32 & <.001\\
+Age X SNS & 18 & 4 & -6532.52 & 117.18 & <.001\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Participant \textit{N} = 1541; Social Network Site \textit{N} = 5. Null model includes only the random intercept. SNS = social network site. X indicates an interaction.}
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table}
 
 \section{Discussion}\label{discussion}
 
@@ -241,6 +371,16 @@ Chan, C.-h., Chan, G. C., Leeper, T. J., \& Becker, J. (2018).
 Daróczi, G., \& Tsegelskyi, R. (2018). \emph{Pander: An r 'pandoc'
 writer}. Retrieved from \url{https://CRAN.R-project.org/package=pander}
 
+\hypertarget{ref-R-car}{}
+Fox, J., \& Weisberg, S. (2011). \emph{An R companion to applied
+regression} (Second.). Thousand Oaks CA: Sage. Retrieved from
+\url{http://socserv.socsci.mcmaster.ca/jfox/Books/Companion}
+
+\hypertarget{ref-R-carData}{}
+Fox, J., Weisberg, S., \& Price, B. (2018). \emph{CarData: Companion to
+applied regression data sets}. Retrieved from
+\url{https://CRAN.R-project.org/package=carData}
+
 \hypertarget{ref-R-lubridate}{}
 Grolemund, G., \& Wickham, H. (2011). Dates and times made easy with
 lubridate. \emph{Journal of Statistical Software}, \emph{40}(3), 1--25.
@@ -255,6 +395,15 @@ Harrell miscellaneous}. Retrieved from
 Henry, L., \& Wickham, H. (2018). \emph{Purrr: Functional programming
 tools}. Retrieved from \url{https://CRAN.R-project.org/package=purrr}
 
+\hypertarget{ref-R-jcolors}{}
+Huling, J. (2018). \emph{Jcolors: Colors palettes for r and 'ggplot2',
+additional themes for 'ggplot2'}. Retrieved from
+\url{https://jaredhuling.github.io/jcolors/}
+
+\hypertarget{ref-R-plotrix}{}
+J, L. (2006). Plotrix: A package in the red light district of r.
+\emph{R-News}, \emph{6}(4), 8--12.
+
 \hypertarget{ref-Kaplan2010}{}
 Kaplan, A. M., \& Haenlein, M. (2010). Users of the world, unite! The
 challenges and opportunities of Social Media. \emph{Business Horizons},
@@ -266,6 +415,16 @@ Kuznetsova, A., Brockhoff, P. B., \& Christensen, R. H. B. (2017).
 lmerTest package: Tests in linear mixed effects models. \emph{Journal of
 Statistical Software}, \emph{82}(13), 1--26.
 doi:\href{https://doi.org/10.18637/jss.v082.i13}{10.18637/jss.v082.i13}
+
+\hypertarget{ref-R-emmeans}{}
+Lenth, R. (2018). \emph{Emmeans: Estimated marginal means, aka
+least-squares means}. Retrieved from
+\url{https://CRAN.R-project.org/package=emmeans}
+
+\hypertarget{ref-R-sjstats}{}
+Lüdecke, D. (2018). \emph{Sjstats: Statistical functions for regression
+models (version 0.17.2)}.
+doi:\href{https://doi.org/10.5281/zenodo.1284472}{10.5281/zenodo.1284472}
 
 \hypertarget{ref-R-here}{}
 Müller, K. (2017). \emph{Here: A simpler way to find your files}.

@@ -1,0 +1,26 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:df_lmer_table}Log likelihood comparison of linear mixed-effects models predicting social network site use from sex, age, and specific social network site.}
+\begin{tabular}{lrrrrrlrrrrrlrrrrrlrrrrrlrrrrrlrrrrr}
+\toprule
+ & \multicolumn{1}{c}{\textit{K}} & \multicolumn{1}{c}{$\chi^2$ \textit{df}} & \multicolumn{1}{c}{Loglik.} & \multicolumn{1}{c}{$\chi^2$} & \multicolumn{1}{c}{\textit{p}}\\
+\midrule
+Null & 3 &  & -6857.08 &  & \\
+Sex & 4 & 1 & -6856.28 & 1.61 & .205\\
+Age & 5 & 1 & -6775.08 & 162.39 & <.001\\
+SNS & 9 & 4 & -6620.63 & 308.91 & <.001\\
+Sex X Age & 10 & 1 & -6620.27 & 0.72 & .396\\
+Sex X SNS & 14 & 4 & -6591.10 & 58.32 & <.001\\
+Age X SNS & 18 & 4 & -6532.52 & 117.18 & <.001\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Participant \textit{N} = 1541; Social Network Site \textit{N} = 5. Null model includes only the random intercept. SNS = social network site. X indicates an interaction.}
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table*}

@@ -1,6 +1,6 @@
 ---
-title             : "Something Clever..."
-shorttitle        : "Title"
+title             : "Internet and Social Media Use in American Adults"
+shorttitle        : "Internet and Social Media"
 
 author: 
   - name          : "Cameron S. Kay"
@@ -223,9 +223,11 @@ df_td %<>%
 
 Social media sites are commonly defined as an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
 
+To explore these individual differences in how people consume and generate social media content, as well as how they interact with technology, we conducted secondary data analyses using recent survey data collected by @Pew.
+
 # Method
 
-The data for the current study was collected by the @Pew.
+Survey data examining attitudes towards technology and use of technology and social media was collected by @Pew. For the current study, we conducted a secondary data analysis looking at factors that relate to frequency of social media use, as well as factors that relate to overall media consumption.
 
 ## Participants
 
@@ -436,6 +438,7 @@ models_compared %>%
 rm(list = setdiff(ls(), c("df", "df_td")))
 ```
 
+
 ```{r ash_analyses_viz, include = FALSE}
 
 plot_data_ash <- df_td %>% 
@@ -547,6 +550,8 @@ Figure2
 ```
 
 
+We next sought to examine how media consumption may vary as a function of age as well as media format (i.e. print, audiobook, electronic or mixed media). To explore this data we used the total number of books read in the past year as an indicator of media consumption and calculated an average number of books read for each age and media format. Next, we ran a multiple regression predicting the average number of books read in the past year from age, book format and their interaction. Results showed a significant main effect of age (STATS) with older adults reading more books in 2018 than younger adults. 
+
 ```{r books_analyses, include = FALSE, warning = FALSE}
 #####################################
 ### Tidying Data for Analyses:
@@ -597,21 +602,22 @@ plot_data %<>%
 ###  Reading and Age Visualization:
 
 # Pick color palette for plot
+pal2 <- wes_palette("Darjeeling1")
 pal <- jcolors("pal10")
 
 # Bar Chart: looking at average books read across age.
 bar_plot <- plot_data %>%
-  group_by(age_group) %>% 
-  dplyr::summarize(mean_books = mean(total_books_read),
+  filter(!is.na(book_format)) %>% 
+  group_by(age_group, book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read, na.rm = TRUE),
                    se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
-  ggplot(aes(x = age_group, y = mean_books, fill = age_group)) + 
-  geom_col() +
+  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
+  geom_col(position = position_dodge(.9)) +
   geom_linerange(aes(ymin = mean_books - se_books, ymax = mean_books + se_books), 
                 width = .2, position = position_dodge(.9)) +
-  scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 25)) +
-  scale_fill_manual(values = pal) + 
-  theme(legend.position = "none") +
+  scale_y_continuous(expand = c(0, 0))+
+  scale_fill_manual(values = pal2) + 
+  theme(legend.position = "right") +
   labs(y = "Average Books Read",
        x = "Ages",
        title = "Books Read by Age",
@@ -620,54 +626,78 @@ bar_plot <- plot_data %>%
         plot.title = element_text(size = 25, hjust = 0),
         axis.title.x = element_text(size = 20), 
         axis.title.y = element_text(size = 20),
-        axis.text = element_text(size = 15))
+        axis.text = element_text(size = 15),
+        axis.text.x = element_text(angle = 90, vjust = .5))
 
 bar_plot
 
 # Bar Chart: looking at average books read by media format
-pal2 <- wes_palette("Darjeeling1")
 
-bar_plot2 <- plot_data %>% 
-  filter(!is.na(book_format)) %>% 
-  group_by(book_format) %>% 
-  dplyr::summarize(mean_books = mean(total_books_read),
-                   se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
-  ggplot(aes(x = reorder(book_format, -mean_books), y = mean_books, fill = book_format)) + 
-  geom_col() +
-  geom_linerange(aes(ymin = mean_books - se_books, ymax = mean_books + se_books), 
-                width = .2, position = position_dodge(.9)) +
-  scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 28)) +
-  scale_fill_manual(values = pal2) +
-  theme(legend.position = "none") +
-  labs(y = "Average Books Read",
-       x = "Media Format",
-       title = "Average Books Read by Format",
-       subtitle = "Average books read in past year.") +
-  theme(plot.subtitle = element_text(size = 17, 
-                                     hjust = 0, 
-                                     face = "italic", 
-                                     color = "black"),
-        plot.title = element_text(size = 25, hjust = 0),
-        axis.text.x = element_text(angle = 0, vjust = .5)) 
-
-bar_plot2
+# bar_plot2 <- plot_data %>% 
+#   filter(!is.na(book_format)) %>% 
+#   group_by(book_format) %>% 
+#   dplyr::summarize(mean_books = mean(total_books_read, na.rm = TRUE),
+#                    se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
+#   ggplot(aes(x = reorder(book_format, -mean_books), y = mean_books, fill = book_format)) + 
+#   geom_col() +
+#   geom_linerange(aes(ymin = mean_books - se_books, ymax = mean_books + se_books), 
+#                 width = .2, position = position_dodge(.9)) +
+#   scale_y_continuous(expand = c(0, 0),
+#                      limits = c(0, 28)) +
+#   scale_fill_manual(values = pal2) +
+#   theme(legend.position = "none") +
+#   labs(y = "Average Books Read",
+#        x = "Media Format",
+#        title = "Average Books Read by Format",
+#        subtitle = "Average books read in past year.") +
+#   theme(plot.subtitle = element_text(size = 17, 
+#                                      hjust = 0, 
+#                                      face = "italic", 
+#                                      color = "black"),
+#         plot.title = element_text(size = 25, hjust = 0),
+#         axis.text.x = element_text(angle = 0, vjust = .5)) 
+# 
+# bar_plot2
 
 # Bar Chart: looking at average books read, by age group and media format
-media_labels <- c(`audio` = "Audio",
-                    `elect` = "Electronic",
-                    `print` = "Print",
-                    `mixed media` = "Mixed Media") # Facet Labels
+# media_labels <- c(`audio` = "Audio",
+#                     `elect` = "Electronic",
+#                     `print` = "Print",
+#                     `mixed media` = "Mixed Media") # Facet Labels
+# 
+# bar_plot3 <- plot_data %>%
+#   filter(!is.na(book_format)) %>% 
+#   group_by(age_group, book_format) %>% 
+#   dplyr::summarize(mean_books = mean(total_books_read, na.rm = TRUE),
+#                    se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
+#   ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
+#   geom_col(position = position_dodge(.9)) +
+#   facet_wrap(~book_format, labeller = as_labeller(media_labels)) +
+#   scale_fill_manual(values = pal2) + 
+#   theme(legend.position = "right") +
+#   labs(y = "Average Books Read",
+#        x = "Age",
+#        title = "Relationship Between Age and Books Read by Media Format",
+#        subtitle = "Books read in the past year.") +
+#   theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
+#         plot.title = element_text(size = 25, hjust = 0),
+#         axis.title.x = element_text(size = 20), 
+#         axis.title.y = element_text(size = 20),
+#         axis.text = element_text(size = 15),
+#         axis.text.x = element_text(angle = 90, vjust = .5))
+# 
+# bar_plot3
 
-bar_plot3 <- plot_data %>%
+# Scatterplot: looking at average books read by age and media format
+point_plot3 <- plot_data %>%
   filter(!is.na(book_format)) %>% 
-  group_by(age_group, book_format) %>% 
-  dplyr::summarize(mean_books = mean(total_books_read),
+  group_by(age, book_format) %>% 
+  dplyr::summarize(mean_books = mean(total_books_read, na.rm = TRUE),
                    se_books = plotrix::std.error(total_books_read, na.rm = TRUE)) %>% 
-  ggplot(aes(x = age_group, y = mean_books, fill = book_format)) + 
-  geom_col(position = position_dodge(.9)) +
-  facet_wrap(~book_format, labeller = as_labeller(media_labels)) +
-  scale_fill_manual(values = pal2) + 
+  ggplot(aes(x = age, y = mean_books, color = book_format)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_manual(values = pal2) + 
   theme(legend.position = "right") +
   labs(y = "Average Books Read",
        x = "Age",
@@ -680,7 +710,9 @@ bar_plot3 <- plot_data %>%
         axis.text = element_text(size = 15),
         axis.text.x = element_text(angle = 90, vjust = .5))
 
-bar_plot3
+point_plot3
+
+
 
 #####################################
 ###  Reading and Age Analysis:
