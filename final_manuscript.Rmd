@@ -31,6 +31,9 @@ footnotelist      : no
 linenumbers       : no
 mask              : no
 draft             : no
+header-includes   :
+  - \raggedbottom
+  - \setlength{\parskip}{0pt}
 
 documentclass     : "apa6"
 classoption       : "man"
@@ -550,8 +553,6 @@ Figure2
 ```
 
 
-We next sought to examine how media consumption may vary as a function of age as well as the media format (i.e. are individuals exclusively using print media, audiobooks, electronic media or combinations of the three). To explore this data we used the total number of books read in the past year as an indicator of media consumption. Survey respondents who endorsed only using only one type of media format for reading were grouped into their appropriate format bins. Respondents who endorsed using more than one type of media format for reading were grouped together into a "mixed media" format bin. Next, we calculated the average number of books read grouped by age and media format. Next, we ran a multiple regression predicting the average number of books read in the past year from age, book format and their interaction. Results showed a significant main effect of age (STATS) with older adults reading more books in 2018 than younger adults. 
-
 ```{r books_analyses, include = FALSE, warning = FALSE}
 #####################################
 ### Tidying Data for Analyses:
@@ -600,7 +601,12 @@ book_data %<>%
   mutate(book_format = factor(book_format,
                               levels = c("print", "audio", "elect", "mixed media"))) #reorder levels
 
+```
 
+
+We next sought to examine how media consumption may vary as a function of age as well as media format (i.e. individuals exclusively using print media, audiobooks, electronic media or combinations of the three). To explore this data we used the total number of books read in the past year as an indicator of media consumption. Survey respondents who endorsed only using a single type of media format were grouped into their appropriate format bins. Respondents who endorsed using more than one type of media format were grouped together into a "mixed media" format bin. Next, we calculated the average number of books read, grouped by age and media format see Figure 3. 
+
+```{r fig3, fig.width=6, fig.height=4, fig.cap="Average books read grouped by age and media format" }
 #####################################
 ###  Reading and Age Visualization:
 
@@ -608,7 +614,7 @@ book_data %<>%
 pal <- wes_palette("Darjeeling1")
 
 # Bar Chart: looking at average books read across age.
-Figure3 <- book_data %>%
+book_data %>%
   filter(!is.na(book_format)) %>% 
   group_by(age_group, book_format) %>% 
   dplyr::summarize(mean_books = mean(total_books_read, na.rm = TRUE),
@@ -619,20 +625,28 @@ Figure3 <- book_data %>%
                  width = .2, position = position_dodge(.9)) +
   scale_y_continuous(expand = c(0, 0)) +
   scale_fill_manual(values = pal) + 
-  theme(legend.position = "right") +
+  theme_apa(base_size = 10) +
   labs(y = "Average Books Read",
        x = "Ages",
-       title = "Books Read by Age",
-       subtitle = "Books read in the past year.",
+       title = "Media Consumption by Age and Format ",
+       subtitle = "Average books read in the past year.",
        fill = "Media Format") +
-  theme(plot.subtitle = element_text(size = 17, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 25, hjust = 0),
-        axis.title.x = element_text(size = 20), 
-        axis.title.y = element_text(size = 20),
-        axis.text = element_text(size = 15),
-        axis.text.x = element_text(angle = 90, vjust = .5))
+  theme(plot.subtitle = element_text(size = 12, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 15, hjust = 0),
+        axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 90, vjust = .5)) 
 
+
+
+```
+
+
+```{r}
 # Scatterplot: looking at average books read by age and media format
+pal <- wes_palette("Darjeeling1")
+
 Figure4 <- book_data %>%
   filter(!is.na(book_format)) %>% 
   group_by(age, book_format) %>% 
@@ -641,7 +655,7 @@ Figure4 <- book_data %>%
   ggplot(aes(x = age, y = mean_books)) + 
   geom_point(fill = "black") +
   geom_smooth(method = "lm", se = FALSE, aes(color = book_format)) +
-  scale_color_manual(values = pal2) + 
+  scale_color_manual(values = pal) + 
   theme(legend.position = "right") +
   labs(y = "Average Books Read",
        x = "Age",
@@ -654,7 +668,11 @@ Figure4 <- book_data %>%
         axis.title.y = element_text(size = 20),
         axis.text = element_text(size = 15),
         axis.text.x = element_text(angle = 90, vjust = .5))
+```
 
+Next, we ran a multiple regression predicting the average number of books read in the past year from age, book format and their interaction. Results showed a significant main effect of age (STATS) with older adults reading more books in 2018 than younger adults. 
+
+```{r regData, echo = FALSE, results = "asis"}
 #####################################
 ###  Reading and Age Analysis:
 reg_data <- book_data %>% 
@@ -664,14 +682,12 @@ reg_data <- book_data %>%
 
 # Fit the model
 model <- lm(mean_books ~ age * book_format, data = reg_data)
-anova(model)
+fit_anova <- anova(model)
 
-# Examine differences by book format
-pairwise.t.test(reg_data$mean_books, reg_data$book_format, p.adj = "none")
-
+# Examine differences by book format, report in-text
+#pairwise.t.test(reg_data$mean_books, reg_data$book_format, p.adj = "none")
 
 ```
- 
 
 # Discussion
 
