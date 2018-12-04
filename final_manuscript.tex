@@ -344,10 +344,13 @@ media, audiobooks, electronic media or combinations of the three). To
 explore this data we used the total number of books read in the past
 year as an indicator of media consumption. Survey respondents who
 endorsed only using a single type of media format were grouped into
-their appropriate format bins. Respondents who endorsed using more than
-one type of media format were grouped together into a \enquote{mixed
-media} format bin. Next, we calculated the average number of books read,
-grouped by age and media format see Figure \ref{fig:fig3}.
+either print, audio, or electronic as appropriate. Respondents who
+endorsed using more than one type of media format were grouped together
+into a \enquote{mixed media} bin. Next, we calculated the average number
+of books read, grouped by age and media format see Figure
+\ref{fig:fig3}. There appear to be differences with age in the number of
+books read as a function of media format. For example, we see that
+audiobook usage seems to be more prevalent among the older respondents.
 
 \begin{figure}
 \centering
@@ -355,25 +358,10 @@ grouped by age and media format see Figure \ref{fig:fig3}.
 \caption{\label{fig:fig3}Average books read grouped by age and media format}
 \end{figure}
 
-To look at the relationships between amount read, age, and media format,
-we ran a multiple regression predicting the average number of books read
-in the past year from age and media format as well as their interaction.
-Results showed a significant main effect of age (STATS) with older
-adults reading more books in 2018 than younger adults. We also saw a
-significant main effect of media format (STATS) and pairwise comparisons
-revealed that books in electronic format were read more than those in
-either print and audiobook format. We found no difference in media
-consumption between individuals who reported using exclusively a print
-format and those who reported using exclusively an audiobook format.
-Furthermore, we found no difference between media consumed by
-individuals who reported they use mixed media sources compared to those
-who exclusively preferred elecronic formats (see Table \ref{tab:reg}.
-Figure @ref(fig:fig3
-
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:reg}Main effects of age and media format predicting the average number of books read in 2018.}
+\caption{\label{tab:tab2}Main effects of age and media format predicting the average number of books read in 2018.}
 \begin{tabular}{llllll}
 \toprule
  & \multicolumn{1}{c}{Df} & \multicolumn{1}{c}{Sum Sq} & \multicolumn{1}{c}{Mean Sq} & \multicolumn{1}{c}{F value} & \multicolumn{1}{c}{Pr(>F)}\\
@@ -387,6 +375,27 @@ Residuals & 200 & 54,193.42 & 270.97 & NA & NA\\
 \end{threeparttable}
 \end{center}
 \end{table}
+
+To look at the relationships between amount read, age, and media format,
+we ran a multiple regression predicting the average number of books read
+in the past year from age and media format as well as their interaction
+(see Figure \ref{fig:fig4}). Results showed a significant main effect of
+age (\(F[1, 200] = 7.99\), \(\mathit{MSE} = 270.97\), \(p = .005\),
+\(\hat{\eta}^2_p = .038\)) with older adults reading more books in 2018
+than younger adults. We also saw a significant main effect of media
+format (\(F[3, 200] = 6.17\), \(\mathit{MSE} = 270.97\), \(p < .001\),
+\(\hat{\eta}^2_p = .085\)) and pairwise comparisons revealed that books
+in print format were read less than those in electronic
+(\(t(48.42) = -2.10\), \(p = .041\)) format. We found no difference in
+the number of books read exclusively in a print format and the number of
+books read through the audiobook format (\(t(34.31) = -0.17\),
+\(p = .863\)). However, we did find that that more books were read using
+a mixed media approach than either exclusively print
+(\(t(135.94) = -4.99\), \(p < .001\)) or exclusively audiobooks
+(\(t(36.64) = -2.68\), \(p = .011\)). Lastly, we found no difference
+between media consumed by individuals who reported the used mixed media
+sources compared to those who exclusively preferred elctronic formats
+(\(t(50.23) = -0.04\), \(p = .967\), see Table \ref{tab:tab2}.
 
 \begin{figure}
 \centering

@@ -31,7 +31,7 @@ Age X SNS & 18 & 4 & -6532.52 & 117.18 & <.001\\
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:reg}Main effects of age and media format predicting the average number of books read in 2018.}
+\caption{\label{tab:tab2}Main effects of age and media format predicting the average number of books read in 2018.}
 \begin{tabular}{llllll}
 \toprule
  & \multicolumn{1}{c}{Df} & \multicolumn{1}{c}{Sum Sq} & \multicolumn{1}{c}{Mean Sq} & \multicolumn{1}{c}{F value} & \multicolumn{1}{c}{Pr(>F)}\\
