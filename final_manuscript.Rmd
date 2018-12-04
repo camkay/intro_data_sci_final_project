@@ -229,7 +229,9 @@ df_td %<>%
 
 Social media sites are commonly defined as an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
 
-To explore these individual differences in how people consume and generate social media content, as well as how they interact with technology, we conducted secondary data analyses using recent survey data collected by the @Pew.
+In an increasingly internet-based world, many new formats for media consumption have come forward. The days of reading the morning paper as the only source of world news are gone; rather, the internet provides a myriad of other media formats from which to choose. With increasing usage of digital media formats in recent years, there has been a growing interest in whether or not the format of media consumption relates to how well information is learned and retained [@DeZee2005; @Margolin2013; @Delgado2018]. @DeZee2005 found that students in their third year of a medical clerkship did not show any performance differences regardless of whether they chose to use electronic or print resources as their primary method of study. However, a meta-analysis by @Delgado2018 found that paper-based reading may result in better comprehension than digital-based reading. Inconsistent findings from prior work highlights the importance of understanding individual differences in media consumption and choices to interact with media in various formats.
+
+To explore these individual differences in how people both generate social media content and consume media in general, we conducted secondary data analyses using recent survey data collected by the @Pew. First, we examined how frequency of social media use might vary as a function of sex, age, and social media site. Second, we examined relationships between age and media format and how these two factors may predict the volume of media consumption.
 
 # Method
 
@@ -252,7 +254,7 @@ For cell phone users, the script was slightly different:
 Once participants passed initial screening (e.g., 18 years of age or older) and provided verbal consent to the interview, they were asked a series of questions pertaining to internet use  (e.g., "How often do you use the internet?"; options ranged from 1 = "Almost Constantly" to 5 = "Less Often"), social media use (e.g., "Do you use any of the following social media sites online or on your cell phone: Twitter, Instagram, Facebook, Snapchat, YouTube, WhatsApp, Interest, and LinkedIn?"), as well as perceptions of social media's influence on the self and society (e.g., "When you add up all the advantages and disadvantages of the internet, would you say the internet has mostly been a good thing or a bad thing for society?"; options included: "Good Thing", "Bad Thing", "Some of Both", and "Don't Know"). Participants were also asked about reading habits (e.g., "During the past 12 months, how many books (print, electronic, and audiobooks) did you read either all or part of the way through?") and reading format preferences (e.g., "Thinking about all of the books you have read in the past 12 months, were any of those printed books, audiobooks, or E-books?"). The interview ended with a series of demographic questions assessing variables including participant sex, age, race, marrital status, education, current employment status, income, and political affiliation.
 
 ## Data analysis
-We used `r cite_r("r-references.bib")` for all our analyses.
+Data was analyzed using `r cite_r("r-references.bib")` for all our analyses.
 
 # Results
 
@@ -482,7 +484,8 @@ fig1b <- ggplot(transform(plot_sns,
     geom_col(aes(x = sns, y = freq_sns_mean, fill = sns)) +
     scale_fill_viridis_d() +
     theme_bw() +
-    theme(legend.position = "") +
+    theme(legend.position = "",
+          axis.text.x = element_text(angle = 75, vjust = .5)) +
     labs(title = "Main effect of social media site",
         x = "Social Media Site",
         y = "Frequency of Social Media Use",
@@ -534,7 +537,10 @@ fig2b <- ggplot(transform(plot_snsxsex,
     scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
     facet_wrap(~sns, nrow = 1) +
     theme_bw() +
-    theme(legend.position = "") +
+    theme(legend.position = "",
+          axis.text.x = element_text(angle = 75, vjust = .5),
+          plot.title = element_text(size = 10, hjust = 0),
+          strip.text = element_text(size = 7)) +
     labs(title = "Interaction between sex and social media site",
        x = "Sex", 
        y = "Frequency of social media use",
@@ -611,9 +617,9 @@ book_data %<>%
 ```
 
 
-We next sought to examine how media consumption may vary as a function of age as well as media format (i.e. individuals exclusively using print media, audiobooks, electronic media or combinations of the three). To explore this data we used the total number of books read in the past year as an indicator of media consumption. Survey respondents who endorsed only using a single type of media format were grouped into either print, audio, or electronic as appropriate. Respondents who endorsed using more than one type of media format were grouped together into a "mixed media" bin. Next, we calculated the average number of books read, grouped by age and media format see Figure \@ref(fig:fig3). There appear to be differences with age in the number of books read as a function of media format. For example, we see that audiobook usage seems to be more prevalent among the older respondents. 
+We next sought to examine how media consumption may vary as a function of age as well as media format (i.e. individuals exclusively using print media, audiobooks, electronic media or combinations of the three). To explore this data we used the total number of books read in the past year as an indicator of media consumption. Survey respondents who endorsed only using a single type of media format were grouped into either print, audio, or electronic as appropriate. Respondents who endorsed using more than one type of media format were grouped together into a "mixed media" bin. Next, we calculated the average number of books read, grouped by age and media format (see Figure \@ref(fig:fig3)). There appear to be differences age differences in the number of books read as a function of media format. For example, we see that audiobook usage seems to be more prevalent among the older respondents. 
 
-```{r fig3, fig.width=6, fig.height=4, fig.cap="Average books read grouped by age and media format" }
+```{r fig3, fig.width=6, fig.height=4, fig.cap="Average books read in the past year grouped by age and media format" }
 #####################################
 ###  Reading and Age Visualization:
 
@@ -630,22 +636,20 @@ book_data %>%
   geom_col(position = position_dodge(.9)) +
   geom_linerange(aes(ymin = mean_books - se_books, ymax = mean_books + se_books), 
                  width = .2, position = position_dodge(.9)) +
-  scale_y_continuous(expand = c(0, 0)) +
+  #scale_y_continuous(expand = c(0, 0)) +
   scale_fill_manual(values = pal) + 
   theme_apa(base_size = 10) +
   labs(y = "Average Books Read",
        x = "Ages",
-       title = "Media Consumption by Age and Format ",
-       subtitle = "Average books read in the past year.",
+       title = "Media Consumption by Age and Format",
        fill = "Media Format") +
-  theme(plot.subtitle = element_text(size = 12, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0),
-        axis.title.x = element_text(size = 12), 
-        axis.title.y = element_text(size = 12),
+  theme(plot.subtitle = element_text(size = 10, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 12, hjust = 0),
+        axis.title.x = element_text(size = 10), 
+        axis.title.y = element_text(size = 10),
         axis.text = element_text(size = 10),
-        axis.text.x = element_text(angle = 90, vjust = .5)) 
-
-
+        axis.text.x = element_text(angle = 75, vjust = .5),
+        legend.position = "right") 
 
 ```
 
@@ -673,9 +677,9 @@ audio_mixed <- apa_print.htest(t.test(reg_data$mean_books[reg_data$book_format =
 elect_mixed <- apa_print.htest(t.test(reg_data$mean_books[reg_data$book_format == "elect"], reg_data$mean_books[reg_data$book_format == "mixed media"]))
 ```
 
-To look at the relationships between amount read, age, and media format, we ran a multiple regression predicting the average number of books read in the past year from age and media format as well as their interaction (see Figure  \@ref(fig:fig4)). Results showed a significant main effect of age (`r anova_results_p$full_result$age`) with older adults reading more books in 2018 than younger adults. We also saw a significant main effect of media format (`r anova_results_p$full_result$book_format`) and pairwise comparisons revealed that books in print format were read less than those in electronic (`r print_elect$statistic`) format. We found no difference in the number of books read exclusively in a print format and the number of books read through the audiobook format (`r print_audio$statistic`). However, we did find that that more books were read using a mixed media approach than either exclusively print (`r print_mixed$statistic`) or exclusively audiobooks (`r audio_mixed$statistic`). Lastly, we found no difference between media consumed by individuals who reported the used mixed media sources compared to those who exclusively preferred electronic formats (`r elect_mixed$statistic`, see Table \@ref(tab:tab2)). Finally, there was a marginal interaction effect between age and media format where changes in average books read increased with age more for individuals exclusively using electronic or audiobook formats than for those exclusively using print or a mixed media approach. 
+To look at the relationships between the average books read in 2018, age, and media format, we ran a multiple regression predicting the average number of books read in the past year from age and media format as well as their interaction (see Figure  \@ref(fig:fig4)). Results showed a significant main effect of age (`r anova_results_p$full_result$age`) with older adults reading more books in 2018 than younger adults. We also saw a significant main effect of media format (`r anova_results_p$full_result$book_format`) and pairwise comparisons revealed that books in print format were read less than those in electronic (`r print_elect$statistic`) format. We found no difference in the number of books read exclusively in a print format and the number of books read through the audiobook format (`r print_audio$statistic`). However, we did find that more books were read using a mixed media approach than either exclusively print (`r print_mixed$statistic`) or exclusively audiobooks (`r audio_mixed$statistic`). Lastly, we found no difference between media consumed by individuals who reported the used mixed media sources compared to those who exclusively preferred electronic formats (`r elect_mixed$statistic`, see Table \@ref(tab:tab2)). Finally, there was a marginal interaction effect between age and media format where changes in average books read increased with age more for individuals exclusively using electronic formats or audiobooks than for individuals exclusively using print media or a mixed media approach. 
 
-```{r fig4, fig.cap="Average media consumed as a function of age and media format"}
+```{r fig4, fig.width=6, fig.height=4, fig.cap="Average books read in the past year as a function of age and media format"}
 # Scatterplot: looking at average books read by age and media format
 pal <- wes_palette("Darjeeling1")
 
@@ -692,14 +696,14 @@ book_data %>%
   labs(y = "Average Books Read",
        x = "Age",
        title = "Relationship Between Age and Books Read by Media Format",
-       subtitle = "Books read in the past year.",
        color = "Media Format") +
-  theme(plot.subtitle = element_text(size = 12, hjust = 0, face = "italic", color = "black"),
-        plot.title = element_text(size = 15, hjust = 0),
-        axis.title.x = element_text(size = 12), 
-        axis.title.y = element_text(size = 12),
+  theme(plot.subtitle = element_text(size = 10, hjust = 0, face = "italic", color = "black"),
+        plot.title = element_text(size = 12, hjust = 0),
+        axis.title.x = element_text(size = 10), 
+        axis.title.y = element_text(size = 10),
         axis.text = element_text(size = 10),
-        axis.text.x = element_text(angle = 90, vjust = .5))
+        axis.text.x = element_text(angle = 75, vjust = .5),
+        legend.position = "right")
 ```
 
 

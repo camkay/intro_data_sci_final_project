@@ -149,18 +149,39 @@ user-generated focus also highlights the importance of individual
 differences in the user-service relationship, as users invariably have
 characteristics that affect how they consume and generate content.
 
-To explore these individual differences in how people consume and
-generate social media content, as well as how they interact with
-technology, we conducted secondary data analyses using recent survey
-data collected by Pew Research Center (2018).
+In an increasingly internet-based world, many new formats for media
+consumption have come forward. The days of reading the morning paper as
+the only source of world news are gone; rather, the internet provides a
+myriad of other media formats from which to choose. With increasing
+usage of digital media formats in recent years, there has been a growing
+interest in whether or not the format of media consumption relates to
+how well information is learned and retained (Delgado, Vargas, Ackerman,
+\& Salmerón, 2018; DeZee, Durning, \& Denton, 2005; Margolin, Driscoll,
+Toland, \& Kegler, 2013). DeZee et al. (2005) found that students in
+their third year of a medical clerkship did not show any performance
+differences regardless of whether they chose to use electronic or print
+resources as their primary method of study. However, a meta-analysis by
+Delgado et al. (2018) found that paper-based reading may result in
+better comprehension than digital-based reading. Inconsistent findings
+from prior work highlights the importance of understanding individual
+differences in media consumption and choices to interact with media in
+various formats.
+
+To explore these individual differences in how people both generate
+social media content and consume media in general, we conducted
+secondary data analyses using recent survey data collected by the Pew
+Research Center (2018). First, we examined how frequency of social media
+use might vary as a function of sex, age, and social media site. Second,
+we examined relationships between age and media format and how these two
+factors may predict the volume of media consumption.
 
 \section{Method}\label{method}
 
 Survey data examining attitudes towards technology and use of technology
-and social media was collected by Pew Research Center (2018). For the
-current study, we conducted a secondary data analysis looking at factors
-that relate to frequency of social media use, as well as factors that
-relate to overall media consumption.
+and social media was collected by the Pew Research Center (2018). For
+the current study, we conducted a secondary data analysis looking at
+factors that relate to frequency of social media use, as well as factors
+that relate to overall media consumption.
 
 \subsection{Participants}\label{participants}
 
@@ -223,9 +244,9 @@ affiliation.
 
 \subsection{Data analysis}\label{data-analysis}
 
-We used R (Version 3.5.1; R Core Team, 2018) and the R-packages
-\emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{car} (Version
-3.0.0; Fox \& Weisberg, 2011; Fox, Weisberg, \& Price, 2018),
+Data was analyzed using R (Version 3.5.1; R Core Team, 2018) and the
+R-packages \emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{car}
+(Version 3.0.0; Fox \& Weisberg, 2011; Fox, Weisberg, \& Price, 2018),
 \emph{carData} (Version 3.0.1; Fox et al., 2018), \emph{cowplot}
 (Version 0.9.2; Wilke, 2018), \emph{dplyr} (Version 0.7.7; Wickham,
 François, Henry, \& Müller, 2018), \emph{emmeans} (Version 1.2.1; Lenth,
@@ -280,27 +301,27 @@ interaction between age and social media site all explained a
 significant proportion of variance in social media site usage frequency.
 Using the \emph{lmerTest} package from Kuznetsova et al. (2017) to
 approximate degrees of freedom with Satterthwaite's method, we found
-that older age is associated with lower social media use, \emph{b} =
--0.01, \emph{SE} = .00, \emph{p} \textless{} .003. Furthermore, Snapchat
-is used more often than Facebook (\emph{b} = .73, \emph{SE} = .18,
-\emph{p} \textless{} .001), and Twitter is used more often than Facebook
-(\emph{b} = -0.74, \emph{SE} = .18, \emph{p} \textless{} .001). However,
-age interacts with the specific social media site, insofar that
-increased age results in even lower rates of social media use in the
-case of Instagram (\emph{b} = -0.02, \emph{SE} = .00, \emph{p}
-\textless{} .001), Snapchat (\emph{b} = -0.04, \emph{SE} = .00, \emph{p}
-\textless{} .001), Twitter (\emph{b} = -0.01, \emph{SE} = .00, \emph{p}
-\textless{} .017), and YouTube (\emph{b} = -0.02, \emph{SE} = .00,
+that age is associated with lower social media use, \(\beta\) = -0.10,
+\emph{SE} = .03, \emph{p} = .003. Furthermore, Snapchat is used more
+often than Facebook (\(\beta\) = .17, \emph{SE} = .04, \emph{p}
+\textless{} .001) and Twitter is used more often than Facebook
+(\(\beta\) = -0.18, \emph{SE} = .04, \emph{p} \textless{} .001).
+However, age interacts with the specific social media site, insofar that
+age results in even lower rates of social media use in the case of
+Instagram (\(\beta\) = -0.28, \emph{SE} = .04, \emph{p} \textless{}
+.001), Snapchat (\(\beta\) = -0.32, \emph{SE} = .04, \emph{p}
+\textless{} .001), Twitter (\(\beta\) = -0.10, \emph{SE} = .04,
+\emph{p}= .017), and YouTube (\(\beta\) = -0.35, \emph{SE} = .05,
 \emph{p} \textless{} .001) when compared to Facebook.
 
 Although the model comparison did not indicate an increase in predictive
 ability from the introduction of participant gender, we did find that
 males (in comparison to females) reported less frequency of social media
-use when using the approximated degrees of freedom, \emph{b} = -0.40,
-\emph{SE} = .14, \emph{p} \textless{} .005. When compared to Facebook,
-however, men exhibitted a greater frequency of using Twitter (\emph{b} =
-.49, \emph{SE} = .12, \emph{p} \textless{} .001) and YouTube (\emph{b} =
-.61, \emph{SE} = .09, \emph{p} \textless{} .001) than women did.
+use when using the approximated degrees of freedom, \(\beta\) = -0.15,
+\emph{SE} = .05, \emph{p} = .005. When compared to Facebook, however,
+men exhibitted a greater frequency of using Twitter (\(\beta\) = .09,
+\emph{SE} = .02, \emph{p} \textless{} .001) and YouTube (\(\beta\) =
+.18, \emph{SE} = .03, \emph{p} \textless{} .001) than women did.
 
 A comparison of the full model with random effects to the full model
 without random effects, revealed that the random effects explained a
@@ -308,10 +329,10 @@ significant proportion of the variance in social media site use,
 \(\chi^2\)(1) = 176.01, \emph{p} \textless{} .001. In fact, grouping
 ratings by participant explained 21.65\% of the variance in the
 frequency of using a social media site. A visual inspection of model
-residuals did not suggest non-normality nor heteroscedasticity. We also
-quantitively inspected the variables for potential multicollinearity
-within the fullest model without the interaction effects. No
-multicollinearity was detected (\emph{VIF} = 1.01 - 1.04).
+residuals suggested a slight negative skew, but no heteroscedasticity.
+We also quantitively inspected the variables for potential
+multicollinearity within the fullest model without the interaction
+effects. No multicollinearity was detected (\emph{VIF} = 1.01 - 1.04).
 
 \begin{table}[tbp]
 \begin{center}
@@ -338,6 +359,18 @@ Age X SNS & 18 & 4 & -6532.52 & 117.18 & <.001\\
 \end{center}
 \end{table}
 
+\begin{figure}
+\centering
+\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz-1.pdf}
+\caption{}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz2-1.pdf}
+\caption{}
+\end{figure}
+
 We next sought to examine how media consumption may vary as a function
 of age as well as media format (i.e.~individuals exclusively using print
 media, audiobooks, electronic media or combinations of the three). To
@@ -347,15 +380,17 @@ endorsed only using a single type of media format were grouped into
 either print, audio, or electronic as appropriate. Respondents who
 endorsed using more than one type of media format were grouped together
 into a \enquote{mixed media} bin. Next, we calculated the average number
-of books read, grouped by age and media format see Figure
-\ref{fig:fig3}. There appear to be differences with age in the number of
-books read as a function of media format. For example, we see that
-audiobook usage seems to be more prevalent among the older respondents.
+of books read, grouped by age and media format (see Figure
+\ref{fig:fig3}). There appear to be differences age differences in the
+number of books read as a function of media format. For example, we see
+that audiobook usage seems to be more prevalent among the older
+respondents.
 
 \begin{figure}
 \centering
 \includegraphics{final_manuscript_files/figure-latex/fig3-1.pdf}
-\caption{\label{fig:fig3}Average books read grouped by age and media format}
+\caption{\label{fig:fig3}Average books read in the past year grouped by age
+and media format}
 \end{figure}
 
 \begin{table}[tbp]
@@ -376,32 +411,36 @@ Residuals & 200 & 54,193.42 & 270.97 & NA & NA\\
 \end{center}
 \end{table}
 
-To look at the relationships between amount read, age, and media format,
-we ran a multiple regression predicting the average number of books read
-in the past year from age and media format as well as their interaction
-(see Figure \ref{fig:fig4}). Results showed a significant main effect of
-age (\(F[1, 200] = 7.99\), \(\mathit{MSE} = 270.97\), \(p = .005\),
-\(\hat{\eta}^2_p = .038\)) with older adults reading more books in 2018
-than younger adults. We also saw a significant main effect of media
-format (\(F[3, 200] = 6.17\), \(\mathit{MSE} = 270.97\), \(p < .001\),
-\(\hat{\eta}^2_p = .085\)) and pairwise comparisons revealed that books
-in print format were read less than those in electronic
-(\(t(48.42) = -2.10\), \(p = .041\)) format. We found no difference in
-the number of books read exclusively in a print format and the number of
-books read through the audiobook format (\(t(34.31) = -0.17\),
-\(p = .863\)). However, we did find that that more books were read using
-a mixed media approach than either exclusively print
-(\(t(135.94) = -4.99\), \(p < .001\)) or exclusively audiobooks
+To look at the relationships between the average books read in 2018,
+age, and media format, we ran a multiple regression predicting the
+average number of books read in the past year from age and media format
+as well as their interaction (see Figure \ref{fig:fig4}). Results showed
+a significant main effect of age (\(F[1, 200] = 7.99\),
+\(\mathit{MSE} = 270.97\), \(p = .005\), \(\hat{\eta}^2_p = .038\)) with
+older adults reading more books in 2018 than younger adults. We also saw
+a significant main effect of media format (\(F[3, 200] = 6.17\),
+\(\mathit{MSE} = 270.97\), \(p < .001\), \(\hat{\eta}^2_p = .085\)) and
+pairwise comparisons revealed that books in print format were read less
+than those in electronic (\(t(48.42) = -2.10\), \(p = .041\)) format. We
+found no difference in the number of books read exclusively in a print
+format and the number of books read through the audiobook format
+(\(t(34.31) = -0.17\), \(p = .863\)). However, we did find that more
+books were read using a mixed media approach than either exclusively
+print (\(t(135.94) = -4.99\), \(p < .001\)) or exclusively audiobooks
 (\(t(36.64) = -2.68\), \(p = .011\)). Lastly, we found no difference
 between media consumed by individuals who reported the used mixed media
-sources compared to those who exclusively preferred elctronic formats
-(\(t(50.23) = -0.04\), \(p = .967\), see Table \ref{tab:tab2}.
+sources compared to those who exclusively preferred electronic formats
+(\(t(50.23) = -0.04\), \(p = .967\), see Table \ref{tab:tab2}). Finally,
+there was a marginal interaction effect between age and media format
+where changes in average books read increased with age more for
+individuals exclusively using electronic formats or audiobooks than for
+individuals exclusively using print media or a mixed media approach.
 
 \begin{figure}
 \centering
 \includegraphics{final_manuscript_files/figure-latex/fig4-1.pdf}
-\caption{\label{fig:fig4}Average media consumed as a function of age and
-media format}
+\caption{\label{fig:fig4}Average books read in the past year as a function
+of age and media format}
 \end{figure}
 
 \section{Discussion}\label{discussion}
@@ -446,6 +485,20 @@ Chan, C.-h., Chan, G. C., Leeper, T. J., \& Becker, J. (2018).
 \hypertarget{ref-R-pander}{}
 Daróczi, G., \& Tsegelskyi, R. (2018). \emph{Pander: An r 'pandoc'
 writer}. Retrieved from \url{https://CRAN.R-project.org/package=pander}
+
+\hypertarget{ref-Delgado2018}{}
+Delgado, P., Vargas, C., Ackerman, R., \& Salmerón, L. (2018). Don't
+throw away your printed books: A meta-analysis on the effects of reading
+media on reading comprehension. \emph{Educational Research Review},
+\emph{25}, 23--38.
+doi:\href{https://doi.org/https://doi.org/10.1016/j.edurev.2018.09.003}{https://doi.org/10.1016/j.edurev.2018.09.003}
+
+\hypertarget{ref-DeZee2005}{}
+DeZee, K. J., Durning, S., \& Denton, G. D. (2005). Effect of electronic
+versus print format and different reading resources on knowledge
+acquisition in the third-year medicine clerkship. \emph{Teaching and
+Learning in Medicine}, \emph{17}(4), 349--354.
+doi:\href{https://doi.org/10.1207/s15328015tlm1704/_7}{10.1207/s15328015tlm1704\textbackslash{}\_7}
 
 \hypertarget{ref-R-car}{}
 Fox, J., \& Weisberg, S. (2011). \emph{An R companion to applied
@@ -501,6 +554,13 @@ least-squares means}. Retrieved from
 Lüdecke, D. (2018). \emph{Sjstats: Statistical functions for regression
 models (version 0.17.2)}.
 doi:\href{https://doi.org/10.5281/zenodo.1284472}{10.5281/zenodo.1284472}
+
+\hypertarget{ref-Margolin2013}{}
+Margolin, S. J., Driscoll, C., Toland, M. J., \& Kegler, J. L. (2013).
+E-readers, computer screens, or paper: Does reading comprehension change
+across media platforms? \emph{Applied Cognitive Psychology},
+\emph{27}(4), 512--519.
+doi:\href{https://doi.org/10.1002/acp.2930}{10.1002/acp.2930}
 
 \hypertarget{ref-R-here}{}
 Müller, K. (2017). \emph{Here: A simpler way to find your files}.
