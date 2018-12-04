@@ -443,7 +443,7 @@ rm(list = setdiff(ls(), c("df", "df_td")))
 ```
 
 
-```{r ash_analyses_viz, include = FALSE}
+```{r ash_analyses_viz}
 
 plot_data_ash <- df_td %>% 
   select(age, sex, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq) %>%
@@ -502,7 +502,7 @@ Figure1
 
 ```
 
-```{r ash_analyses_viz2, include = FALSE}
+```{r ash_analyses_viz2}
 
 #Examing the potential influence of sex on the aforementioned effects
 
