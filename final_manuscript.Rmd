@@ -229,13 +229,13 @@ df_td %<>%
 
 Social media sites are commonly defined as an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
 
-In an increasingly internet-based world, many new formats for media consumption have come forward. The days of reading the morning paper as the only source of world news are gone; rather, the internet provides a myriad of other media formats from which to choose. With increasing usage of digital media formats in recent years, there has been a growing interest in whether or not the format of media consumption relates to how well information is learned and retained [@DeZee2005; @Margolin2013; @Delgado2018]. @DeZee2005 found that students in their third year of a medical clerkship did not show any performance differences regardless of whether they chose to use electronic or print resources as their primary method of study. However, a meta-analysis by @Delgado2018 found that paper-based reading may result in better comprehension than digital-based reading. Inconsistent findings from prior work highlights the importance of understanding individual differences in media consumption and choices to interact with media in various formats.
+Moreover, in an increasingly internet-based world, many new formats for media consumption have come forward. The days of reading the morning paper as the only source of world news are gone; rather, the internet provides a myriad of other media formats from which to choose. With increasing usage of digital media formats in recent years, there has been a growing interest in whether or not the format of media consumption relates to how well information is learned and retained [@DeZee2005; @Margolin2013; @Delgado2018]. @DeZee2005 found that students in their third year of a medical clerkship did not show any performance differences regardless of whether they chose to use electronic or print resources as their primary method of study. However, a meta-analysis by @Delgado2018 found that paper-based reading may result in better comprehension than digital-based reading. Inconsistent findings from prior work highlights the importance of understanding individual differences in media consumption and choices to interact with media in various formats.
 
 To explore these individual differences in how people both generate social media content and consume media in general, we conducted secondary data analyses using recent survey data collected by the @Pew. First, we examined how frequency of social media use might vary as a function of sex, age, and social media site. Second, we examined relationships between age and media format and how these two factors may predict the volume of media consumption.
 
 # Method
 
-Survey data examining attitudes towards technology and use of technology and social media was collected by the @Pew. For the current study, we conducted a secondary data analysis looking at factors that relate to frequency of social media use, as well as factors that relate to overall media consumption.
+As stated above, survey data examining attitudes towards technology and use of technology and social media was collected by the @Pew. For the current study, we conducted a secondary data analysis looking at factors that relate to frequency of social media use, as well as factors that relate to overall media consumption.
 
 ## Participants
 
@@ -451,7 +451,7 @@ rm(list = setdiff(ls(), c("df", "df_td")))
 ```
 
 
-```{r ash_analyses_viz}
+```{r fig1, fig.width = 6.5, fig.height = 5.5, fig.cap="Frequency of social media use as a function of (a) the interaction between age and social media site, (b) social media site alone, and (c) age alone." }
 
 plot_data_ash <- df_td %>% 
   select(age, sex, party, sns, sns_freq_use, int_good_society, int_good_self, int_use_freq) %>%
@@ -470,10 +470,17 @@ fig1a <- ggplot(transform(plot_data_ash,
   geom_smooth(aes(x = age, y = sns_freq_use, group = sns, colour = sns), method = "lm", se = TRUE, lwd = 1.5) +
   scale_colour_viridis_d() +
   theme_bw() +
-  labs(title = "Interaction between age and social media site",
+  labs(#title = "Interaction between age and social media site",
        x = "Age", 
-       y = "Frequency of Social Media Use",
-       colour = "Social Media Site")
+       y = "Social Media Use Freq",
+       colour = "Social Media Site") +
+  theme(plot.title = element_text(size = 11, hjust = 0, family = "Times"),
+        axis.title.x = element_text(size = 9, family = "Times"), 
+        axis.title.y = element_text(size = 9, family = "Times"),
+        axis.text = element_text(size = 9, family = "Times"),
+        legend.text = element_text(family = "Times"),
+        legend.title = element_text(family = "Times", size = 10),
+        strip.text = element_text(family = "Times"))
 
 plot_sns <- plot_data_ash %>%
   group_by(sns) %>%
@@ -485,23 +492,31 @@ fig1b <- ggplot(transform(plot_sns,
     scale_fill_viridis_d() +
     theme_bw() +
     theme(legend.position = "",
-          axis.text.x = element_text(angle = 75, vjust = .5)) +
-    labs(title = "Main effect of social media site",
+          axis.text.x = element_text(angle = 75, vjust = .5, family = "Times"),
+          plot.title = element_text(size = 11, hjust = 0, family = "Times"),
+          axis.title.x = element_text(size = 9, family = "Times"), 
+          axis.title.y = element_text(size = 9, family = "Times"),
+          axis.text = element_text(size = 9, family = "Times")) +
+    labs(#title = "Main effect of social media site",
         x = "Social Media Site",
-        y = "Frequency of Social Media Use",
+        y = "Social Media Use Freq",
         colour = "")
 
 fig1c <- plot_data_ash %>%
   group_by(age) %>%
   summarise(freq_sns_mean = mean(sns_freq_use, fill = age)) %>%
   ggplot(aes(x = age, y = freq_sns_mean)) +
-    geom_point(alpha = 0.9, fill = "turquoise3", color = "turquoise4", size = 2.5) +
+    geom_point(alpha = 0.9, fill = "turquoise3", color = "turquoise4", size = 2) +
     geom_smooth(color = "grey", method = lm, se = FALSE) +
     theme_bw() +
-    theme(legend.position = "") +
-    labs(title = "Main effect of age",
+    theme(legend.position = "",
+          plot.title = element_text(size = 11, hjust = 0, family = "Times"),
+          axis.title.x = element_text(size = 9, family = "Times"), 
+          axis.title.y = element_text(size = 9, family = "Times"),
+          axis.text = element_text(size = 9, family = "Times")) +
+    labs(#title = "Main effect of age",
         x = "Age",
-        y = "Frequency of Social Media Use")
+        y = "Social Media Use Freq")
 
 fig1d <- plot_grid(fig1b, fig1c, labels = c("B", "C"), align = "h", ncol = 2)
 
@@ -511,20 +526,27 @@ Figure1
 
 ```
 
-```{r ash_analyses_viz2}
+```{r fig2, fig.width = 6.5, fig.height = 5.5, fig.cap="Frequency of social media use as a function of (a) the (non-significant) three-way interaction between age, sex, and social media site, (b) the interaction between sex and social media site, and (c) sex alone" }
 
 #Examing the potential influence of sex on the aforementioned effects
 
 fig2a <- ggplot(transform(plot_data_ash, 
                  sns = factor(sns,levels = c("Facebook", "YouTube", "Instagram", "Snapchat", "Twitter")))) +
-  geom_smooth(aes(x = age, y = sns_freq_use, group = sex, colour = sex), method = "lm", se = TRUE, lwd = 2) +
+  geom_smooth(aes(x = age, y = sns_freq_use, group = sex, colour = sex), method = "lm", se = TRUE, lwd = 1.5) +
   scale_color_manual(values = c("turquoise4", "darkorchid4")) +
-  geom_jitter(aes(x = age, y = sns_freq_use, colour = sex), alpha = 0.2) +
+  geom_jitter(aes(x = age, y = sns_freq_use, colour = sex), alpha = 0.15, size = 0.5) +
   facet_wrap(~sns, nrow = 1) +
   theme_bw() +
-  labs(title = "Interaction between sex, age, and social media site",
+  theme(plot.title = element_text(size = 11, hjust = 0, family = "Times"),
+        axis.title.x = element_text(size = 9, family = "Times"), 
+        axis.title.y = element_text(size = 9, family = "Times"),
+        axis.text = element_text(size = 9, family = "Times"),
+        legend.text = element_text(family = "Times"),
+        legend.title = element_text(family = "Times", size = 10),
+        strip.text = element_text(family = "Times")) +
+  labs(#title = "Interaction between sex, age, and social media site",
        x = "Age", 
-       y = "Frequency of social media use",
+       y = "Social Media Use Freq",
        colour = "Sex")
 
 plot_snsxsex <- plot_data_ash %>%
@@ -538,12 +560,15 @@ fig2b <- ggplot(transform(plot_snsxsex,
     facet_wrap(~sns, nrow = 1) +
     theme_bw() +
     theme(legend.position = "",
-          axis.text.x = element_text(angle = 75, vjust = .5),
-          plot.title = element_text(size = 10, hjust = 0),
-          strip.text = element_text(size = 7)) +
-    labs(title = "Interaction between sex and social media site",
+          axis.text.x = element_text(angle = 75, vjust = .5, family = "Times"),
+          plot.title = element_text(size = 10.5, hjust = 0, family = "Times"),
+          strip.text = element_text(size = 8, family = "Times"),
+          axis.title.x = element_text(size = 9, family = "Times"), 
+          axis.title.y = element_text(size = 9, family = "Times"),
+          axis.text = element_text(size = 9, family = "Times")) +
+    labs(#title = "Interaction between sex and social media site",
        x = "Sex", 
-       y = "Frequency of social media use",
+       y = "Social Media Use Freq",
        colour = "Sex")
 
 fig2c <- plot_data_ash %>%
@@ -551,10 +576,14 @@ fig2c <- plot_data_ash %>%
     geom_boxplot(aes(group = sex, fill = sex)) +
     scale_fill_manual(values = c("turquoise4", "darkorchid4")) +
     theme_bw() +
-    theme(legend.position = "") +
-    labs(title = "Main effect of sex",
+    theme(legend.position = "",
+          plot.title = element_text(size = 11, hjust = 0, family = "Times"),
+          axis.title.x = element_text(size = 9, family = "Times"), 
+          axis.title.y = element_text(size = 9, family = "Times"),
+          axis.text = element_text(size = 9, family = "Times")) +
+    labs(#title = "Main effect of sex",
        x = "Sex", 
-       y = "Frequency of social media use")
+       y = "Social Media Use Freq")
 
 fig2d <- plot_grid(fig2b, fig2c, labels = c("B", "C"), align = "h", ncol = 2)
 

@@ -2,20 +2,21 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
-\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz-1.pdf}
-\caption{}
+\includegraphics{final_manuscript_files/figure-latex/fig1-1.pdf}
+\caption{\label{fig:fig1}Frequency of social media use as a function of (a)
+the interaction between age and social media site, (b) social media site
+alone, and (c) age alone.}
 \end{figure*}
-\efloatseparator
- 
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
 \centering
-\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz2-1.pdf}
-\caption{}
+\includegraphics{final_manuscript_files/figure-latex/fig2-1.pdf}
+\caption{\label{fig:fig2}Frequency of social media use as a function of (a)
+the (non-significant) three-way interaction between age, sex, and social
+media site, (b) the interaction between sex and social media site, and
+(c) sex alone}
 \end{figure*}
-\efloatseparator
- 
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
@@ -24,8 +25,6 @@
 \caption{\label{fig:fig3}Average books read in the past year grouped by age
 and media format}
 \end{figure*}
-\efloatseparator
- 
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
@@ -34,5 +33,3 @@ and media format}
 \caption{\label{fig:fig4}Average books read in the past year as a function
 of age and media format}
 \end{figure*}
-\efloatseparator
- 

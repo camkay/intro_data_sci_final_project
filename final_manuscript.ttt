@@ -24,8 +24,6 @@ Age X SNS & 18 & 4 & -6532.52 & 117.18 & <.001\\
 \end{threeparttable}
 \end{center}
 \end{table*}
-\efloatseparator
- 
 \begin{table*}[hbt]
 \ifnextchar[{\eatarg}{}
 [tbp]
@@ -45,5 +43,3 @@ Residuals & 200 & 54,193.42 & 270.97 & NA & NA\\
 \end{threeparttable}
 \end{center}
 \end{table*}
-\efloatseparator
- 
