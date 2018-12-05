@@ -2,20 +2,37 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
+<<<<<<< Updated upstream
 \includegraphics{final_manuscript_files/figure-latex/fig1-1.pdf}
 \caption{\label{fig:fig1}Frequency of social media use as a function of (a)
 the interaction between age and social media site, (b) social media site
 alone, and (c) age alone.}
+=======
+\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz-1.pdf}
+\caption{}
+>>>>>>> Stashed changes
 \end{figure*}
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
 \centering
+<<<<<<< Updated upstream
 \includegraphics{final_manuscript_files/figure-latex/fig2-1.pdf}
 \caption{\label{fig:fig2}Frequency of social media use as a function of (a)
 the (non-significant) three-way interaction between age, sex, and social
 media site, (b) the interaction between sex and social media site, and
 (c) sex alone}
+=======
+\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz2-1.pdf}
+\caption{}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{final_manuscript_files/figure-latex/fig3-1.pdf}
+\caption{\label{fig:fig3}Average books read grouped by age and media format}
+>>>>>>> Stashed changes
 \end{figure*}
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
