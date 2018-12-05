@@ -21,15 +21,8 @@ media site, (b) the interaction between sex and social media site, and
 \ifnextchar[{\eatarg}{}
 
 \centering
-\includegraphics{final_manuscript_files/figure-latex/fig3-1.pdf}
-\caption{\label{fig:fig3}Average books read in the past year grouped by age
-and media format}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
 \includegraphics{final_manuscript_files/figure-latex/fig4-1.pdf}
-\caption{\label{fig:fig4}Average books read in the past year as a function
-of age and media format}
+\caption{\label{fig:fig4}(a) Average books read in the past year grouped by
+age and media format, (b) Relationships between age and media format
+predicting average books read in the past year}
 \end{figure*}

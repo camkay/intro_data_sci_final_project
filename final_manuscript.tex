@@ -25,7 +25,8 @@
 \hypersetup{unicode=true,
             pdftitle={Internet and Social Media Use in American Adults},
             pdfauthor={Cameron S. Kay, Stefania R. Ashby, \& Ashley L. Miller},
-            pdfkeywords={american, social media, internet, pew research center},
+            pdfkeywords={social media use, internet attitudes, media format, age, sex, pew
+research center},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -72,7 +73,7 @@
 \affiliation{
 \vspace{0.5cm}
 \textsuperscript{1} University of Oregon}
-\keywords{american, social media, internet, pew research center}
+\keywords{social media use, internet attitudes, media format, age, sex, pew research center}
 \usepackage{csquotes}
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -109,7 +110,22 @@ Kay, 1451 Onyx Street, Eugene, OR 97403. E-mail:
 \href{mailto:ckay@uoregon.edu}{\nolinkurl{ckay@uoregon.edu}}}
 
 \abstract{
-TBD
+The present research examined individual differences in interactions
+with social media content and media consumption in American adults.
+Secondary data analyses were conducted using an early 2018 phone survey
+collected by the Pew Research Center (2018). Results showed that age is
+associated with lower social media use overall but there are differences
+with preferred social media site; both Snapchat and Twitter are used
+more frequently than Facebook. Male respondents reported less frequency
+of social media use overall, but exhibitted greater use of both Twitter
+and YouTube than female respondents. Examination of media consumption
+revealed that both age and media format are significant predictors of
+the volume of media consumption. Older respondents were reading more
+than younger respondents and books in print were read less than those in
+electronic formats. A marginal interaction between age and media format
+suggests that the amount of media consumed increases with age more for
+individuals using exclusively electronic or audiobook formats than fror
+those using exclusively print or mixed media formats.
 
 
 }
@@ -248,27 +264,27 @@ Data was analyzed using R (Version 3.5.1; R Core Team, 2018) and the
 R-packages \emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{car}
 (Version 3.0.2; Fox \& Weisberg, 2011; Fox, Weisberg, \& Price, 2018),
 \emph{carData} (Version 3.0.2; Fox et al., 2018), \emph{cowplot}
-(Version 0.9.3; Wilke, 2018), \emph{dplyr} (Version 0.7.8; Wickham,
+(Version 0.9.3; Wilke, 2018), \emph{dplyr} (Version 0.7.7; Wickham,
 François, Henry, \& Müller, 2018), \emph{emmeans} (Version 1.3.0; Lenth,
 2018), \emph{forcats} (Version 0.3.0; Wickham, 2018a), \emph{Formula}
 (Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggplot2} (Version
 3.1.0; Wickham, 2016), \emph{here} (Version 0.1; Müller, 2017),
 \emph{Hmisc} (Version 4.1.1; Harrell Jr, Charles Dupont, \& others.,
 2018), \emph{jcolors} (Version 0.0.4; Huling, 2018), \emph{lattice}
-(Version 0.20.38; Sarkar, 2008), \emph{lme4} (Version 1.1.19; Bates,
+(Version 0.20.35; Sarkar, 2008), \emph{lme4} (Version 1.1.18.1; Bates,
 Mächler, Bolker, \& Walker, 2015), \emph{lmerTest} (Version 3.0.1;
 Kuznetsova, Brockhoff, \& Christensen, 2017), \emph{lubridate} (Version
 1.7.4; Grolemund \& Wickham, 2011), \emph{magrittr} (Version 1.5; Bache
-\& Wickham, 2014), \emph{Matrix} (Version 1.2.15; Bates \& Maechler,
-2018), \emph{pander} (Version 0.6.3; Daróczi \& Tsegelskyi, 2018),
+\& Wickham, 2014), \emph{Matrix} (Version 1.2.14; Bates \& Maechler,
+2018), \emph{pander} (Version 0.6.2; Daróczi \& Tsegelskyi, 2018),
 \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{plotrix}
 (Version 3.7.4; J, 2006), \emph{purrr} (Version 0.2.5; Henry \& Wickham,
 2018), \emph{readr} (Version 1.2.1; Wickham, Hester, \& Francois, 2017),
-\emph{rio} (Version 0.5.16; C.-h. Chan, Chan, Leeper, \& Becker, 2018),
+\emph{rio} (Version 0.5.10; C.-h. Chan, Chan, Leeper, \& Becker, 2018),
 \emph{sjstats} (Version 0.17.2; Lüdecke, 2018), \emph{stringr} (Version
-1.3.1; Wickham, 2018b), \emph{survival} (Version 2.43.3; Terry M.
+1.3.1; Wickham, 2018b), \emph{survival} (Version 2.42.3; Terry M.
 Therneau \& Patricia M. Grambsch, 2000), \emph{tibble} (Version 1.4.2;
-Müller \& Wickham, 2018), \emph{tidyr} (Version 0.8.2; Wickham \& Henry,
+Müller \& Wickham, 2018), \emph{tidyr} (Version 0.8.1; Wickham \& Henry,
 2018), \emph{tidyverse} (Version 1.2.1; Wickham, 2017), and
 \emph{wesanderson} (Version 0.3.6; Ram \& Wickham, 2018) for all our
 analyses.
@@ -386,17 +402,9 @@ either print, audio, or electronic as appropriate. Respondents who
 endorsed using more than one type of media format were grouped together
 into a \enquote{mixed media} bin. Next, we calculated the average number
 of books read, grouped by age and media format (see Figure
-\ref{fig:fig3}). There appear to be differences age differences in the
-number of books read as a function of media format. For example, we see
-that audiobook usage seems to be more prevalent among the older
-respondents.
-
-\begin{figure}
-\centering
-\includegraphics{final_manuscript_files/figure-latex/fig3-1.pdf}
-\caption{\label{fig:fig3}Average books read in the past year grouped by age
-and media format}
-\end{figure}
+\ref{fig:fig4}A). There appear to be age differences in the number of
+books read as a function of media format. For example, we see that
+audiobook usage seems to be more prevalent among the older respondents.
 
 \begin{table}[tbp]
 \begin{center}
@@ -419,8 +427,8 @@ Residuals & 200 & 54,193.42 & 270.97 & NA & NA\\
 To look at the relationships between the average books read in 2018,
 age, and media format, we ran a multiple regression predicting the
 average number of books read in the past year from age and media format
-as well as their interaction (see Figure \ref{fig:fig4}). Results showed
-a significant main effect of age (\(F[1, 200] = 7.99\),
+as well as their interaction (see Figure \ref{fig:fig4}B). Results
+showed a significant main effect of age (\(F[1, 200] = 7.99\),
 \(\mathit{MSE} = 270.97\), \(p = .005\), \(\hat{\eta}^2_p = .038\)) with
 older adults reading more books in 2018 than younger adults. We also saw
 a significant main effect of media format (\(F[3, 200] = 6.17\),
@@ -444,8 +452,9 @@ individuals exclusively using print media or a mixed media approach.
 \begin{figure}
 \centering
 \includegraphics{final_manuscript_files/figure-latex/fig4-1.pdf}
-\caption{\label{fig:fig4}Average books read in the past year as a function
-of age and media format}
+\caption{\label{fig:fig4}(a) Average books read in the past year grouped by
+age and media format, (b) Relationships between age and media format
+predicting average books read in the past year}
 \end{figure}
 
 \section{Discussion}\label{discussion}
