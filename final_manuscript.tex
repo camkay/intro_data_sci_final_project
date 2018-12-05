@@ -166,7 +166,6 @@ user-generated focus also highlights the importance of individual
 differences in the user-service relationship, as users invariably have
 characteristics that affect how they consume and generate content.
 
-<<<<<<< Updated upstream
 Moreover, in an increasingly internet-based world, many new formats for
 media consumption have come forward. The days of reading the morning
 paper as the only source of world news are gone; rather, the internet
@@ -200,20 +199,6 @@ use of technology and social media was collected by the Pew Research
 Center (2018). For the current study, we conducted a secondary data
 analysis looking at factors that relate to frequency of social media
 use, as well as factors that relate to overall media consumption.
-=======
-To explore these individual differences in how people consume and
-generate social media content, as well as how they interact with
-technology, we conducted secondary data analyses using recent survey
-data collected by the Pew Research Center (2018).
-
-\section{Method}\label{method}
-
-Survey data examining attitudes towards technology and use of technology
-and social media was collected by the Pew Research Center (2018). For
-the current study, we conducted a secondary data analysis looking at
-factors that relate to frequency of social media use, as well as factors
-that relate to overall media consumption.
->>>>>>> Stashed changes
 
 \subsection{Participants}\label{participants}
 
@@ -273,15 +258,9 @@ affiliation.
 
 \subsection{Data analysis}\label{data-analysis}
 
-<<<<<<< Updated upstream
 Data was analyzed using R (Version 3.5.1; R Core Team, 2018) and the
 R-packages \emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{car}
 (Version 3.0.2; Fox \& Weisberg, 2011; Fox, Weisberg, \& Price, 2018),
-=======
-We used R (Version 3.5.1; R Core Team, 2018) and the R-packages
-\emph{bindrcpp} (Version 0.2.2; Müller, 2018), \emph{car} (Version
-3.0.2; Fox \& Weisberg, 2011; Fox, Weisberg, \& Price, 2018),
->>>>>>> Stashed changes
 \emph{carData} (Version 3.0.2; Fox et al., 2018), \emph{cowplot}
 (Version 0.9.3; Wilke, 2018), \emph{dplyr} (Version 0.7.8; Wickham,
 François, Henry, \& Müller, 2018), \emph{emmeans} (Version 1.3.0; Lenth,
@@ -289,11 +268,7 @@ François, Henry, \& Müller, 2018), \emph{emmeans} (Version 1.3.0; Lenth,
 (Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggplot2} (Version
 3.1.0; Wickham, 2016), \emph{here} (Version 0.1; Müller, 2017),
 \emph{Hmisc} (Version 4.1.1; Harrell Jr, Charles Dupont, \& others.,
-<<<<<<< Updated upstream
 2018), \emph{jcolors} (Version 0.0.4; Huling, 2018), \emph{lattice}
-=======
-2018), \emph{jcolors} (Version 0.0.3; Huling, 2018), \emph{lattice}
->>>>>>> Stashed changes
 (Version 0.20.38; Sarkar, 2008), \emph{lme4} (Version 1.1.19; Bates,
 Mächler, Bolker, \& Walker, 2015), \emph{lmerTest} (Version 3.0.1;
 Kuznetsova, Brockhoff, \& Christensen, 2017), \emph{lubridate} (Version
@@ -302,17 +277,10 @@ Kuznetsova, Brockhoff, \& Christensen, 2017), \emph{lubridate} (Version
 2018), \emph{pander} (Version 0.6.3; Daróczi \& Tsegelskyi, 2018),
 \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{plotrix}
 (Version 3.7.4; J, 2006), \emph{purrr} (Version 0.2.5; Henry \& Wickham,
-<<<<<<< Updated upstream
 2018), \emph{readr} (Version 1.2.1; Wickham, Hester, \& Francois, 2017),
 \emph{rio} (Version 0.5.16; C.-h. Chan, Chan, Leeper, \& Becker, 2018),
 \emph{sjstats} (Version 0.17.2; Lüdecke, 2018), \emph{stringr} (Version
 1.3.1; Wickham, 2018b), \emph{survival} (Version 2.43.3; Terry M.
-=======
-2018), \emph{readr} (Version 1.1.1; Wickham, Hester, \& Francois, 2017),
-\emph{rio} (Version 0.5.10; C.-h. Chan, Chan, Leeper, \& Becker, 2018),
-\emph{sjstats} (Version 0.17.2; Lüdecke, 2018), \emph{stringr} (Version
-1.3.1; Wickham, 2018b), \emph{survival} (Version 2.43.1; Terry M.
->>>>>>> Stashed changes
 Therneau \& Patricia M. Grambsch, 2000), \emph{tibble} (Version 1.4.2;
 Müller \& Wickham, 2018), \emph{tidyr} (Version 0.8.2; Wickham \& Henry,
 2018), \emph{tidyverse} (Version 1.2.1; Wickham, 2017), and
@@ -320,6 +288,9 @@ Müller \& Wickham, 2018), \emph{tidyr} (Version 0.8.2; Wickham \& Henry,
 analyses.
 
 \section{Results}\label{results}
+
+\subsection{Frequency of Social Media
+Use}\label{frequency-of-social-media-use}
 
 First, we sought to examine how frequency of social media use might vary
 as a function of sex, age, social media site, and the interaction
@@ -345,18 +316,16 @@ interaction between age and social media site all explained a
 significant proportion of variance in social media site usage frequency.
 Using the \emph{lmerTest} package from Kuznetsova et al. (2017) to
 approximate degrees of freedom with Satterthwaite's method, we found
-that age is associated with lower social media use, \(\beta\) = -0.10,
-<<<<<<< Updated upstream
-\emph{SE} = .03, \emph{p} = .003 (see Figure 1c). Furthermore, Snapchat
-is used more often than Facebook (\(\beta\) = .17, \emph{SE} = .04,
-\emph{p} \textless{} .001) and Twitter is used more often than Facebook
-=======
-\emph{SE} = .03, \emph{p} = .003. Furthermore, Snapchat is used more
-often than Facebook (\(\beta\) = .17, \emph{SE} = .04, \emph{p}
-\textless{} .001) and Twitter is used more often than Facebook
->>>>>>> Stashed changes
-(\(\beta\) = -0.18, \emph{SE} = .04, \emph{p} \textless{} .001).
-However, age interacts with the specific social media site, insofar that
+that increased age is associated with lower social media use, \(\beta\)
+= -0.10, \emph{SE} = .03, \emph{p} = .003 (see Figure 1C). Note that
+Figure 1B suggests that, overall, Facebook is associated with the most
+social media use, followed by YouTube, Instagram, Snapchat, and Twitter.
+However, when accounting for age and gender, Snapchat is actually
+associated with greater social media use than Facebook (\(\beta\) = .17,
+\emph{SE} = .04, \emph{p} \textless{} .001), and Twitter is associated
+with lesser social media use than Facebook (\(\beta\) = -0.18, \emph{SE}
+= .04, \emph{p} \textless{} .001). Critically, age also interacts with
+the specific social media site (see Figure 1A), insofar that increased
 age results in even lower rates of social media use in the case of
 Instagram (\(\beta\) = -0.28, \emph{SE} = .04, \emph{p} \textless{}
 .001), Snapchat (\(\beta\) = -0.32, \emph{SE} = .04, \emph{p}
@@ -367,14 +336,15 @@ Instagram (\(\beta\) = -0.28, \emph{SE} = .04, \emph{p} \textless{}
 Although the model comparison did not indicate an increase in predictive
 ability from the introduction of participant gender, we did find that
 males (in comparison to females) reported less frequency of social media
-use when using the approximated degrees of freedom, \(\beta\) = -0.15,
-\emph{SE} = .05, \emph{p} = .005. When compared to Facebook, however,
-men exhibitted a greater frequency of using Twitter (\(\beta\) = .09,
-\emph{SE} = .02, \emph{p} \textless{} .001) and YouTube (\(\beta\) =
-.18, \emph{SE} = .03, \emph{p} \textless{} .001) than women did.
+use when using the approximated degrees of freedom (see Figure 2C),
+\(\beta\) = -0.15, \emph{SE} = .05, \emph{p} = .005. Figure 2B
+demonstrates that when compared to Facebook, however, men exhibitted a
+greater frequency of using Twitter (\(\beta\) = .09, \emph{SE} = .02,
+\emph{p} \textless{} .001) and YouTube (\(\beta\) = .18, \emph{SE} =
+.03, \emph{p} \textless{} .001) than women did.
 
 A comparison of the full model with random effects to the full model
-without random effects, revealed that the random effects explained a
+without random effects revealed that the random effects explained a
 significant proportion of the variance in social media site use,
 \(\chi^2\)(1) = 176.01, \emph{p} \textless{} .001. In fact, grouping
 ratings by participant explained 21.65\% of the variance in the
@@ -411,30 +381,22 @@ Age X SNS & 18 & 4 & -6532.52 & 117.18 & <.001\\
 
 \begin{figure}
 \centering
-<<<<<<< Updated upstream
 \includegraphics{final_manuscript_files/figure-latex/fig1-1.pdf}
 \caption{\label{fig:fig1}Frequency of social media use as a function of (a)
 the interaction between age and social media site, (b) social media site
 alone, and (c) age alone.}
-=======
-\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz-1.pdf}
-\caption{}
->>>>>>> Stashed changes
 \end{figure}
 
 \begin{figure}
 \centering
-<<<<<<< Updated upstream
 \includegraphics{final_manuscript_files/figure-latex/fig2-1.pdf}
 \caption{\label{fig:fig2}Frequency of social media use as a function of (a)
 the (non-significant) three-way interaction between age, sex, and social
 media site, (b) the interaction between sex and social media site, and
 (c) sex alone}
-=======
-\includegraphics{final_manuscript_files/figure-latex/ash_analyses_viz2-1.pdf}
-\caption{}
->>>>>>> Stashed changes
 \end{figure}
+
+\subsection{Media Consumption}\label{media-consumption}
 
 We next sought to examine how media consumption may vary as a function
 of age as well as media format (i.e.~individuals exclusively using print
@@ -490,13 +452,8 @@ sources compared to those who exclusively preferred electronic formats
 (\(t(50.23) = -0.04\), \(p = .967\), see Table \ref{tab:tab2}). Finally,
 there was a marginal interaction effect between age and media format
 where changes in average books read increased with age more for
-<<<<<<< Updated upstream
 individuals exclusively using electronic formats or audiobooks than for
 individuals exclusively using print media or a mixed media approach.
-=======
-individuals exclusively using electronic or audiobook formats than for
-those exclusively using print or a mixed media approach.
->>>>>>> Stashed changes
 
 \begin{figure}
 \centering
@@ -507,6 +464,47 @@ predicting average books read in the past year}
 \end{figure}
 
 \section{Discussion}\label{discussion}
+
+Using data collected by the Pew Research Center (2018), we examined
+variation in frequency of social media use and media consumption.
+Namely, via secondary data analyses, we assessed (1) how frequency of
+social media use varies across age, sex, and social media site and (2)
+how amount of media consumption (as indexed by number of books read)
+varies across media format (print, electronic, vs audio) and age.
+
+Results revealed large individual differences in both social media use
+and media consumption. In the case of the former, sex predicted social
+media use, with females (in comparison to males) reporting higher
+frequency of social media use overall. Importantly, sex also interacted
+with social media site. Relative to Facebook, men actually reported
+higher frequency of Twitter and YouTube usage than did women. This
+result seemingly implies that women tend to use social media platforms
+with an emphasis on the generation and evaluation of picture-related
+content.
+
+While increased age was associated with lower social media use
+frequency, the strength of this relationship changed as a function of
+social media site. Relative to Facebook, the largest age effects were
+observed in the case of Instagram, Snapchat, and YouTube. In other
+words, older individuals were increasingly less likely to report high
+usage of Instagram, Snapchat, and YouTube when compared to younger
+adults.
+
+It seems plausible that, at least in the case of Instagram and Snapchat
+(the youngest social media sites surveyed, emerging in 2010 and 2011
+respectively), newer social media sites may appeal to younger users
+merely because older people may be late adopters and/or are less
+familiar with new social media platforms/internet trends. Indeed,
+Facebook has been around the longest of the social media sites (since
+2004), and age-related differences appear to be the smallest in this
+case (see Figure 1A). However, this explanation is entirely speculative,
+so future work should aim to better identify other sources of
+age-related differences across social media sites. One factor deserving
+attention is the reason why people chose to use social media. Perhaps
+older adults use social media sites that more easily allow them to keep
+in touch with family and friends, whereas younger adults may put more
+emphasis on social media sites that provide more entertainment
+value/creative expression as a means of enhancing social status.
 
 \newpage
 
