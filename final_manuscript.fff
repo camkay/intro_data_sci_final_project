@@ -7,6 +7,8 @@
 the interaction between age and social media site, (b) social media site
 alone, and (c) age alone.}
 \end{figure*}
+\efloatseparator
+ 
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
@@ -17,6 +19,8 @@ the (non-significant) three-way interaction between age, sex, and social
 media site, (b) the interaction between sex and social media site, and
 (c) sex alone}
 \end{figure*}
+\efloatseparator
+ 
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
@@ -26,3 +30,5 @@ media site, (b) the interaction between sex and social media site, and
 age and media format, (b) Relationships between age and media format
 predicting average books read in the past year}
 \end{figure*}
+\efloatseparator
+ 
