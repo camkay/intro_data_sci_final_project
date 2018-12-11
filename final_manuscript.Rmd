@@ -54,24 +54,24 @@ knitr::opts_chunk$set(echo = FALSE,
 options(scipen = 999) 
 
 # if you do not have the following packages, you will need to install them
-#install.packages("car")
-#install.packages("papaja")
-#install.packages("tidyverse")
-#install.packages("lme4")
-#install.packages("lmerTest")
-#install.packages("here")
-#install.packages("rio")
-#install.packages("lubridate")
-#install.packages("cowplot")
-#install.packages("wesanderson")
-#install.packages("forcats")
-#install.packages("pander")
-#install.packages("magrittr")
-#install.packages("Hmisc")
-#install.packages("sjstats")
-#install.packages("emmeans")
-#install.packages("plotrix")
-#install.packages("sjstats")
+# install.packages("car")
+# install.packages("papaja")
+# install.packages("tidyverse")
+# install.packages("lme4")
+# install.packages("lmerTest")
+# install.packages("here")
+# install.packages("rio")
+# install.packages("lubridate")
+# install.packages("cowplot")
+# install.packages("wesanderson")
+# install.packages("forcats")
+# install.packages("pander")
+# install.packages("magrittr")
+# install.packages("Hmisc")
+# install.packages("sjstats")
+# install.packages("emmeans")
+# install.packages("plotrix")
+# install.packages("sjstats")
 
 # load required libraries
 library(car)
@@ -99,7 +99,11 @@ source(here::here("functions", "perble.R")) #creates a table but with percentage
 source(here::here("functions", "spround.R")) #combines round and sprintf
 ```
 
-
+<!-- I would not use `include = FALSE` on this chunk. I understand the 
+reasoning, but from my view it's better to just keep it with the default
+`echo = FALSE` because then if any warnings or errors pop up here, they'll
+show up in your document and it should be really apparent that something is
+going on, which may not be the case if you have set `include = FALSE`.-->
 ```{r prep_data, include = FALSE}
 # import data
 df <- import(here::here("data", "dataSPSS.sav"), setclass = "tibble") %>%
@@ -112,6 +116,9 @@ df %<>%
 #switch 99 ages with refused
 df %<>%
   mutate(age = replace(age, age == 99, NA))
+
+# If 99 is consistently missing across all variables you can handle this when
+# importing by adding including the additional argument `na.strings = "99"`.
 
 # select only variables of interest
 df_td <- df %>% 
@@ -137,8 +144,19 @@ df_td %<>%
   separate(websites, into = c("temp", "website"), sep = "[[:digit:]]") %>%
   spread(key = "temp", value = "value")
 
+# Just an FYI, you can use "\\d" as a shortcut for "[[:digit:]]"
+
 # change "no, do not do this" in the sns_use column to "Rarely if ever" in the sns_freq_use columns
 df_td[which(df_td[, "web"] == "No, do not do this"), "sns"] <- "Rarely if ever"
+
+# You could have also accomplished this with the following code, which I think
+# is a bit more clear, particularly if the rest of your code is using the
+# tidyverse, as yours is
+#
+# df_td %<>% 
+#   mutate(sns = ifelse(web == "No, do not do this", 
+#                       "Rarely if ever", 
+#                       sns))
 
 #drop now unneeded sns_use column
 df_td %<>%
@@ -226,23 +244,40 @@ df_td %<>%
 
 ```
 
-Social media sites are commonly defined as an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
+Social media sites are commonly defined as an internet-based service allowing for the creation and broadcast of user-generated information [@Boyd2008; @Kaplan2010; @Obar2015]. @Obar2015 emphasize the user-generated aspect of this definition, arguing that this content is the lifeblood of social media. Although that may sound hyperbolic, it logically follows that if a site is created with the express purpose of providing user-generated content, it must have user-generated content to function as intended. By way of illustration, without videos created by users, YouTube, a social media site that allows its users to upload and share videos, would fail to serve its primary purpose. Netflix, a site that allows users to only stream videos, does not require user-generated content, as it does not serve user-generated content, and, by extension, is not a social media site. Beyond the functional aspects of social media sites, the user-generated focus also highlights the importance of individual differences in the user-service relationship, as users invariably have characteristics that affect how they consume and generate content.
 
-Moreover, in an increasingly internet-based world, many new formats for media consumption have arisen. The days of reading the morning paper as the only source of world news are gone; rather, the internet provides a myriad of other media formats from which to choose. With increasing usage of digital media formats in recent years, there has been a growing interest in whether or not the format of media consumption relates to how well information is learned and retained [@DeZee2005; @Margolin2013; @Delgado2018]. @DeZee2005 found that students in their third year of a medical clerkship did not show any performance differences regardless of whether they chose to use electronic or print resources as their primary method of study. However, a meta-analysis by @Delgado2018 found that paper-based reading may result in better comprehension than digital-based reading. Inconsistent findings from prior work highlights the importance of understanding individual differences in media consumption and choices to interact with media in various formats.
+
+<!-- You might want to think of another way of saying "Although that may sound
+hyperbolic". Maybe something along the lines of "Although this is a substantial
+claim..." -->
+
+In an increasingly internet-based world, many new formats for media consumption have arisen. The days of reading the morning paper as the only source of world news are gone; rather, the internet provides a myriad of other media formats from which to choose. Increasing usage of digital media formats in recent years have also led to a growing interest in whether the format of media consumption relates to how well information is learned and retained [@DeZee2005; @Margolin2013; @Delgado2018]. @DeZee2005 found that students in their third year of a medical clerkship did not show any performance differences regardless of whether they chose to use electronic or print resources as their primary method of study. However, a meta-analysis by @Delgado2018 found that paper-based reading may result in better comprehension than digital-based reading. Inconsistent findings from prior work highlights the importance of understanding individual differences in media consumption and choices to interact with media in various formats.
 
 To explore these individual differences in how people both generate social media content and consume media in general, we conducted secondary data analyses using recent survey data collected by the @Pew. First, we examined how frequency of social media use might vary as a function of sex, age, and social media site. Second, we examined relationships between age and media format and how these two factors may predict the volume of media consumption.
 
 # Method
 
-As stated above, survey data examining attitudes towards technology and use of technology and social media was collected by the @Pew. For the current study, we conducted a secondary data analysis looking at factors that relate to frequency of social media use, as well as factors that relate to overall media consumption.
+We examined factors that relate to frequency of social media use and overall media consumption.
+
+<!-- I tried to make this a little less redundant but now it's super brief. 
+Might consider basically moving the previous paragraph here instead. -->
 
 ## Participants
 
-`r capitalize(.numbers2words(nrow(df)))` people were surveyed by telephone (`r .spround(.perble(df$sample)["Percent", "Cell phone"])`% cell phone; `r .spround(.perble(df$sample)["Percent", "Landline"])`% land-line) over a period of `r interval(min(df_td$date), max(df_td$date)) %/% days(1)` days in `r unique(months(df_td$date))` of `r unique(year(df_td$date))`. We excluded any participants who reported that they do not even occasionally use the internet or email (*n* = `r nrow(df) - length(unique(df_td$id))`). The resulting sample comprised `r length(unique(df_td$id))` people (`r .spround(.perble(df_td$sex)["Percent", "Female"])`% female). Ages ranged from `r min(df_td$age, na.rm = TRUE)` to `r max(df_td$age, na.rm = TRUE)` (*M* age = `r .spround(mean(df_td$age, na.rm = TRUE))`; *SD* age = `r .spround(sd(df_td$age, na.rm = TRUE))`)\footnote{Note that the descriptive statistics for age are slightly lower than reality. Ages 97 and older were recorded as simply 97 in the data.}. Concerning race, `r .spround(.perble(df_td$race)["Percent", "White"])`% identified as white, `r .spround(.perble(df_td$race)["Percent", "Black"])`% identified as black, `r .spround(.perble(df_td$race)["Percent", "Asian"])`% identified as Asian, `r .spround(.perble(df_td$race)["Percent", "Mixed"])`% identified as mixed race, and `r .spround(.perble(df_td$race)["Percent", "Don't know/Refused (VOL.)"] + .perble(df_td$race)["Percent", "Other"])`% refused to answer or reported being from some other race.  
+<!-- Hmm... I'm not sure how I feel about the `.numbers2words` function here. I
+understand the desirability, but I think it might be better to just phrase the
+sentence so you can use an integer. The numbering did not come across 
+perfectly so it's a bit awkward. APA allows you to use integers for any
+non-single digit number. So you could have done something like, "The analytic
+sample for this study consisted of `r nrow(df)` people...".-->
+
+<!-- I like the .spround and .perble functions more, but I think you could have actually made it a little simpler here by wrapping it into a single function that would look something like `f(data, col, level)` and just return the exact percent as a character vector of length 1. So, for example `f(df, race, mixed)` would return "2.95%". I could help you with this, if you'd like.-->
+
+`r capitalize(.numbers2words(nrow(df)))` people were surveyed by telephone (`r .spround(.perble(df$sample)["Percent", "Cell phone"])`% cell phone; `r .spround(.perble(df$sample)["Percent", "Landline"])`% land-line) over a period of `r interval(min(df_td$date), max(df_td$date)) %/% days(1)` days in `r unique(months(df_td$date))` of `r unique(year(df_td$date))`. We excluded any participants who reported that they did not even occasionally use the internet or email ($n$ = `r nrow(df) - length(unique(df_td$id))`). The resulting sample comprised `r length(unique(df_td$id))` people (`r .spround(.perble(df_td$sex)["Percent", "Female"])`% female). Ages ranged from `r min(df_td$age, na.rm = TRUE)` to `r max(df_td$age, na.rm = TRUE)` ($M$ age = `r .spround(mean(df_td$age, na.rm = TRUE))`; $SD$ age = `r .spround(sd(df_td$age, na.rm = TRUE))`)\footnote{Note that the descriptive statistics for age are slightly lower than reality. Ages 97 and older were recorded as simply 97 in the data.}. Concerning race, `r .spround(.perble(df_td$race)["Percent", "White"])`% identified as white, `r .spround(.perble(df_td$race)["Percent", "Black"])`% identified as black, `r .spround(.perble(df_td$race)["Percent", "Asian"])`% identified as Asian, `r .spround(.perble(df_td$race)["Percent", "Mixed"])`% identified as mixed race, and `r .spround(.perble(df_td$race)["Percent", "Don't know/Refused (VOL.)"] + .perble(df_td$race)["Percent", "Other"])`% refused to answer or reported being from some other race.  
 
 ## Materials and Procedure
 
-Research personnel were instructed to read from a script while interviewing each participant. For land-line users, the script began as follows: "Hello, I am _____ calling on behalf of the Pew Research Center. We are conducting a telephone opinion survey about some important issues today and we would like to include your household. May I please speak with the YOUNGEST [RANDOMIZE: (MALE / FEMALE)], age 18 or older, who is now at home? [IF NO MALE/FEMALE, ASK: May I please speak with the YOUNGEST (FEMALE / MALE), age 18 or older, who is now at home?]"
+Pew research personnel were instructed to read from a script while interviewing each participant. For land-line users, the script began as follows: "Hello, I am _____ calling on behalf of the Pew Research Center. We are conducting a telephone opinion survey about some important issues today and we would like to include your household. May I please speak with the YOUNGEST [RANDOMIZE: (MALE / FEMALE)], age 18 or older, who is now at home? [IF NO MALE/FEMALE, ASK: May I please speak with the YOUNGEST (FEMALE / MALE), age 18 or older, who is now at home?]"
 
 For cell phone users, the script was slightly different: "Hello, I am _____ calling on behalf of the Pew Research Center. We are conducting a telephone opinion survey about some important issues today. I know I am calling you on a cell phone. If you would like to be reimbursed for your cell phone minutes, we will pay all eligible respondents $5 for participating in this survey. This is NOT a sales call."
 
@@ -251,11 +286,29 @@ Once participants passed initial screening (e.g., 18 years of age or older) and 
 ## Data analysis
 Data was analyzed using `r cite_r("r-references.bib")` for all our analyses.
 
+<!-- When you get to this number of packages, it might be better to include 
+them either in a footnote, or as an appendix. It's sort of a lot to go
+through in-text. -->
+
 # Results
 
 ## Frequency of Social Media Use
 
-First, we sought to examine how frequency of social media use might vary as a function of sex, age, social media site, and the interaction between these variables. Using the *lme4* package by @R-lme4, we ran a comparison of seven linear mixed-effects models predicting frequency of social media use from age, social media site, sex, and the interactions among these variables. Our first model included only the random effects. Specifically, we suspected that participants may have certain response style in evaluating their frequency of social media use. We entered the subject as a random intercept to account for interdependence in the participants' ratings. Although in many cases the scenario or context (i.e., social media site) would also be entered as a random intercept, we did not wish to generalize beyond these specific sites. Our second model added gender, followed by age in our third model. The fourth model included the social media site in question. The fifth through seventh models added (1) the interaction between sex and age, (2) the interaction between sex and social media site, and (3) the interaction between age and social media site. 
+First, we sought to examine how frequency of social media use might vary as a
+function of sex, age, social media site, and the interaction between these variables. Using the *lme4* package in @R-lme4, we ran a comparison of seven linear mixed-effects models predicting frequency of social media use from age, social media site, sex, and the interactions among these variables. Our first model included only the random effects. Specifically, we suspected that participants may have certain response style in evaluating their frequency of social media use. We entered the subject as a random intercept to account for interdependence in the participants' ratings. Although in many cases the scenario or context (i.e., social media site) would also be entered as a random intercept, we did not wish to generalize beyond these specific sites. Our second model added gender, followed by age in our third model. The fourth model included the social media site in question. The fifth through seventh models added (1) the interaction between sex and age, (2) the interaction between sex and social media site, and (3) the interaction between age and social media site. 
+
+<!-- So I can see through your code that you're treating social media use as a
+continuous variable, but it only takes on 5 different values (3-7). If this 
+were something you were submitting for publication, you'd want to be
+explicit that you are treating it like continuous, and then (for me
+anyway, if I were reviewing it), you'd probably want to do a bit of
+work to convince readers that's the best choice. I'm not sure it is at
+the moment, but I might be able to be convinced. Also, it appears you're just
+looking at responses to a single item from the survey, correct? If so, you're
+going to have pretty low reliability there, and because it's a secondary
+analysis there's not really a lot you can do about it, but you'll want to
+discuss that as a limitation in your discussion (I haven't gotten that far so
+not sure if you do or not). -->
 
 ```{r df_lmer, include = FALSE}
 #remove unknowns and "rarely if ever and change sns_freq_use to numeric
@@ -319,6 +372,28 @@ model_6    <- lmer(sns_freq_use ~ sex +
                           model_5,
                           model_6))
 
+# A bit of a self-plug here, but I prefer using information criteria to 
+# p-values. In one of my packages that's really meant "just for me", there's a
+# function called `aic_weights` that will give the delta AIC values for any set
+# of competing models, as well as the associated AIC weights. If you're not
+# familiar with AIC weights, they essentially represent the probability that a
+# given model will have the highest out-of-sample predictive accuracy among the
+# set.
+#
+# If you're interested in checking it out, run 
+#
+# `devtools::install_github("datalorax/sundry")
+#
+# and then you can run
+
+# sundry::aic_weights(model_null,
+#                           model_1,
+#                           model_2,
+#                           model_3,
+#                           model_4,
+#                           model_5,
+#                           model_6)
+
 #compare model without random effects to that with random effects
 model_wo <- lm(sns_freq_use ~ sex + 
                               age +
@@ -328,6 +403,11 @@ model_wo <- lm(sns_freq_use ~ sex +
                               age * sns, data = df_td_lmer)
 
 (wo_compared <- anova(model_6, model_wo))
+
+# I would not do this. From my view, whether or not something is modeled
+# as random or not should depend on the design and the research question, #
+# rather than on statistical tests. For more detailed info on this see
+# https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#testing-significance-of-random-effects
 
 ###plot residuals
 plot(resid(model_6))
@@ -354,11 +434,14 @@ model_var <- print(VarCorr(model_6), comp = "Variance")
 #(emms_contrast <- contrast(emms_results, interaction = "pairwise"))
 ```
 
-As shown in Table 1, we found that the addition of age, social media site, the interaction between sex and social media site, and the interaction between age and social media site all explained a significant proportion of variance in social media site usage frequency. Using the *lmerTest* package from @R-lmerTest to approximate degrees of freedom with Satterthwaite's method, we found that increased age is associated with lower social media use, $\beta$ = `r .spround(sum_model_6_betas["age", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["age", "std.error"], l_zero = FALSE)`, *p* = `r .spround(sum_model_6$coefficients["age", "Pr(>|t|)"], 3, l_zero = FALSE)` (see Figure 1C). Note that Figure 1B suggests that, overall, Facebook is associated with the most social media use, followed by YouTube, Instagram, Snapchat, and Twitter. However, when accounting for age and gender, Snapchat is actually associated with greater social media use than Facebook ($\beta$ = `r .spround(sum_model_6_betas["snsSnapchat", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["snsSnapchat", "std.error"], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients["snsSnapchat", "Pr(>|t|)"], 3, l_zero = FALSE)`), and Twitter is associated with lesser social media use than Facebook ($\beta$ = `r .spround(sum_model_6_betas["snsTwitter", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["snsTwitter", "std.error"], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients["snsTwitter", "Pr(>|t|)"], 3, l_zero = FALSE)`). Critically, age also interacts with the specific social media site (see Figure 1A), insofar that increased age results in even lower rates of social media use in the case of Instagram ($\beta$ = `r .spround(sum_model_6_betas["age:snsInstagram", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["age:snsInstagram", "std.error"], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients["age:snsInstagram", "Pr(>|t|)"], 3, l_zero = FALSE)`), Snapchat ($\beta$ = `r .spround(sum_model_6_betas["age:snsSnapchat", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["age:snsSnapchat", "std.error"], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients["age:snsSnapchat", "Pr(>|t|)"], 3, l_zero = FALSE)`), Twitter ($\beta$ = `r .spround(sum_model_6_betas["age:snsTwitter", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["age:snsTwitter", "std.error"], l_zero = FALSE)`, *p*= `r .spround(sum_model_6$coefficients["age:snsTwitter", "Pr(>|t|)"], 3, l_zero = FALSE)`), and YouTube ($\beta$ = `r .spround(sum_model_6_betas["age:snsYouTube", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["age:snsYouTube", "std.error"], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients["age:snsYouTube", "Pr(>|t|)"], 3, l_zero = FALSE)`) when compared to Facebook. 
+<!-- To add a little more emphasis, consider italicizing the social media 
+websites. -->
 
-Although the model comparison did not indicate an increase in predictive ability from the introduction of participant gender, we did find that males (in comparison to females) reported less frequency of social media use when using the approximated degrees of freedom (see Figure 2C), $\beta$ = `r .spround(sum_model_6_betas["sexMale", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["sexMale", "std.error"], l_zero = FALSE)`, *p* = `r .spround(sum_model_6$coefficients["sexMale", "Pr(>|t|)"], 3, l_zero = FALSE)`. Figure 2B demonstrates that when compared to Facebook, however, men exhibited a greater frequency of using Twitter ($\beta$ = `r .spround(sum_model_6_betas["sexMale:snsTwitter", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["sexMale:snsTwitter", "std.error"], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients["sexMale:snsTwitter", "Pr(>|t|)"], 3, l_zero = FALSE)`) and YouTube ($\beta$ = `r .spround(sum_model_6_betas["sexMale:snsYouTube", "std.estimate"], l_zero = FALSE)`, *SE* = `r .spround(sum_model_6_betas["sexMale:snsYouTube", "std.error"], l_zero = FALSE)`, *p* < `r .spround(sum_model_6$coefficients["sexMale:snsYouTube", "Pr(>|t|)"], 3, l_zero = FALSE)`) than women did.  
+As shown in Table 1, we found that the addition of age, social media site, the interaction between sex and social media site, and the interaction between age and social media site all explained a significant proportion of variance in social media site usage frequency. Using the *lmerTest* package from @R-lmerTest to approximate degrees of freedom with Satterthwaite's method, we found that increased age is associated with lower social media use, $\beta$ = `r .spround(sum_model_6_betas["age", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["age", "std.error"], l_zero = FALSE)`, $p$ = `r .spround(sum_model_6$coefficients["age", "Pr(>|t|)"], 3, l_zero = FALSE)` (see Figure 1C). Note that Figure 1B suggests that, overall, Facebook is associated with the most social media use, followed by YouTube, Instagram, Snapchat, and Twitter. However, when accounting for age and gender, Snapchat is actually associated with greater social media use than Facebook ($\beta$ = `r .spround(sum_model_6_betas["snsSnapchat", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["snsSnapchat", "std.error"], l_zero = FALSE)`, $p$ < `r .spround(sum_model_6$coefficients["snsSnapchat", "Pr(>|t|)"], 3, l_zero = FALSE)`), and Twitter is associated with lesser social media use than Facebook ($\beta$ = `r .spround(sum_model_6_betas["snsTwitter", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["snsTwitter", "std.error"], l_zero = FALSE)`, $p$ < `r .spround(sum_model_6$coefficients["snsTwitter", "Pr(>|t|)"], 3, l_zero = FALSE)`). Critically, age also interacts with the specific social media site (see Figure 1A), insofar that increased age results in even lower rates of social media use in the case of Instagram ($\beta$ = `r .spround(sum_model_6_betas["age:snsInstagram", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["age:snsInstagram", "std.error"], l_zero = FALSE)`, $p$ < `r .spround(sum_model_6$coefficients["age:snsInstagram", "Pr(>|t|)"], 3, l_zero = FALSE)`), Snapchat ($\beta$ = `r .spround(sum_model_6_betas["age:snsSnapchat", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["age:snsSnapchat", "std.error"], l_zero = FALSE)`, $p$ < `r .spround(sum_model_6$coefficients["age:snsSnapchat", "Pr(>|t|)"], 3, l_zero = FALSE)`), Twitter ($\beta$ = `r .spround(sum_model_6_betas["age:snsTwitter", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["age:snsTwitter", "std.error"], l_zero = FALSE)`, $p$= `r .spround(sum_model_6$coefficients["age:snsTwitter", "Pr(>|t|)"], 3, l_zero = FALSE)`), and YouTube ($\beta$ = `r .spround(sum_model_6_betas["age:snsYouTube", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["age:snsYouTube", "std.error"], l_zero = FALSE)`, $p$ < `r .spround(sum_model_6$coefficients["age:snsYouTube", "Pr(>|t|)"], 3, l_zero = FALSE)`) when compared to Facebook. 
 
-A comparison of the full model with random effects to the full model without random effects revealed that the random effects explained a significant proportion of the variance in social media site use, $\chi^2$(`r .spround(wo_compared[2, "Chi Df"], 0)`) = `r .spround(wo_compared[2, "Chisq"], 2)`, *p* < `r .spround(wo_compared[2, "Pr(>Chisq)"], 3, l_zero = FALSE)`. In fact, grouping ratings by participant explained `r .spround((model_var[1, "vcov"]/sum(model_var$vcov)) * 100)`% of the variance in the frequency of using a social media site. A visual inspection of model residuals suggested a slight negative skew, but no heteroscedasticity. We also quantitatively inspected the variables for potential multicollinearity within the fullest model without the interaction effects. No multicollinearity was detected (*VIF* = `r min(model_vif[, "GVIF"])` - `r max(model_vif[, "GVIF"])`). 
+Although the model comparison did not indicate an increase in predictive ability from the introduction of participant gender, we did find that males (in comparison to females) reported less frequency of social media use when using the approximated degrees of freedom (see Figure 2C), $\beta$ = `r .spround(sum_model_6_betas["sexMale", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["sexMale", "std.error"], l_zero = FALSE)`, $p$ = `r .spround(sum_model_6$coefficients["sexMale", "Pr(>|t|)"], 3, l_zero = FALSE)`. Figure 2B demonstrates that when compared to Facebook, however, men exhibited a greater frequency of using Twitter ($\beta$ = `r .spround(sum_model_6_betas["sexMale:snsTwitter", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["sexMale:snsTwitter", "std.error"], l_zero = FALSE)`, $p$ < `r .spround(sum_model_6$coefficients["sexMale:snsTwitter", "Pr(>|t|)"], 3, l_zero = FALSE)`) and YouTube ($\beta$ = `r .spround(sum_model_6_betas["sexMale:snsYouTube", "std.estimate"], l_zero = FALSE)`, $SE$ = `r .spround(sum_model_6_betas["sexMale:snsYouTube", "std.error"], l_zero = FALSE)`, $p$ < `r .spround(sum_model_6$coefficients["sexMale:snsYouTube", "Pr(>|t|)"], 3, l_zero = FALSE)`) than women did.  
+
+A comparison of the full model with random effects to the full model without random effects revealed that the random effects explained a significant proportion of the variance in social media site use, $\chi^2$(`r .spround(wo_compared[2, "Chi Df"], 0)`) = `r .spround(wo_compared[2, "Chisq"], 2)`, $p$ < `r .spround(wo_compared[2, "Pr(>Chisq)"], 3, l_zero = FALSE)`. In fact, grouping ratings by participant explained `r .spround((model_var[1, "vcov"]/sum(model_var$vcov)) * 100)`% of the variance in the frequency of using a social media site. A visual inspection of model residuals suggested a slight negative skew, but no heteroscedasticity. We also quantitatively inspected the variables for potential multicollinearity within the fullest model without the interaction effects. No multicollinearity was detected ($VIF$ = `r min(model_vif[, "GVIF"])` - `r max(model_vif[, "GVIF"])`). 
 
 ```{r df_lmer_table, echo = FALSE, results = "asis"}
 ###clean table names
@@ -367,9 +450,16 @@ models_compared <- models_compared %>%
 
 ###round
 #create na identified function
-na_id <- function(data = NULL, col = NULL) {
+na_id <- function(data, col) {
   !is.na(data[, col])
 }
+
+# In the above, I removed `= NULL` as the default argument to those functions
+# because, in this case, those two arguments are required. Using `NULL` sets
+# that as the default and is not really what you want here. Not sure that 
+# totally makes sense, but basically you only want to hard-code arguments if 
+# you want to set them defaults that can be overridden. Here, you need the user
+# to supply both.
 
 models_compared[na_id(models_compared, "pr_chisq"), 
                 "pr_chisq"] <- .spround(models_compared[na_id(models_compared,
@@ -405,6 +495,23 @@ for (i in 1:nrow(models_compared)) {
     }
   }
 }
+
+# So we haven't learned looping at all, so I'm impressed you were able to come
+# up with the above, but it's pretty gnarly. The below will do the same thing
+#
+# map_df(models_compared, 
+#        ~ifelse(is.na(.), "", ifelse(
+#                . == ".001", "<.001",
+#                .)))
+#
+# Or, slightly more tidyverse-y, but actually not as nice, imo
+#
+# map_df(models_compared, 
+#        ~case_when(is.na(.) ~ "",
+#                   . == ".001" ~ "<.001",
+#                   TRUE ~ as.character(.)))
+
+
 
 ###cut down table
 models_compared %<>%
